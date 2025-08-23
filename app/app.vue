@@ -82,11 +82,10 @@
           Знаходимося в серці Києва, Україна
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            class="px-8 py-4 bg-accent-primary text-background-primary rounded-lg hover:bg-accent-secondary transition-colors font-semibold"
-            @click="window.location.href = 'https://discord.gg/pNGVFb6d'">
+          <a href="https://discord.gg/pNGVFb6d" target="_blank" rel="noopener"
+            class="px-8 py-4 bg-accent-primary text-background-primary rounded-lg hover:bg-accent-secondary transition-colors font-semibold flex items-center justify-center">
             Ми тусимо в Discord, приєднуйся!
-          </button>
+          </a>
         </div>
       </div>
 
