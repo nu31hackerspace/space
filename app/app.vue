@@ -99,7 +99,7 @@
           <div>
             <h3 class="text-2xl font-bold mb-4 text-accent-primary">Соціальні мережі</h3>
             <div class="flex space-x-4">
-              <a href="https://www.instagram.com/reel/DNLCQWnMZjb/"
+              <a href="https://www.instagram.com/nu31hackerspace/"
                 class="text-accent-primary hover:text-accent-secondary transition-colors">
                 <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
                   <path
