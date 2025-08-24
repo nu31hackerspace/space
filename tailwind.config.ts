@@ -24,6 +24,9 @@ export default <Partial<Config>>{
             'separator-secondary': 'var(--color-separator-secondary)',
         },
         extend: {
+            fontFamily: {
+                'default': ['SF Mono', 'monospace']
+            }
         }
     },
     plugins: [],
