@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   imports: {
     autoImport: false
   },
+  pages: true,
   runtimeConfig: {
     mongoUri: '',
     public: {
