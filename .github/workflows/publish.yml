@@ -16,9 +16,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: nu31space
+          - name: space
             context: .
-            image: nu31space
+            image: space
 
     runs-on: ubuntu-latest
     permissions:
@@ -45,8 +45,8 @@ jobs:
           context: ${{ matrix.context }}
           push: true
           tags: |
-            ${{ env.REGISTRY }}/vovastelmashchuk/${{ matrix.image }}:latest
-            ${{ env.REGISTRY }}/vovastelmashchuk/${{ matrix.image }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/nu31hackerspace/${{ matrix.image }}:latest
+            ${{ env.REGISTRY }}/nu31hackerspace/${{ matrix.image }}:${{ github.sha }}
           build-args: |
             GIT_COMMIT_SHA=${{ github.sha }}
 

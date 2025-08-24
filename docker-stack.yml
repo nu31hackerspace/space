@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    image: ghcr.io/vovastelmashchuk/nu31space:${GIT_COMMIT_HASH:-latest}
+    image: ghcr.io/nu31hackerspace/space:${GIT_COMMIT_HASH:-latest}
     dns:
       - 8.8.8.8
       - 8.8.4.4
