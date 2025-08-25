@@ -1,17 +1,16 @@
 <template>
   <div class="min-h-screen bg-background-primary text-label-primary">
-    <div class="relative h-screen">
-      <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-black/20 z-10"></div>
+    <div class="relative w-screen">
       <img src="https://placehold.co/1920x1080" alt="NU31 Hacker Space" class="w-full h-full object-cover" />
       <div class="absolute inset-0 z-20 flex items-center justify-center">
         <div class="text-center text-white">
-          <h1 class="text-6xl md:text-8xl font-bold mb-6 tracking-tight">
+          <h1 class="text-6xl font-bold mb-6 tracking-tight">
             NU31
           </h1>
-          <p class="text-2xl md:text-3xl mb-8 font-light">
+          <p class="text-2xl mb-8 font-light">
             Хакерспейс у Києві
           </p>
-          <p class="text-xl md:text-2xl font-semibold text-accent-primary">
+          <p class="text-xl font-semibold text-accent-primary">
             Створюй що завгодно
           </p>
         </div>
@@ -23,7 +22,7 @@
         <h2 class="text-4xl font-bold mb-8 text-accent-primary">
           Про наш хакерспейс
         </h2>
-        <p class="text-xl text-label-secondary leading-relaxed">
+        <p class="text-xl text-label-secondary">
           NU31 — це простір для творчих людей, інноваторів та ентузіастів технологій.
           Ми створюємо середовище, де можна експериментувати, навчатися та реалізовувати
           найсміливіші ідеї.
@@ -31,7 +30,7 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-        <div class="bg-fill-secondary p-8 rounded-xl border border-separator-primary hover:shadow-lg transition-all">
+        <div class="bg-fill-secondary p-8 rounded-xl border border-separator-primary">
           <div class="w-16 h-16 bg-accent-primary rounded-full flex items-center justify-center mb-6 mx-auto">
             <svg class="w-8 h-8 text-background-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -45,7 +44,7 @@
           </p>
         </div>
 
-        <div class="bg-fill-tertiary p-8 rounded-xl border border-separator-secondary hover:shadow-lg transition-all">
+        <div class="bg-fill-tertiary p-8 rounded-xl border border-separator-secondary">
           <div class="w-16 h-16 bg-accent-secondary rounded-full flex items-center justify-center mb-6 mx-auto">
             <svg class="w-8 h-8 text-background-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -59,7 +58,7 @@
           </p>
         </div>
 
-        <div class="bg-fill-secondary p-8 rounded-xl border border-separator-primary hover:shadow-lg transition-all">
+        <div class="bg-fill-secondary p-8 rounded-xl border border-separator-primary">
           <div class="w-16 h-16 bg-accent-primary rounded-full flex items-center justify-center mb-6 mx-auto">
             <svg class="w-8 h-8 text-background-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -81,11 +80,10 @@
         <p class="text-xl text-label-secondary mb-8">
           Знаходимося в серці Києва, Україна
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <MainButton buttonStyle="primary" size="M" link="https://discord.gg/kgTHaaHWyD" icon="ic:baseline-discord">
-            Ми тусимо в Discord, приєднуйся!
-          </MainButton>
-        </div>
+        <MainButton class="justify-center" buttonStyle="primary" size="M" link="https://discord.gg/kgTHaaHWyD"
+          icon="ic:baseline-discord">
+          Ми тусимо в Discord, приєднуйся!
+        </MainButton>
       </div>
 
       <div class="border-t border-separator-primary pt-16">
