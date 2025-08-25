@@ -1,20 +1,28 @@
 <template>
     <component :is="link ? 'a' : 'button'" :class="[
-        'inline-flex items-center justify-center font-semibold rounded-lg',
+        'inline-flex items-center justify-center font-semibold rounded-lg gap-2',
         variantClasses[buttonStyle],
         sizeClasses[size],
     ]" :href="link" :target="link ? '_blank' : undefined" :rel="link ? 'noopener noreferrer' : undefined"
         @click="link ? undefined : $emit('click', $event)">
+        <span v-if="icon" class="flex items-center">
+            <Icon :icon="icon" :class="iconSizeClasses[size]" />
+        </span>
+        {{ label }}
         <slot />
     </component>
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue'
+
 interface Props {
-    size?: 'S' | 'M'
+    label?: string
+    size?: 'S' | 'M' | 'L'
     buttonStyle?: 'primary' | 'secondary' | 'ghost',
     state?: 'default' | 'disabled',
     link?: string
+    icon?: string
 }
 
 interface Emits {
@@ -22,17 +30,26 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+    label: '',
     size: 'M',
     buttonStyle: 'primary',
     state: 'default',
     link: '',
+    icon: '',
 })
 
 defineEmits<Emits>()
 
 const sizeClasses = {
-    S: 'px-4 py-2 text-xs font-bold',
-    M: 'px-6 py-3 text-sm font-bold'
+    S: 'px-2 py-2 text-xs font-bold',
+    M: 'px-4 py-3 text-sm font-bold',
+    L: 'px-6 py-4 text-base font-bold'
+}
+
+const iconSizeClasses = {
+    S: 'w-4 h-4',
+    M: 'w-6 h-6',
+    L: 'w-8 h-8'
 }
 
 const variantClasses = {
