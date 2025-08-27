@@ -3,25 +3,18 @@
     <div class="relative w-screen">
       <div class="w-full h-full"></div>
       <div class="w-full h-fullabsolute inset-0 z-20 flex items-center justify-center">
-        <div class="text-center text-white">
-          <h1 class="text-6xl font-bold mb-6 tracking-tight">
-            NU31 HACKER SPACE
-          </h1>
-          <p class="text-2xl mb-8 font-light">
-            Хакерспейс у Києві
-          </p>
-          <p class="text-xl font-semibold text-accent-primary">
-            Створюй що завгодно
-          </p>
-        </div>
+        <img src="~/assets/images/landing_image_dark.svg" alt="NU31 Hacker Space" class="w-full h-full" />
       </div>
     </div>
 
     <div class="container mx-auto px-6 py-16">
       <div class="max-w-4xl mx-auto text-center mb-20">
         <h2 class="text-4xl font-bold mb-8 text-accent-primary">
-          Про наш хакерспейс
+          Хакерспейс у Києві
         </h2>
+        <h3 class="text-2xl font-bold mb-8 text-accent-primary">
+          Create whatever you want
+        </h3>
         <p class="text-xl text-label-secondary">
           NU31 — це простір для творчих людей, інноваторів та ентузіастів технологій.
           Ми створюємо середовище, де можна експериментувати, навчатися та реалізовувати
@@ -91,11 +84,13 @@
           <div>
             <h3 class="text-2xl font-bold mb-4 text-accent-primary">Контакти</h3>
             <p class="text-label-secondary mb-2">📍 Київ, Україна</p>
-            <p class="text-label-secondary mb-2">📧 Нижньоюківська 31</p>
+            <p class="text-label-secondary mb-2">📧 Нижньоюрківська 31</p>
           </div>
           <div>
             <h3 class="text-2xl font-bold mb-4 text-accent-primary">Соціальні мережі</h3>
             <div class="flex">
+              <MainButton buttonStyle="ghost" size="L" link="https://github.com/nu31hackerspace" icon="mdi:github">
+              </MainButton>
               <MainButton buttonStyle="ghost" size="L" link="https://www.instagram.com/nu31hackerspace/"
                 icon="mdi:instagram">
               </MainButton>
