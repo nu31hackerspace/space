@@ -1,75 +1,51 @@
-# Nuxt Minimal Starter
+# Сайт NU31 Hacker Space
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Поки що цей проект це просто ось цей [сайт](https://nu31.space/) але амбіцій в нього дуже великі.
 
-## Setup
+## Короткий backlog
+- Додати widget з google maps
+- Додати логін через Discord
+- Додати щось по типу блог, я вірю в те це може стати гарним місцем для документації про проектах, або якої іншої штуки, а так то мені цікаво написати blog і тому це тут буде. 
 
-Make sure to install dependencies:
+### Технологі
+
+Основна філософія проекту це зробити роботу з кодом максимально простим для того щоб більше людей могли доєднати до його розробки.
+
+Проект це monorepo в якому і сайт і backend до нього. Проект написаний на Nuxt 4, як з цим працювати можна почитати [тут](https://nuxt.com/docs/getting-started/introduction). 
+
+Ми для роботи з CSS використовується [tailwind 4](https://tailwindcss.com/)
+Як база даних MongoDB через те що вона не потребує додаткових дій для роботи з базою даних, якщо ви хочете щось додати просто додайте. 
+
+### Як запустити
+
+Проекту для роботи треба mongo db. Для локальної розробки рекомендую просто запусти її в [docker](https://www.docker.com/)
+Для MacOS рекомендую використовувати [colima](https://github.com/abiosoft/colima) воно реально працює краще.
+
+Запустити mongo в docker можна ось цією командою
 
 ```bash
-# npm
+docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:latest
+```
+
+1. Зробіль git clone
+2. Встановіть залежності
+
+```bash
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+3. Запусти development server, буде доступний за адресою `http://localhost:3000`, 
 
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+Якщо на вашому компютері 3000 зайнятий буде спороба запуститися на 3001, 3002, ...
 
-Build the application for production:
 
-```bash
-# npm
-npm run build
+## Проект вікритий до любої  допомоги
+- знайшли помилку в Readme чи знайєте як зробити його краще, сміло робіть pull request
+- хочете зробити круту фічу чи поправити баг сміло робіть pull request
+- не знаєте за що взятися перевірте список [issue](https://github.com/nu31hackerspace/space/issues) думаю там щось є 
 
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+P.S. Знайшли проблему але не знаєте як її вирішити, створіть issue, [ось тут](https://github.com/nu31hackerspace/space/issues/new)

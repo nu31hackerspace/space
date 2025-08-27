@@ -14,5 +14,12 @@ export default defineEventHandler((event) => {
             status,
             duration
         })
+
+        useNitroApp().db.collection("http-logs").insertOne({
+            method,
+            url,
+            status,
+            duration
+        })
     })
 })

@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   },
   pages: true,
   runtimeConfig: {
-    mongoUri: '',
+    mongoUri: 'mongodb://localhost:27017/nu31space',
     public: {
       baseUrl: '',
       gitCommitSha: '',
