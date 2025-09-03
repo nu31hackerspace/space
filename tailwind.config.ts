@@ -25,7 +25,8 @@ export default <Partial<Config>>{
         },
         extend: {
             fontFamily: {
-                'default': ['SF Mono', 'monospace']
+                'default': ['SF Mono', 'monospace'],
+                'wallpoet': ['Wallpoet', 'sans-serif']
             }
         }
     },
