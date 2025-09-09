@@ -1,5 +1,5 @@
 <template>
-    <MainButton @click="toggleTheme" icon="gg:dark-mode" />
+    <MainButton @click="toggleTheme" icon="gg:dark-mode" size="M" />
 </template>
 
 <script setup>
