@@ -97,7 +97,7 @@
               <MainButton buttonStyle="ghost" size="L" link="https://www.instagram.com/nu31hackerspace/"
                 icon="mdi:instagram">
               </MainButton>
-              <MainButton buttonStyle="ghost" size="L" link="https://discord.gg/pNGVFb6d" icon="ic:baseline-discord">
+              <MainButton buttonStyle="ghost" size="L" link="https://discord.gg/kgTHaaHWyD" icon="ic:baseline-discord">
               </MainButton>
             </div>
           </div>
