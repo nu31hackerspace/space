@@ -7,6 +7,7 @@ services:
       - 8.8.8.8
       - 8.8.4.4
     environment:
+      - NUXT_PUBLIC_GIT_COMMIT_SHA=${GIT_COMMIT_HASH}
       - NUXT_PUBLIC_BASE_URL=https://nu31.space
       - NUXT_MONGO_URI=${MONGO_URI}
     deploy:
