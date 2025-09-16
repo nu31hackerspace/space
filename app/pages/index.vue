@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen  text-label-primary">
-    <div class="relative w-screen">
+  <div class="min-h-screen text-label-primary">
+    <div class="relative w-full">
       <div class="w-full h-full"></div>
-      <div class="w-screen aspect-[1920/1080] relative">
+      <div class="w-full aspect-[1920/1080] relative">
         <div class="w-full h-full absolute inset-0 z-20 flex items-center text-center justify-center">
           <span class="text-8xl font-wallpoet text-accent-primary">NU31 Hacker Space</span>
         </div>
