@@ -1,24 +1,26 @@
 version: "3.8"
 
 services:
-  app:
-    image: ghcr.io/nu31hackerspace/space:${GIT_COMMIT_HASH:-latest}
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
-    environment:
-      - NUXT_PUBLIC_GIT_COMMIT_SHA=${GIT_COMMIT_HASH}
-      - NUXT_PUBLIC_BASE_URL=https://nu31.space
-      - NUXT_MONGO_URI=${MONGO_URI}
-    deploy:
-      update_config:
-        order: start-first
-    networks:
-      - infra_reverse-proxy
-      - infra_mongo
+    app:
+        image: ghcr.io/nu31hackerspace/space:${GIT_COMMIT_HASH:-latest}
+        dns:
+            - 8.8.8.8
+            - 8.8.4.4
+        environment:
+            - NUXT_PUBLIC_GIT_COMMIT_SHA=${GIT_COMMIT_HASH}
+            - NUXT_PUBLIC_BASE_URL=https://nu31.space
+            - NUXT_MONGO_URI=${MONGO_URI}
+            - NUXT_DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+            - NUXT_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+        deploy:
+            update_config:
+                order: start-first
+        networks:
+            - infra_reverse-proxy
+            - infra_mongo
 
 networks:
-  infra_reverse-proxy:
-    external: true
-  infra_mongo:
-    external: true
+    infra_reverse-proxy:
+        external: true
+    infra_mongo:
+        external: true

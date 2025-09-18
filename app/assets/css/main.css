@@ -1,45 +1,45 @@
-@import "./fonts.css";
-@import "tailwindcss";
+@import './fonts.css';
+@import 'tailwindcss';
 
 @theme {
-  --color-*: initial;
+    --color-*: initial;
 
-  --color-fill-tertiary: rgb(0 11 33 / 0.05);
-  --color-label-primary: rgb(0 0 0 / 1);
-  --color-label-secondary: rgb(22 26 33 / 0.8);
-  --color-label-tertiary: rgb(22 26 33 / 0.5);
-  --color-accent-primary: rgb(0 0 0 / 1);
-  --color-accent-secondary: rgb(0 0 0 / 0.8);
-  --color-background-primary: rgb(245 244 240 / 1);
-  --color-fill-secondary: rgb(0 11 33 / 0.08);
-  --color-separator-primary: rgb(0 11 33 / 0.15);
-  --color-separator-secondary: rgb(0 11 33 / 0.1);
+    --color-fill-tertiary: rgb(0 11 33 / 0.05);
+    --color-label-primary: rgb(0 0 0 / 1);
+    --color-label-secondary: rgb(22 26 33 / 0.8);
+    --color-label-tertiary: rgb(22 26 33 / 0.5);
+    --color-accent-primary: rgb(0 0 0 / 1);
+    --color-accent-secondary: rgb(0 0 0 / 0.8);
+    --color-background-primary: rgb(245 244 240 / 1);
+    --color-fill-secondary: rgb(0 11 33 / 0.08);
+    --color-separator-primary: rgb(0 11 33 / 0.15);
+    --color-separator-secondary: rgb(0 11 33 / 0.1);
 
-  --font-display: "Wallpoet", sans-serif;
+    --font-display: 'Wallpoet', sans-serif;
 }
 
 .light {
-  --color-fill-tertiary: rgb(0 11 33 / 0.05);
-  --color-label-primary: rgb(0 0 0 / 1);
-  --color-label-secondary: rgb(22 26 33 / 0.8);
-  --color-label-tertiary: rgb(22 26 33 / 0.5);
-  --color-accent-primary: rgb(0 0 0 / 1);
-  --color-accent-secondary: rgb(0 0 0 / 0.8);
-  --color-background-primary: rgb(245 244 240 / 1);
-  --color-fill-secondary: rgb(0 11 33 / 0.08);
-  --color-separator-primary: rgb(0 11 33 / 0.15);
-  --color-separator-secondary: rgb(0 11 33 / 0.1);
+    --color-fill-tertiary: rgb(0 11 33 / 0.05);
+    --color-label-primary: rgb(0 0 0 / 1);
+    --color-label-secondary: rgb(22 26 33 / 0.8);
+    --color-label-tertiary: rgb(22 26 33 / 0.5);
+    --color-accent-primary: rgb(0 0 0 / 1);
+    --color-accent-secondary: rgb(0 0 0 / 0.8);
+    --color-background-primary: rgb(245 244 240 / 1);
+    --color-fill-secondary: rgb(0 11 33 / 0.08);
+    --color-separator-primary: rgb(0 11 33 / 0.15);
+    --color-separator-secondary: rgb(0 11 33 / 0.1);
 }
 
 .dark {
-  --color-fill-tertiary: rgb(245 244 240 / 0.05);
-  --color-label-primary: rgb(245 244 240 / 0.9);
-  --color-label-secondary: rgb(245 244 240 / 0.6);
-  --color-label-tertiary: rgb(245 244 240 / 0.3);
-  --color-accent-primary: rgb(245 244 240 / 0.9);
-  --color-accent-secondary: rgb(245 244 240 / 0.8);
-  --color-background-primary: rgb(36 35 34 / 1);
-  --color-fill-secondary: rgb(245 244 240 / 0.08);
-  --color-separator-primary: rgb(245 244 240 / 0.13);
-  --color-separator-secondary: rgb(245 244 240 / 0.08);
+    --color-fill-tertiary: rgb(245 244 240 / 0.05);
+    --color-label-primary: rgb(245 244 240 / 0.9);
+    --color-label-secondary: rgb(245 244 240 / 0.6);
+    --color-label-tertiary: rgb(245 244 240 / 0.3);
+    --color-accent-primary: rgb(245 244 240 / 0.9);
+    --color-accent-secondary: rgb(245 244 240 / 0.8);
+    --color-background-primary: rgb(36 35 34 / 1);
+    --color-fill-secondary: rgb(245 244 240 / 0.08);
+    --color-separator-primary: rgb(245 244 240 / 0.13);
+    --color-separator-secondary: rgb(245 244 240 / 0.08);
 }

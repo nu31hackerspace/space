@@ -1,4 +1,4 @@
-import { defineEventHandler, useNitroApp } from "#imports"
+import { defineEventHandler, useNitroApp } from '#imports'
 
 export default defineEventHandler((event) => {
     const { method, url } = event.node.req
@@ -8,18 +8,18 @@ export default defineEventHandler((event) => {
         const duration = Date.now() - start
         const status = event.node.res.statusCode
 
-        useNitroApp().logger.info("http", {
+        useNitroApp().logger.info('http', {
             method,
             url,
             status,
-            duration
+            duration,
         })
 
-        useNitroApp().db.collection("http-logs").insertOne({
+        useNitroApp().db.collection('http-logs').insertOne({
             method,
             url,
             status,
-            duration
+            duration,
         })
     })
 })

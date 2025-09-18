@@ -11,14 +11,36 @@ export default defineNitroPlugin(async (nitroApp) => {
         nitroApp.mongo = await client.connect()
         nitroApp.db = nitroApp.mongo.db()
         nitroApp.logger.info('Connected to MongoDB')
+
+        await initializeDatabaseSchema(nitroApp.db, nitroApp.logger)
     } catch (error) {
         nitroApp.logger.error('Failed to connect to MongoDB:', error)
     }
 })
+
+async function initializeDatabaseSchema(db: Db, logger: any) {
+    try {
+        logger.info('Initializing database schema...')
+
+        const usersCollection = db.collection('users')
+
+        await usersCollection.createIndex(
+            { id: 1 },
+            {
+                unique: true,
+                name: 'unique_user_id'
+            }
+        )
+
+        logger.info('Database schema initialized successfully')
+    } catch (error) {
+        logger.error('Failed to initialize database schema:', error)
+    }
+}
 
 declare module 'nitropack' {
     interface NitroApp {
         mongo: MongoClient
         db: Db
     }
-} 
+}
