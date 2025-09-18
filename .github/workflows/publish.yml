@@ -62,6 +62,8 @@ jobs:
               run: |
                   echo "GIT_COMMIT_HASH=${{ github.sha }}" >> ./envfile
                   echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> ./envfile
+                  echo "DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }}" >> ./envfile
+                  echo "DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }}" >> ./envfile
 
             - name: Docker Stack Deploy
               uses: cssnr/stack-deploy-action@v1
