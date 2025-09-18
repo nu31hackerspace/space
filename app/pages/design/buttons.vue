@@ -12,19 +12,21 @@
                         <div v-for="size in buttonSizes" :key="`${style.name}-${size.name}`" class="p-6">
                             <div class="flex flex-col gap-4">
                                 <div class="text-center">
-                                    <h3 class="text-lg font-medium mb-2">{{ size.label }} Size</h3>
+                                    <h3 class="text-lg font-medium mb-2 text-accent-primary">{{ size.label }} Size</h3>
                                     <MainButton :size="size.name" :buttonStyle="style.name" @click="handleClick"
                                         label="Button">
                                     </MainButton>
                                 </div>
                                 <div class="text-center">
-                                    <h3 class="text-lg font-medium mb-2">{{ size.label }} with Icon</h3>
+                                    <h3 class="text-lg font-medium mb-2 text-accent-primary">{{ size.label }} with Icon
+                                    </h3>
                                     <MainButton :size="size.name" :buttonStyle="style.name" @click="handleClick"
                                         label="Button" icon="mdi:heart">
                                     </MainButton>
                                 </div>
                                 <div class="text-center">
-                                    <h3 class="text-lg font-medium mb-2">{{ size.label }} Icon Only</h3>
+                                    <h3 class="text-lg font-medium mb-2 text-accent-primary">{{ size.label }} Icon Only
+                                    </h3>
                                     <MainButton :size="size.name" :buttonStyle="style.name" @click="handleClick"
                                         icon="mdi:star">
                                     </MainButton>
