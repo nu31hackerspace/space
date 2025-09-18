@@ -1,5 +1,5 @@
-import { useState } from "#app"
-import { onMounted, watchEffect } from "vue"
+import { useState } from '#app'
+import { onMounted, watchEffect } from 'vue'
 
 export const useTheme = () => {
     const theme = useState<'light' | 'dark'>('theme', () => 'light')
@@ -9,11 +9,16 @@ export const useTheme = () => {
     }
 
     onMounted(() => {
-        const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+        const savedTheme = localStorage.getItem('theme') as
+            | 'light'
+            | 'dark'
+            | null
         if (savedTheme) {
             theme.value = savedTheme
         } else {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+            const prefersDark = window.matchMedia(
+                '(prefers-color-scheme: dark)'
+            ).matches
             theme.value = prefersDark ? 'dark' : 'light'
         }
 

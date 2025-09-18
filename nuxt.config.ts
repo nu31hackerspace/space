@@ -1,24 +1,23 @@
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from '@tailwindcss/vite'
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-  imports: {
-    autoImport: false
-  },
-  pages: true,
-  runtimeConfig: {
-    mongoUri: 'mongodb://localhost:27017/nu31space',
-    public: {
-      baseUrl: '',
-      gitCommitSha: '',
+    compatibilityDate: '2025-07-15',
+    devtools: { enabled: true },
+    imports: {
+        autoImport: false,
     },
-  },
-  vite: {
-    plugins: [
-      tailwindcss(),
-    ],
-  },
-  css: ['~/assets/css/main.css'],
+    pages: true,
+    runtimeConfig: {
+        mongoUri: 'mongodb://localhost:27017/nu31space',
+        discordClientSecret: '',
+        public: {
+            baseUrl: 'http://localhost:3000',
+            gitCommitSha: 'local',
+            discordClientId: '1418277247005229096',
+        },
+    },
+    vite: {
+        plugins: [tailwindcss()],
+    },
+    css: ['~/assets/css/main.css'],
 })

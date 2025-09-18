@@ -25,10 +25,10 @@ export default <Partial<Config>>{
         },
         extend: {
             fontFamily: {
-                'default': ['SF Mono', 'monospace'],
-                'wallpoet': ['Wallpoet', 'sans-serif']
-            }
-        }
+                default: ['SF Mono', 'monospace'],
+                wallpoet: ['Wallpoet', 'sans-serif'],
+            },
+        },
     },
     plugins: [],
 }

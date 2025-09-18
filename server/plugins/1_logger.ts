@@ -1,6 +1,6 @@
-import winston from "winston";
+import winston from 'winston'
 
-import { defineNitroPlugin } from "#imports";
+import { defineNitroPlugin } from '#imports'
 
 export default defineNitroPlugin(async (nitroApp) => {
     nitroApp.logger = winston.createLogger({
@@ -8,9 +8,7 @@ export default defineNitroPlugin(async (nitroApp) => {
             winston.format.timestamp(),
             winston.format.json()
         ),
-        transports: [
-            new winston.transports.Console()
-        ]
+        transports: [new winston.transports.Console()],
     })
     nitroApp.logger.info('Logger initialized')
 })
