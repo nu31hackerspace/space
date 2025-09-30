@@ -1,0 +1,1 @@
+export const TRACKING_COOKIE_NAME = 'session-key'

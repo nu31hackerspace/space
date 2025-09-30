@@ -22,6 +22,18 @@ async function initializeDatabaseSchema(db: Db, logger: any) {
     try {
         logger.info('Initializing database schema...')
 
+        await createIndexes(db, logger)
+
+        logger.info('Database schema initialized successfully')
+    } catch (error) {
+        logger.error('Failed to initialize database schema:', error)
+    }
+}
+
+async function createIndexes(db: Db, logger: any) {
+    try {
+        logger.info('Creating database indexes...')
+
         const usersCollection = db.collection('users')
 
         await usersCollection.createIndex(
@@ -32,9 +44,9 @@ async function initializeDatabaseSchema(db: Db, logger: any) {
             }
         )
 
-        logger.info('Database schema initialized successfully')
+        logger.info('Database indexes created successfully')
     } catch (error) {
-        logger.error('Failed to initialize database schema:', error)
+        logger.error('Failed to create database indexes:', error)
     }
 }
 

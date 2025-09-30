@@ -181,3 +181,12 @@
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { trackEvent } from '~~/app/utils/track'
+
+onMounted(() => {
+    trackEvent('page_view', 'landing')
+})
+</script>
