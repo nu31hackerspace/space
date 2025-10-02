@@ -8,11 +8,17 @@ export default defineEventHandler((event) => {
         const duration = Date.now() - start
         const status = event.node.res.statusCode
 
+        const now = new Date()
+
+        const headers = event.node.req.headers
+
         useNitroApp().logger.info('http', {
             method,
             url,
             status,
             duration,
+            time: now,
+            headers,
         })
 
         useNitroApp().db.collection('http-logs').insertOne({
@@ -20,6 +26,7 @@ export default defineEventHandler((event) => {
             url,
             status,
             duration,
+            time: now,
         })
     })
 })
