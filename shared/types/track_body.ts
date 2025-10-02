@@ -1,5 +1,4 @@
 export type TrackRequest = {
     action: string
-    page: string
-    data: Map<string, string>
+    data: Record<string, string>
 }

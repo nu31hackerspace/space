@@ -8,7 +8,6 @@ export default defineEventHandler(async (event) => {
 
     const trackRecond = {
         action: trackRequest.action,
-        page: trackRequest.page,
         data: trackRequest.data,
         sessionKey: sessionKey,
         timestamp: new Date(),

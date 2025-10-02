@@ -1,11 +1,13 @@
 import { useState } from '#app'
 import { onMounted, watchEffect } from 'vue'
+import { trackEvent } from '~/utils/track'
 
 export const useTheme = () => {
     const theme = useState<'light' | 'dark'>('theme', () => 'light')
 
     const toggleTheme = () => {
         theme.value = theme.value === 'dark' ? 'light' : 'dark'
+        trackEvent('toggle_theme', { newTheme: theme.value })
     }
 
     onMounted(() => {

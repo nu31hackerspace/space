@@ -2,14 +2,12 @@ import type { TrackRequest } from '~~/shared/types/track_body'
 
 export async function trackEvent(
     action: string,
-    page: string,
     data: Record<string, string> = {},
 ): Promise<void> {
     try {
         const trackRequest: TrackRequest = {
             action,
-            page,
-            data: new Map(Object.entries(data))
+            data,
         }
 
         await $fetch('/api/track', {
