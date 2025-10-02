@@ -1,19 +1,21 @@
 import { defineEventHandler, getCookie, readBody, useNitroApp } from '#imports'
-import { TRACKING_COOKIE_NAME } from '~~/server/tracking/const'
+import { saveTrackRecordInBackground, TrackDBRecord } from '~~/server/tracking/add'
+import { COUNTRY_HEADER_NAME, TRACKING_COOKIE_NAME } from '~~/server/tracking/const'
 import { TrackRequest } from '~~/shared/types/track_body'
 
 export default defineEventHandler(async (event) => {
-    const sessionKey = getCookie(event, TRACKING_COOKIE_NAME)
+    const sessionKey = getCookie(event, TRACKING_COOKIE_NAME) as string
     const trackRequest = await readBody<TrackRequest>(event)
 
-    const trackRecond = {
+    const country = event.node.req.headers[COUNTRY_HEADER_NAME] as string
+
+    const trackRecond: TrackDBRecord = {
         action: trackRequest.action,
+        country: country,
         data: trackRequest.data,
         sessionKey: sessionKey,
         timestamp: new Date(),
     }
 
-    const db = useNitroApp().db
-
-    await db.collection('tracking').insertOne(trackRecond)
+    saveTrackRecordInBackground(trackRecond)
 })
