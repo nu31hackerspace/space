@@ -187,6 +187,6 @@ import { onMounted } from 'vue'
 import { trackEvent } from '~~/app/utils/track'
 
 onMounted(() => {
-    trackEvent('page_view_landing')
+    trackEvent('page_view', { page: 'landing' })
 })
 </script>

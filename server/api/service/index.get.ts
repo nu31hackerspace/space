@@ -1,4 +1,5 @@
 import { defineEventHandler, useNitroApp, useRuntimeConfig } from '#imports'
+import { UserSession } from '~~/server/core/user/user'
 
 export default defineEventHandler(async (event) => {
     const isConnected: boolean = await useNitroApp()
@@ -17,8 +18,13 @@ export default defineEventHandler(async (event) => {
         commitSha = `Error getting commit sha: ${message}`
     }
 
+    const user = event.context.user as UserSession
+
+    console.log(user)
+
     return {
         isConnected: isConnected,
         commitSha: commitSha,
+        user: user,
     }
 })

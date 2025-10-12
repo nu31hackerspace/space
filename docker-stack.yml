@@ -12,12 +12,19 @@ services:
             - NUXT_MONGO_URI=${MONGO_URI}
             - NUXT_DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
             - NUXT_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+            - NUXT_JWT_SECRET=${JWT_SECRET}
         deploy:
             update_config:
                 order: start-first
         networks:
             - infra_reverse-proxy
             - infra_mongo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/service/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
     infra_reverse-proxy:

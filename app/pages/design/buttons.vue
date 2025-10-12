@@ -127,6 +127,10 @@
 <script setup>
 import { ref } from 'vue'
 
+onMounted(() => {
+    trackEvent('page_view', { page: 'design_sandbox_buttons' })
+})
+
 const clickCount = ref(0)
 
 const buttonSizes = [

@@ -7,7 +7,6 @@
             sizeClasses[size],
         ]"
         :href="link"
-        :target="link ? '_blank' : undefined"
         :rel="link ? 'noopener noreferrer' : undefined"
         @click="link ? undefined : $emit('click', $event)"
     >
