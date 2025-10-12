@@ -3,7 +3,8 @@ import { useNitroApp } from "#imports"
 export type User = {
     id: string
     name: string
-    username: string
+    username: string,
+    avatarId: string
 }
 
 export type AuthTechnicalInfo = {
@@ -48,4 +49,9 @@ export async function createOrUpdateUser(user: User, authTechnicalInfo: AuthTech
         },
         { $set: { userId: user.id } }
     )
+}
+
+export async function setUserAvatar(user: User, avatarFilename: string) {
+    const db = useNitroApp().db
+    await db.collection('users').updateOne({ id: user.id }, { $set: { avatarFilename: avatarFilename } })
 }

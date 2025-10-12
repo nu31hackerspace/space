@@ -1,8 +1,9 @@
 import { createError, defineEventHandler, getCookie, readBody, setCookie, useNitroApp, useRuntimeConfig } from '#imports'
 import { discordAuth } from '~~/server/core/discord/auth'
-import { AuthTechnicalInfo, createOrUpdateUser, User } from '~~/server/core/user/init'
+import { AuthTechnicalInfo, createOrUpdateUser, setUserAvatar, User } from '~~/server/core/user/init'
 import { COUNTRY_HEADER_NAME, TRACKING_COOKIE_NAME } from '~~/server/tracking/const'
 import jwt from 'jsonwebtoken'
+import { FileStoreType } from '~~/server/plugins/3_file_store'
 
 export default defineEventHandler(async (event) => {
     const { code } = await readBody(event)
@@ -39,6 +40,7 @@ export default defineEventHandler(async (event) => {
         id: userId,
         name: name,
         username: username,
+        avatarId: userBody.avatar,
     }
 
     const authTechnicalInfo: AuthTechnicalInfo = {
@@ -48,6 +50,13 @@ export default defineEventHandler(async (event) => {
     }
 
     await createOrUpdateUser(user, authTechnicalInfo)
+
+    const fileStore = useNitroApp().fileStores.getFileStore(FileStoreType.UserAvatar)
+    const avatarUrl = "https://cdn.discordapp.com/avatars/" + discordUserId + "/" + user.avatarId + ".png"
+    const avatarFilename = 'avatar-' + discordUserId + '.png'
+    await fileStore.saveFileByUrl(avatarUrl, avatarFilename)
+
+    await setUserAvatar(user, avatarFilename)
 
     setCookie(event, 'jwt', jwtToken)
 
