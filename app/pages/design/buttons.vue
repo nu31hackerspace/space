@@ -124,8 +124,10 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
+import { onMounted } from 'vue'
+import { trackEvent } from '~~/app/utils/track'
 
 onMounted(() => {
     trackEvent('page_view', { page: 'design_sandbox_buttons' })

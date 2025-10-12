@@ -14,26 +14,18 @@
                     {{ user?.name }}
                 </span>
             </div>
-            <MainButton
-                v-else
-                buttonStyle="primary"
-                size="M"
-                icon="ic:baseline-discord"
-                label="Вхід для резедентів"
-                :link="data?.redirectUri"
-            />
             <ThemeSwitch />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useFetch } from '#imports'
+import { onMounted } from 'vue'
 import { useUser } from '~/composables/useUser'
 
 const { user, isLoggedIn, avatarUrl } = useUser()
 
-const { data } = await useFetch<{ redirectUri: string }>(
-    '/api/auth/discord/redirect'
-)
+onMounted(() => {
+    useUser().fetchUser()
+})
 </script>

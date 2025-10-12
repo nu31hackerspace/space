@@ -20,6 +20,8 @@ export const useUser = () => {
             })
             if (response.user) {
                 user.value = response.user
+            } else {
+                user.value = null
             }
         } catch (error) {
             console.error('Failed to fetch user:', error)

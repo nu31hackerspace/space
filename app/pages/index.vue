@@ -1,5 +1,18 @@
 <template>
-    <div class="min-h-screen text-label-primary">
+    <div class="min-h-screen bg-background-primary text-label-primary">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-end space-x-4 items-center">
+                <MainButton
+                    buttonStyle="primary"
+                    size="M"
+                    icon="ic:baseline-discord"
+                    label="Вхід для резедентів"
+                    :link="data?.redirectUri"
+                />
+                <ThemeSwitch />
+            </div>
+        </div>
+
         <div class="relative w-full">
             <div class="w-full h-full"></div>
             <div class="w-full aspect-[1920/1080] relative">
@@ -183,10 +196,29 @@
 </template>
 
 <script setup lang="ts">
+import { definePageMeta, navigateTo } from '#imports'
 import { onMounted } from 'vue'
 import { trackEvent } from '~~/app/utils/track'
 
-onMounted(() => {
-    trackEvent('page_view', { page: 'landing' })
+definePageMeta({
+    layout: 'void',
 })
+
+onMounted(async () => {
+    trackEvent('page_view', { page: 'landing' })
+
+    const { isLoggedIn, fetchUser } = useUser()
+    await fetchUser()
+    if (isLoggedIn.value) {
+        console.log('isLoggedIn', isLoggedIn)
+        navigateTo('/home')
+    }
+})
+
+import { useFetch } from '#imports'
+import { useUser } from '~/composables/useUser'
+
+const { data } = await useFetch<{ redirectUri: string }>(
+    '/api/auth/discord/redirect'
+)
 </script>

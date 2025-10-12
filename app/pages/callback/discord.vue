@@ -5,7 +5,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, useRoute, useRouter } from '#imports'
+import { definePageMeta, onMounted, useRoute, useRouter } from '#imports'
+
+definePageMeta({
+    layout: 'void',
+})
 
 const code = useRoute().query.code as string
 const router = useRouter()
