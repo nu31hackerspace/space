@@ -23,7 +23,7 @@ onMounted(async () => {
             },
         })
 
-        await router.push('/')
+        await router.push('/home')
     } catch (error) {
         console.error('Authorization failed:', error)
     }

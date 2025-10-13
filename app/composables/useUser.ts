@@ -40,10 +40,20 @@ export const useUser = () => {
         return null
     })
 
-    const logout = () => {
-        user.value = null
-        document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-        window.location.reload()
+    const logout = async () => {
+        try {
+            await $fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            })
+            user.value = null
+            window.location.href = '/'
+        } catch (error) {
+            console.error('Failed to logout:', error)
+            document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+            user.value = null
+            window.location.href = '/'
+        }
     }
 
     return {
