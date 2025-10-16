@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         mongoUri: 'mongodb://localhost:27017/nu31space',
         discordClientSecret: '',
+        discordBotToken: '',
         jwtSecret: 'test-jwt-secret',
         public: {
             baseUrl: 'http://localhost:3000',
