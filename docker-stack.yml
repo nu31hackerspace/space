@@ -12,6 +12,7 @@ services:
             - NUXT_MONGO_URI=${MONGO_URI}
             - NUXT_DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
             - NUXT_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+            - NUXT_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
             - NUXT_JWT_SECRET=${JWT_SECRET}
         deploy:
             update_config:
