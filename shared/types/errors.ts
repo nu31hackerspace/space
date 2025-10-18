@@ -1,0 +1,1 @@
+export const ERROR_USER_NOT_IN_GUILD_CODE = 10403

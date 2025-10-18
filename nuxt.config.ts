@@ -16,6 +16,8 @@ export default defineNuxtConfig({
             baseUrl: 'http://localhost:3000',
             gitCommitSha: 'local',
             discordClientId: '1418277247005229096',
+            discordGuildId: '1279831505492901910',
+            discordGuildMemberRoleId: '1280504520018755594',
         },
     },
     vite: {

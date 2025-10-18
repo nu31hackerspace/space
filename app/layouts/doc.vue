@@ -5,7 +5,7 @@
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <NuxtLink
-                    to="/home"
+                    to="/"
                     class="text-3xl font-bold text-accent-primary hover:opacity-80 transition-opacity"
                 >
                     NU31

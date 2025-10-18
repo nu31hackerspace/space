@@ -13,6 +13,7 @@ services:
             - NUXT_DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
             - NUXT_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
             - NUXT_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+            - NUXT_PUBLIC_DISCORD_GUILD_ID=${DISCORD_GUILD_ID}
             - NUXT_JWT_SECRET=${JWT_SECRET}
         deploy:
             update_config:
@@ -25,7 +26,7 @@ services:
             interval: 30s
             timeout: 10s
             retries: 3
-            start_period: 40s
+            start_period: 10s
 
 networks:
     infra_reverse-proxy:

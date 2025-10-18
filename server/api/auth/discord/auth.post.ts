@@ -1,34 +1,43 @@
-import { createError, defineEventHandler, getCookie, readBody, setCookie, useNitroApp, useRuntimeConfig } from '#imports'
+import { defineEventHandler, getCookie, readBody, setCookie, useNitroApp, useRuntimeConfig } from '#imports'
 import { discordAuth } from '~~/server/core/discord/auth'
 import { AuthTechnicalInfo, createOrUpdateUser, setUserAvatar, User } from '~~/server/core/user/init'
 import { COUNTRY_HEADER_NAME, TRACKING_COOKIE_NAME } from '~~/server/tracking/const'
 import jwt from 'jsonwebtoken'
 import { FileStoreType } from '~~/server/plugins/3_file_store'
+import { discordAvatarUrl } from '~~/server/core/discord/utils'
+import { checkIsUserInGuild, getUserByAuthToken, UserInGuildStatus } from '~~/server/core/discord/data/repository'
+import { ERROR_USER_NOT_IN_GUILD_CODE } from '~~/shared/types/errors'
+import type { AuthResponse } from '~~/shared/types/auth_response'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<AuthResponse> => {
     const { code } = await readBody(event)
     const userAgent = event.node.req.headers['user-agent'] as string
     const country = event.node.req.headers[COUNTRY_HEADER_NAME] as string
     const accessToken = await discordAuth(code)
 
-    const discordResponce = await fetch('https://discord.com/api/v10/users/@me', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-        },
-    })
+    const userBody: any = await getUserByAuthToken(accessToken)
+    useNitroApp().logger.info('Discord user getting successful', { user: userBody })
 
-    if (!discordResponce.ok) {
-        throw createError({
-            statusCode: discordResponce.status,
-            statusMessage: 'Discord user getting failed',
-        })
+    const discordUserId = userBody.id
+    useNitroApp().logger.info('Discord user ID', { discordUserId: discordUserId })
+
+    const userInGuildStatus = await checkIsUserInGuild(discordUserId)
+    if (userInGuildStatus !== UserInGuildStatus.InGuildWithRole) {
+        const step1Complete = userInGuildStatus === UserInGuildStatus.InGuildNoRole
+        const step2Complete = false
+
+        return {
+            success: false,
+            errorCode: ERROR_USER_NOT_IN_GUILD_CODE,
+            errorMessage: 'User is not in the guild or does not have required role',
+            stepStatus: {
+                step1Complete,
+                step2Complete,
+            },
+        }
     }
 
-    const userBody = await discordResponce.json()
-    useNitroApp().logger.info('Discord user getting successful', userBody)
-
     const name = userBody.global_name
-    const discordUserId = userBody.id
     const userId = 'discord:' + discordUserId
     const username = userBody.username
 
@@ -52,11 +61,13 @@ export default defineEventHandler(async (event) => {
     await createOrUpdateUser(user, authTechnicalInfo)
 
     const fileStore = useNitroApp().fileStores.getFileStore(FileStoreType.UserAvatar)
-    const avatarUrl = "https://cdn.discordapp.com/avatars/" + discordUserId + "/" + user.avatarId + ".png"
-    const avatarFilename = 'avatar-' + discordUserId + '.png'
-    await fileStore.saveFileByUrl(avatarUrl, avatarFilename)
+    const avatarUrl = discordAvatarUrl(discordUserId, user.avatarId)
 
-    await setUserAvatar(user, avatarFilename)
+    if (avatarUrl) {
+        const avatarFilename = 'avatar-' + user.id + '.png'
+        await fileStore.saveFileByUrl(avatarUrl as string, avatarFilename)
+        await setUserAvatar(user, avatarFilename)
+    }
 
     setCookie(event, 'jwt', jwtToken)
 
@@ -64,13 +75,20 @@ export default defineEventHandler(async (event) => {
     const createdUser = await db.collection('users').findOne({ id: userId })
 
     if (!createdUser) {
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'User not created',
-        })
+        useNitroApp().logger.error('User not created in database')
+        return {
+            success: false,
+            errorCode: 500,
+            errorMessage: 'User not created',
+            stepStatus: {
+                step1Complete: true,
+                step2Complete: true,
+            },
+        }
     }
 
     return {
+        success: true,
         user: {
             id: createdUser.id,
             name: createdUser.name,

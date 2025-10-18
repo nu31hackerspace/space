@@ -1,5 +1,5 @@
 import { Db, Stream } from 'mongodb'
-import { defineNitroPlugin } from '#imports'
+import { defineNitroPlugin, useNitroApp } from '#imports'
 import { GridFSBucket, GridFSBucketReadStream } from 'mongodb'
 
 export enum FileStoreType {
@@ -41,22 +41,43 @@ export class FileStore {
             throw new Error(`No body found when fetching file from URL: ${url}`);
         }
 
+        const existingFiles = await this.bucket.find({ filename }).toArray();
+        if (existingFiles.length > 0) {
+            const deletionPromises = existingFiles.map(async (file) => {
+                try {
+                    await this.bucket.delete(file._id);
+                } catch (error) {
+                    useNitroApp().logger.error('Error deleting existing file:', error);
+                }
+            });
+            await Promise.all(deletionPromises);
+        }
+
         const uploadStream = this.bucket.openUploadStream(filename);
+
+        const logger = useNitroApp().logger;
+        logger.info(`Starting to save file to GridFS from URL: ${url} with filename: ${filename}`);
 
         return new Promise((resolve, reject) => {
             stream.pipeTo(new WritableStream({
                 write(chunk) {
+                    logger.debug(`Writing chunk for file: ${filename}`);
                     uploadStream.write(chunk);
                 },
                 close() {
                     uploadStream.end();
+                    logger.info(`Finished uploading file: ${filename}. GridFS id: ${uploadStream.id}`);
                     resolve(uploadStream.id);
                 },
                 abort(err) {
                     uploadStream.destroy(err);
+                    logger.error(`Upload aborted for file: ${filename}`, err);
                     reject(err);
                 }
-            })).catch(reject);
+            })).catch((err) => {
+                logger.error(`Error during stream.pipeTo for file: ${filename}`, err);
+                reject(err);
+            });
         });
     }
 

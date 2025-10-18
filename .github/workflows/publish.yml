@@ -3,7 +3,7 @@ name: Deploy docker image and update production
 on:
     push:
         branches:
-            - 'main'
+            - "main"
 
 env:
     REGISTRY: ghcr.io
@@ -30,7 +30,7 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
               with:
-                  submodules: 'true'
+                  submodules: "true"
 
             - name: Log in to the Container registry
               uses: docker/login-action@v2
@@ -64,8 +64,9 @@ jobs:
                   echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> ./envfile
                   echo "DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }}" >> ./envfile
                   echo "DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }}" >> ./envfile
-                  echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ./envfile
                   echo "DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}" >> ./envfile
+                  echo "DISCORD_GUILD_ID=${{ vars.DISCORD_GUILD_ID }}" >> ./envfile
+                  echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ./envfile
 
             - name: Docker Stack Deploy
               uses: cssnr/stack-deploy-action@v1
