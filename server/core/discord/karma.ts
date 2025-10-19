@@ -167,10 +167,10 @@ export class KarmaService {
                     avatarUrl = `/api/user/discord:${member.discordId}/avatar.png`
                 }
                 return {
-                    discord_id: member.discord_id,
+                    discord_id: member.discordId,
                     username: member.username,
                     avatar_id: member.avatar_id ?? null,
-                    karma: karmaMap[member.discord_id] || 0,
+                    karma: karmaMap[member.discordId] || 0,
                     avatar_url: avatarUrl
                 }
             })
