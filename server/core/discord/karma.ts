@@ -144,7 +144,6 @@ export class KarmaService {
      */
     async getAllMembersWithKarma() {
         try {
-            // Get karma aggregation
             const karmaAggregation = await this.db.collection('karma_events').aggregate([
                 {
                     $group: {
@@ -154,21 +153,17 @@ export class KarmaService {
                 }
             ]).toArray()
 
-            // Map for quick lookup: discordId -> karma
             const karmaMap: Record<string, number> = {}
             for (const k of karmaAggregation) {
                 karmaMap[k._id] = k.total_karma
             }
 
-            // Get all discord members
             const members = await this.db.collection('discord_members').find({}).toArray()
 
-            // Compose final list, including avatar URL
             const membersWithKarma = members.map(member => {
                 let avatarUrl: string | null = null
                 if (member.avatarFilename) {
-                    // Build URL matching the style used in avatar.png.get.ts route
-                    avatarUrl = `/api/user/discord:${member.discord_id}/avatar.png`
+                    avatarUrl = `/api/user/discord:${member.discordId}/avatar.png`
                 }
                 return {
                     discord_id: member.discord_id,
@@ -179,7 +174,6 @@ export class KarmaService {
                 }
             })
 
-            // Sort by karma descending
             membersWithKarma.sort((a, b) => b.karma - a.karma)
 
             return {
