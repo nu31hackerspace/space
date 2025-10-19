@@ -17,36 +17,18 @@ export async function registerDiscordCommands() {
     const commands = [
         {
             name: 'karma',
-            description: 'Give karma to users',
+            description: 'Give karma to a user',
             options: [
                 {
-                    name: 'user1',
-                    description: 'First user to give karma',
+                    name: 'user',
+                    description: 'User to give karma',
                     type: ApplicationCommandOptionType.User,
                     required: true,
                 },
                 {
-                    name: 'user2',
-                    description: 'Second user to give karma',
-                    type: ApplicationCommandOptionType.User,
-                    required: false,
-                },
-                {
-                    name: 'user3',
-                    description: 'Third user to give karma',
-                    type: ApplicationCommandOptionType.User,
-                    required: false,
-                },
-                {
-                    name: 'user4',
-                    description: 'Fourth user to give karma',
-                    type: ApplicationCommandOptionType.User,
-                    required: false,
-                },
-                {
-                    name: 'user5',
-                    description: 'Fifth user to give karma',
-                    type: ApplicationCommandOptionType.User,
+                    name: 'reason',
+                    description: 'Reason for giving karma',
+                    type: ApplicationCommandOptionType.String,
                     required: false,
                 },
             ],

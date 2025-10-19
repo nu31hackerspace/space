@@ -8,7 +8,8 @@ export type KarmaCount = {
 
 export type GiveKarmaResult = {
     success: boolean
-    karma_counts: KarmaCount[]
+    receiver_discord_id: string
+    total_karma: number
     timestamp: string
 }
 
@@ -22,68 +23,68 @@ export class KarmaService {
     }
 
     /**
-     * Give karma from one user to multiple receivers
+     * Give karma from one user to a receiver
      * @param giverDiscordId - Discord ID of the user giving karma
-     * @param receiverDiscordIds - Array of Discord IDs receiving karma
-     * @returns Result containing karma counts for each receiver
+     * @param receiverDiscordId - Discord ID of the user receiving karma
+     * @param reason - Optional reason for giving karma
+     * @returns Result containing karma count for the receiver
      * @throws Error if validation fails or database operation fails
      */
     async giveKarma(
         giverDiscordId: string,
-        receiverDiscordIds: string[]
+        receiverDiscordId: string,
+        reason?: string
     ): Promise<GiveKarmaResult> {
-        // Validate inputs
         if (!giverDiscordId) {
             throw new Error('giver_discord_id is required')
         }
 
-        if (!receiverDiscordIds || !Array.isArray(receiverDiscordIds) || receiverDiscordIds.length === 0) {
-            throw new Error('receiver_discord_ids must be a non-empty array')
+        if (!receiverDiscordId) {
+            throw new Error('receiver_discord_id is required')
         }
 
-        if (receiverDiscordIds.includes(giverDiscordId)) {
+        if (receiverDiscordId === giverDiscordId) {
             throw new Error('Хтось пробує сам собі дати карму!')
         }
 
         try {
             const timestamp = new Date()
-            const karmaCounts: KarmaCount[] = []
 
-            this.logger.info('Giving karma to receivers:', { giverDiscordId: giverDiscordId, receiverDiscordIds: receiverDiscordIds })
+            this.logger.info('Giving karma to receiver:', {
+                giverDiscordId,
+                receiverDiscordId,
+                reason: reason || 'No reason provided'
+            })
 
-            // Check if receivers exist in discord_members collection
-            const existingMembers = await this.db.collection('discord_members').find({
-                discordId: { $in: receiverDiscordIds }
-            }).project({ discordId: 1 }).toArray()
+            const existingMember = await this.db.collection('discord_members').findOne({
+                discordId: receiverDiscordId
+            })
 
-            const existingIds = new Set(existingMembers.map((m: any) => m.discordId))
-            const filteredDiscordIds = receiverDiscordIds.filter(id => existingIds.has(id))
-
-            if (filteredDiscordIds.length === 0) {
-                throw new Error('No valid receiver_discord_ids found in discord_members')
+            if (!existingMember) {
+                throw new Error('Receiver not found in discord_members')
             }
 
-            for (const receiverId of filteredDiscordIds) {
-                await this.db.collection('karma_events').insertOne({
-                    giver_discord_id: giverDiscordId,
-                    receiver_discord_id: receiverId,
-                    amount: 1,
-                    timestamp: timestamp
-                })
-
-                const totalKarma = await this.getTotalKarma(receiverId)
-
-                karmaCounts.push({
-                    receiver_discord_id: receiverId,
-                    total_karma: totalKarma
-                })
-
-                this.logger.info(`Karma given: ${giverDiscordId} -> ${receiverId}, new total: ${totalKarma}`)
+            const karmaEvent: any = {
+                giver_discord_id: giverDiscordId,
+                receiver_discord_id: receiverDiscordId,
+                amount: 1,
+                timestamp: timestamp
             }
+
+            if (reason) {
+                karmaEvent.reason = reason
+            }
+
+            await this.db.collection('karma_events').insertOne(karmaEvent)
+
+            const totalKarma = await this.getTotalKarma(receiverDiscordId)
+
+            this.logger.info(`Karma given: ${giverDiscordId} -> ${receiverDiscordId}, new total: ${totalKarma}${reason ? `, reason: ${reason}` : ''}`)
 
             return {
                 success: true,
-                karma_counts: karmaCounts,
+                receiver_discord_id: receiverDiscordId,
+                total_karma: totalKarma,
                 timestamp: timestamp.toISOString()
             }
         } catch (error) {
