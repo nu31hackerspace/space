@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.12",
+        "discord.js": "^14.23.2",
         "jsonwebtoken": "^9.0.2",
         "mongodb": "^6.18.0",
         "nuxt": "^4.0.3",

@@ -52,6 +52,14 @@ async function createIndexes(db: Db, logger: any) {
             }
         )
 
+        await db.collection('discord_members').createIndex(
+            { id: 1 },
+            {
+                unique: true,
+                name: 'unique_discord_member_id'
+            }
+        )
+
         logger.info('Database indexes created successfully')
     } catch (error) {
         logger.error('Failed to create database indexes:', error)

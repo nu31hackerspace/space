@@ -8,6 +8,7 @@ import { discordAvatarUrl } from '~~/server/core/discord/utils'
 import { checkIsUserInGuild, getUserByAuthToken, UserInGuildStatus } from '~~/server/core/discord/data/repository'
 import { ERROR_USER_NOT_IN_GUILD_CODE } from '~~/shared/types/errors'
 import type { AuthResponse } from '~~/shared/types/auth_response'
+import { addNewDiscordMembers, DiscordMember } from '~~/server/core/discord/members'
 
 export default defineEventHandler(async (event): Promise<AuthResponse> => {
     const { code } = await readBody(event)
@@ -73,6 +74,14 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
 
     const db = useNitroApp().db
     const createdUser = await db.collection('users').findOne({ id: userId })
+
+    const discordMember: DiscordMember = {
+        discordId: discordUserId,
+        username: username,
+        avatarId: userBody.avatar,
+    }
+
+    await addNewDiscordMembers(discordMember)
 
     if (!createdUser) {
         useNitroApp().logger.error('User not created in database')

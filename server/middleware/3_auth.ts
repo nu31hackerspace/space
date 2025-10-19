@@ -21,6 +21,9 @@ export default defineEventHandler(async (event) => {
                 sessionKey: decoded.sessionKey,
                 userId: decoded.userId,
             }
+
+            db.collection('users').updateOne({ id: decoded.userId }, { $set: { lastActivity: new Date() } })
+
             event.context.user = userSession
         } catch (e) {
             deleteCookie(event, 'jwt')

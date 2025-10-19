@@ -48,7 +48,10 @@ export async function getDiscordGuildMembers(): Promise<DiscordMember[]> {
     const members = await discordResponce.json()
 
     const discordMembers: DiscordMember[] = members
-        .filter((member: any) => member.roles.includes(discordGuildMemberRoleId))
+        .filter((member: any) =>
+            member.roles.includes(discordGuildMemberRoleId) &&
+            !member.user.bot
+        )
         .map((member: any) => ({
             discordId: member.user.id,
             username: member.user.username,

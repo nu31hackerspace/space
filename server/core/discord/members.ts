@@ -1,7 +1,6 @@
 import { useNitroApp } from "#imports"
 import { FileStoreType } from "~~/server/plugins/3_file_store";
 import { discordAvatarUrl } from "./utils";
-import { setUserAvatar } from "../user/init";
 
 export type DiscordMember = {
     discordId: string,
@@ -23,6 +22,7 @@ export async function syncDiscordMembers(members: DiscordMember[]) {
             );
         } else {
             await db.collection('discord_members').insertOne({
+                id: 'discord:' + member.discordId,
                 discordId: member.discordId,
                 username: member.username,
                 avatarId: member.avatarId
@@ -48,7 +48,12 @@ export async function syncDiscordMembers(members: DiscordMember[]) {
 }
 
 export async function addNewDiscordMembers(member: DiscordMember) {
-    const db = useNitroApp().db
+    useNitroApp().logger.info('Adding new discord member:', member.discordId, 'username:', member.username, 'avatarId:', member.avatarId)
+    const db = useNitroApp().db;
+    const existingMember = await db.collection('discord_members').findOne({ discordId: member.discordId });
+    if (existingMember) {
+        return;
+    }
     await db.collection('discord_members').insertOne({
         discordId: member.discordId,
         username: member.username,

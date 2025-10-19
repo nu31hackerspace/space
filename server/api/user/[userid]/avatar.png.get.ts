@@ -13,14 +13,7 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    if (userSession.userId !== avatarUserId) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-        });
-    }
-
-    const user = await useNitroApp().db.collection('users').findOne({ id: avatarUserId });
+    const user = await useNitroApp().db.collection('discord_members').findOne({ id: avatarUserId });
 
     const avatarFilename = user?.avatarFilename;
     if (!avatarFilename) {
