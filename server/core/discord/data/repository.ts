@@ -71,6 +71,7 @@ export async function getUserByAuthToken(authToken: string): Promise<DiscordMemb
     if (!discordResponce.ok) {
         useNitroApp().logger.error('Discord user getting failed', {
             error: discordResponce.statusText,
+            body: await discordResponce.json(),
             hint: 'Make sure the bot is added to the guild and has SERVER MEMBERS INTENT enabled in Discord Developer Portal'
         })
         throw createError({

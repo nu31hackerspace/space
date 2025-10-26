@@ -14,7 +14,10 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
     const { code } = await readBody(event)
     const userAgent = event.node.req.headers['user-agent'] as string
     const country = event.node.req.headers[COUNTRY_HEADER_NAME] as string
+    useNitroApp().logger.info('Discord auth code', { code: code })
     const accessToken = await discordAuth(code)
+
+    useNitroApp().logger.info('Discord access token getting successful', { accessToken: accessToken })
 
     const userBody: any = await getUserByAuthToken(accessToken)
     useNitroApp().logger.info('Discord user getting successful', { user: userBody })

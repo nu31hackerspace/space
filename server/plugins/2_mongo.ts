@@ -60,6 +60,14 @@ async function createIndexes(db: Db, logger: any) {
             }
         )
 
+        await db.collection('electricity_trackers').createIndex(
+            { slug: 1 },
+            {
+                unique: true,
+                name: 'unique_electricity_tracker_slug'
+            }
+        )
+
         logger.info('Database indexes created successfully')
     } catch (error) {
         logger.error('Failed to create database indexes:', error)
