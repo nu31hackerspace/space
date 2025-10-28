@@ -73,7 +73,9 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
         await setUserAvatar(user, avatarFilename)
     }
 
-    setCookie(event, 'jwt', jwtToken)
+    setCookie(event, 'jwt', jwtToken, {
+        expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+    })
 
     const db = useNitroApp().db
     const createdUser = await db.collection('users').findOne({ id: userId })
