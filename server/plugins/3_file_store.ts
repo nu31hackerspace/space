@@ -1,6 +1,6 @@
-import { Db, Stream } from 'mongodb'
+import { Db } from 'mongodb'
 import { defineNitroPlugin, useNitroApp } from '#imports'
-import { GridFSBucket, GridFSBucketReadStream } from 'mongodb'
+import { GridFSBucket } from 'mongodb'
 
 export enum FileStoreType {
     UserAvatar = "user_avatar",
