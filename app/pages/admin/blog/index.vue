@@ -21,8 +21,6 @@
                 <p v-if="createError" class="text-red-500 mt-2">{{ createError }}</p>
                 <p v-if="createOk" class="text-green-600 mt-2">Created</p>
             </div>
-
-
         </div>
 
         <div class="mt-10 bg-fill-secondary border border-separator-primary rounded-xl p-4">

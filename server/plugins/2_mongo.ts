@@ -68,6 +68,11 @@ async function createIndexes(db: Db, logger: any) {
             }
         )
 
+        await db.collection('electricity_tracker_alive').createIndex(
+            { deviceSlug: 1, timestamp: -1 },
+            { name: 'deviceSlug_timestamp_desc' }
+        )
+
         const blogPosts = db.collection('blogPosts')
         await blogPosts.createIndex(
             { slug: 1 },
