@@ -6,19 +6,11 @@ const TEN_MIN_MS = 10 * 60 * 1000
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 
 export default defineEventHandler(async (event) => {
-    const user = event.context.user
-    if (!user) {
-        throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-    }
-
     const slug = getRouterParam(event, 'slug')
-    if (!slug) {
-        throw createError({ statusCode: 400, statusMessage: 'Missing slug' })
-    }
 
     const db = useNitroApp().db
 
-    const tracker = await db.collection('electricity_trackers').findOne({ slug, userId: user.userId })
+    const tracker = await db.collection('electricity_trackers').findOne({ slug })
     if (!tracker) {
         throw createError({ statusCode: 404, statusMessage: 'Tracker not found' })
     }
