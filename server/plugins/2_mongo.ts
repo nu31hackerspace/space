@@ -68,6 +68,21 @@ async function createIndexes(db: Db, logger: any) {
             }
         )
 
+        const blogPosts = db.collection('blogPosts')
+        await blogPosts.createIndex(
+            { slug: 1 },
+            {
+                unique: true,
+                name: 'unique_blog_slug'
+            }
+        )
+        await blogPosts.createIndex(
+            { status: 1, updatedAt: -1 },
+            {
+                name: 'status_updatedAt_idx'
+            }
+        )
+
         logger.info('Database indexes created successfully')
     } catch (error) {
         logger.error('Failed to create database indexes:', error)
