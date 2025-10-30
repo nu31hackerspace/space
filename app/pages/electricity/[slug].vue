@@ -14,15 +14,8 @@
             <div class="bg-fill-secondary p-4 rounded-xl border border-separator-primary md:col-span-2">
                 <div class="flex items-center gap-3 mb-2">
                     <span :class="[
-                        'inline-flex items-center gap-2 text-sm font-semibold px-3 py-1 rounded-full',
-                        currentStatus === 'online'
-                            ? 'bg-green-500/10 text-green-400 border border-green-500/30'
-                            : 'bg-red-500/10 text-red-400 border border-red-500/30'
+                        'inline-flex items-center gap-2 text-sm font-semibold px-3 py-1 rounded-full border',
                     ]">
-                        <span :class="[
-                            'inline-block w-2 h-2 rounded-full',
-                            currentStatus === 'online' ? 'bg-green-400' : 'bg-red-400'
-                        ]" />
                         {{ currentStatus === 'online' ? 'Online' : 'Offline' }}
                     </span>
                 </div>
