@@ -42,13 +42,18 @@
                         class="flex-1 px-4 py-2 bg-fill-primary border border-separator-primary rounded-lg text-label-primary text-sm font-mono" />
                     <MainButton @click="copyToken" label="Copy" button-style="primary" icon="mdi:content-copy" />
                 </div>
+                <div v-if="qrImageUrl" class="flex flex-col items-center gap-2">
+                    <img :src="qrImageUrl" alt="Tracker token QR"
+                        class="rounded-lg border border-separator-primary bg-fill-primary p-2" />
+                    <p class="text-xs text-label-secondary">Scan this QR with your phone to transfer the token</p>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useFetch, ref } from '#imports'
+import { definePageMeta, useFetch, ref, watch } from '#imports'
 import type { ElectricityTracker } from '~~/shared/types/electricity_device'
 import MainButton from '~/components/MainButton.vue'
 
@@ -64,6 +69,22 @@ const newTrackerName = ref('')
 const isAdding = ref(false)
 const showTokenDialog = ref(false)
 const newTrackerToken = ref('')
+const qrImageUrl = ref('')
+
+watch(newTrackerToken, async (token) => {
+    if (!process.client) return
+    if (!token) {
+        qrImageUrl.value = ''
+        return
+    }
+    try {
+        const { toDataURL } = await import('qrcode')
+        qrImageUrl.value = await toDataURL(token, { width: 220, margin: 1 })
+    } catch (e) {
+        console.error('Failed to generate QR code', e)
+        qrImageUrl.value = ''
+    }
+})
 
 const addTracker = async () => {
     if (!newTrackerName.value.trim() || isAdding.value) return
