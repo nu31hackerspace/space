@@ -86,13 +86,10 @@ export default defineEventHandler(async (event) => {
     for (const ping of timestamps) {
         if (!prevPing) {
             if (currentState === 'offline') {
-                // Transition to online at first ping
                 history.push({ status: 'offline', start: currentStart, end: ping })
                 currentState = 'online'
                 currentStart = ping
             } else {
-                // Already online; keep session from week start
-                // no interval push here
             }
             prevPing = ping
             continue
@@ -113,10 +110,14 @@ export default defineEventHandler(async (event) => {
         prevPing = ping
     }
 
-    // Close the current interval to now (end null for current state)
     history.push({ status: currentState, start: currentStart, end: null })
 
-    // Determine current.since from the last interval
+    history.sort((a, b) => {
+        const aEnd = a.end ? new Date(a.end).getTime() : Infinity
+        const bEnd = b.end ? new Date(b.end).getTime() : Infinity
+        return bEnd - aEnd
+    })
+
     const lastInterval = history[history.length - 1]
     current.since = lastInterval.start
 
