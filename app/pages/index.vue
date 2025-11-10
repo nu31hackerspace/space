@@ -152,7 +152,7 @@
             </div>
 
             <div class="border-t border-separator-primary pt-16">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                     <div>
                         <h3 class="text-2xl font-bold mb-4 text-accent-primary">
                             Контакти
@@ -189,6 +189,12 @@
                             ></MainButton>
                         </div>
                     </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-accent-primary">
+                        Розташування
+                    </h3>
+                    <LocationMap />
                 </div>
             </div>
         </div>
