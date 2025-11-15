@@ -1,16 +1,24 @@
 <template>
     <div class="min-h-screen bg-background-primary text-label-primary">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div>
-                    <MainBadge v-if="!electricityLoading && electricityStatus" :variant="electricityBadgeVariant"
-                        :label="electricityBadgeLabel" />
-                </div>
-                <div class="flex items-center space-x-4">
-                    <MainButton buttonStyle="primary" size="M" icon="ic:baseline-discord" label="Вхід для резедентів"
-                        :link="data?.redirectUri" />
-                    <ThemeSwitch />
-                </div>
+        <div class="container mx-auto px-4 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="w-full sm:w-auto">
+                <MainBadge
+                    v-if="!electricityLoading && electricityStatus"
+                    :variant="electricityBadgeVariant"
+                    :label="electricityBadgeLabel"
+                    class="w-full sm:w-auto mb-4 sm:mb-0"
+                />
+            </div>
+            <div class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row">
+                <MainButton
+                    buttonStyle="primary"
+                    size="M"
+                    icon="ic:baseline-discord"
+                    label="Вхід для резедентів"
+                    :link="data?.redirectUri"
+                    class="w-full sm:w-auto"
+                />
+                <ThemeSwitch  />
             </div>
         </div>
 
