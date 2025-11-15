@@ -13,11 +13,10 @@
         <div class="w-full grid gap-4 md:grid-cols-3">
             <div class="bg-fill-secondary p-4 rounded-xl border border-separator-primary md:col-span-2">
                 <div class="flex items-center gap-3 mb-2">
-                    <span :class="[
-                        'inline-flex items-center gap-2 text-sm font-semibold px-3 py-1 rounded-full border',
-                    ]">
-                        {{ currentStatus === 'online' ? 'Online' : 'Offline' }}
-                    </span>
+                    <MainBadge
+                        :variant="currentStatus === 'online' ? 'success' : 'error'"
+                        :label="currentStatus === 'online' ? 'світло є' : 'світла немає'"
+                    />
                 </div>
                 <p class="text-sm text-label-secondary">
                     Last seen: {{ formatDate(data?.current.lastAliveAt) }}
