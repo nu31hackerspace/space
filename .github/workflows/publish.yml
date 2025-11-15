@@ -68,6 +68,7 @@ jobs:
                   echo "DISCORD_GUILD_MEMBER_ROLE_ID=${{ vars.DISCORD_GUILD_MEMBER_ROLE_ID }}" >> ./envfile
                   echo "DISCORD_GUILD_ID=${{ vars.DISCORD_GUILD_ID }}" >> ./envfile
                   echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ./envfile
+                  echo "SPACE_ELECTRICITY_TRACKER_SLUG=${{ vars.SPACE_ELECTRICITY_TRACKER_SLUG }}" >> ./envfile
 
             - name: Docker Stack Deploy
               uses: cssnr/stack-deploy-action@v1

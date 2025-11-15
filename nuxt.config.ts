@@ -18,6 +18,7 @@ export default defineNuxtConfig({
             discordClientId: '1418277247005229096',
             discordGuildId: '1279831505492901910',
             discordGuildMemberRoleId: '1280504520018755594',
+            spaceElectricityTrackerSlug: 'nu31',
         },
     },
     vite: {
