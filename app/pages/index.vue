@@ -2,23 +2,13 @@
     <div class="min-h-screen bg-background-primary text-label-primary">
         <div class="container mx-auto px-4 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="w-full sm:w-auto">
-                <MainBadge
-                    v-if="!electricityLoading && electricityStatus"
-                    :variant="electricityBadgeVariant"
-                    :label="electricityBadgeLabel"
-                    class="w-full sm:w-auto mb-4 sm:mb-0"
-                />
+                <MainBadge v-if="!electricityLoading && electricityStatus" :variant="electricityBadgeVariant"
+                    :label="electricityBadgeLabel" class="w-full sm:w-auto mb-4 sm:mb-0" />
             </div>
             <div class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row">
-                <MainButton
-                    buttonStyle="primary"
-                    size="M"
-                    icon="ic:baseline-discord"
-                    label="Вхід для резедентів"
-                    :link="data?.redirectUri"
-                    class="w-full sm:w-auto"
-                />
-                <ThemeSwitch  />
+                <MainButton buttonStyle="primary" size="M" icon="ic:baseline-discord" label="Вхід для резедентів"
+                    :link="data?.redirectUri" class="w-full sm:w-auto" />
+                <ThemeSwitch />
             </div>
         </div>
 
@@ -119,6 +109,17 @@
                 </MainButton>
             </div>
 
+            <div v-if="mediaPosts && mediaPosts.length > 0" class="mb-20">
+                <h2 class="text-3xl font-bold mb-8 text-center text-accent-primary">
+                    Медіа про нас
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <MediaPostCard v-for="post in mediaPosts" :key="post.id" :title="post.title"
+                        :source-url="post.sourceUrl"
+                        :image-url="post.imageFilename ? `/api/media/image/${post.imageFilename}` : undefined" />
+                </div>
+            </div>
+
             <div class="border-t border-separator-primary pt-16">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
@@ -174,6 +175,14 @@ const {
     badgeLabel: electricityBadgeLabel,
     fetchStatus: fetchElectricityStatus,
 } = useElectricityStatus()
+
+const { data: mediaPosts } = await useFetch<Array<{
+    id: string
+    title: string
+    sourceUrl: string
+    imageFilename: string
+    createdAt: string
+}>>('/api/media')
 
 onMounted(async () => {
     trackEvent('page_view', { page: 'landing' })

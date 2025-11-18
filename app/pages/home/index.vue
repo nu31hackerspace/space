@@ -61,6 +61,12 @@ const cards = [
         title: 'Blog Admin',
         description: 'Create and edit blog articles',
     },
+    {
+        route: '/admin/media',
+        icon: 'mdi:newspaper-variant',
+        title: 'Медіа про нас',
+        description: 'Керування медіа постами для головної сторінки',
+    },
 ]
 
 onMounted(() => {

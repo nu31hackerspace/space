@@ -4,6 +4,7 @@ import { GridFSBucket } from 'mongodb'
 
 export enum FileStoreType {
     UserAvatar = "user_avatar",
+    MediaPostImage = "media_post_image",
     Other = "other"
 }
 
@@ -83,6 +84,21 @@ export class FileStore {
 
     public async openDownloadStreamByName(filename: string): Promise<NodeJS.ReadableStream> {
         return this.bucket.openDownloadStreamByName(filename);
+    }
+
+    public async deleteFileByName(filename: string): Promise<void> {
+        const existingFiles = await this.bucket.find({ filename }).toArray();
+        if (existingFiles.length > 0) {
+            const deletionPromises = existingFiles.map(async (file) => {
+                try {
+                    await this.bucket.delete(file._id);
+                } catch (error) {
+                    useNitroApp().logger.error('Error deleting file:', error);
+                    throw error;
+                }
+            });
+            await Promise.all(deletionPromises);
+        }
     }
 }
 
