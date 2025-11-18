@@ -5,6 +5,7 @@ import { GridFSBucket } from 'mongodb'
 export enum FileStoreType {
     UserAvatar = "user_avatar",
     MediaPostImage = "media_post_image",
+    LandingGalleryImage = "landing_gallery_image",
     Other = "other"
 }
 
@@ -99,6 +100,36 @@ export class FileStore {
             });
             await Promise.all(deletionPromises);
         }
+    }
+
+    public async saveFileFromBuffer(buffer: Buffer, filename: string): Promise<any> {
+        const existingFiles = await this.bucket.find({ filename }).toArray();
+        if (existingFiles.length > 0) {
+            const deletionPromises = existingFiles.map(async (file) => {
+                try {
+                    await this.bucket.delete(file._id);
+                } catch (error) {
+                    useNitroApp().logger.error('Error deleting existing file:', error);
+                }
+            });
+            await Promise.all(deletionPromises);
+        }
+
+        const uploadStream = this.bucket.openUploadStream(filename);
+        const logger = useNitroApp().logger;
+        logger.info(`Starting to save file to GridFS from buffer with filename: ${filename}`);
+
+        return new Promise((resolve, reject) => {
+            uploadStream.on('finish', () => {
+                logger.info(`Finished uploading file: ${filename}. GridFS id: ${uploadStream.id}`);
+                resolve(uploadStream.id);
+            });
+            uploadStream.on('error', (err) => {
+                logger.error(`Error uploading file: ${filename}`, err);
+                reject(err);
+            });
+            uploadStream.end(buffer);
+        });
     }
 }
 

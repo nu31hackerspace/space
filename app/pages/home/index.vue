@@ -67,6 +67,12 @@ const cards = [
         title: 'Медіа про нас',
         description: 'Керування медіа постами для головної сторінки',
     },
+    {
+        route: '/admin/gallery',
+        icon: 'mdi:image-multiple',
+        title: 'Галерея',
+        description: 'Керування зображеннями галереї',
+    },
 ]
 
 onMounted(() => {

@@ -120,6 +120,25 @@
                 </div>
             </div>
 
+            <div v-if="galleryImages && galleryImages.length > 0" class="mb-20">
+                <h2 class="text-3xl font-bold mb-8 text-center text-accent-primary">
+                    Галерея
+                </h2>
+                <div class="overflow-x-auto">
+                    <div class="flex gap-4 pb-4" style="scroll-snap-type: x mandatory; scroll-behavior: smooth;">
+                        <div v-for="image in galleryImages" :key="image.id" class="flex-shrink-0"
+                            style="scroll-snap-align: start;">
+                            <div
+                                class="w-64 h-64 md:w-80 md:h-80 rounded-xl overflow-hidden bg-fill-tertiary border border-separator-primary">
+                                <img :src="`/api/gallery/image/${image.imageFilename}`"
+                                    :alt="image.altText || 'Gallery image'" class="w-full h-full object-cover"
+                                    loading="lazy" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="border-t border-separator-primary pt-16">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
@@ -183,6 +202,13 @@ const { data: mediaPosts } = await useFetch<Array<{
     imageFilename: string
     createdAt: string
 }>>('/api/media')
+
+const { data: galleryImages } = await useFetch<Array<{
+    id: string
+    imageFilename: string
+    altText: string
+    createdAt: string
+}>>('/api/gallery')
 
 onMounted(async () => {
     trackEvent('page_view', { page: 'landing' })
