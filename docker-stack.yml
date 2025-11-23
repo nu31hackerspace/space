@@ -22,7 +22,7 @@ services:
                 order: start-first
         networks:
             - infra_reverse-proxy
-            - infra_mongo
+            - infra_mongo-rs-net
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/api/service/health"]
             interval: 30s
@@ -33,5 +33,5 @@ services:
 networks:
     infra_reverse-proxy:
         external: true
-    infra_mongo:
+    infra_mongo-rs-net:
         external: true
