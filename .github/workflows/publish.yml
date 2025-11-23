@@ -60,15 +60,15 @@ jobs:
 
             - name: Create env file
               run: |
-                  echo "GIT_COMMIT_HASH=${{ github.sha }}" >> ./envfile
-                  echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> ./envfile
-                  echo "DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }}" >> ./envfile
-                  echo "DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }}" >> ./envfile
-                  echo "DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}" >> ./envfile
-                  echo "DISCORD_GUILD_MEMBER_ROLE_ID=${{ vars.DISCORD_GUILD_MEMBER_ROLE_ID }}" >> ./envfile
-                  echo "DISCORD_GUILD_ID=${{ vars.DISCORD_GUILD_ID }}" >> ./envfile
-                  echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ./envfile
-                  echo "SPACE_ELECTRICITY_TRACKER_SLUG=${{ vars.SPACE_ELECTRICITY_TRACKER_SLUG }}" >> ./envfile
+                  echo "GIT_COMMIT_HASH='${{ github.sha }}'" >> ./envfile
+                  echo "MONGO_URI='${{ secrets.MONGO_URI }}'" >> ./envfile
+                  echo "DISCORD_CLIENT_ID='${{ vars.DISCORD_CLIENT_ID }}'" >> ./envfile
+                  echo "DISCORD_CLIENT_SECRET='${{ secrets.DISCORD_CLIENT_SECRET }}'" >> ./envfile
+                  echo "DISCORD_BOT_TOKEN='${{ secrets.DISCORD_BOT_TOKEN }}'" >> ./envfile
+                  echo "DISCORD_GUILD_MEMBER_ROLE_ID='${{ vars.DISCORD_GUILD_MEMBER_ROLE_ID }}'" >> ./envfile
+                  echo "DISCORD_GUILD_ID='${{ vars.DISCORD_GUILD_ID }}'" >> ./envfile
+                  echo "JWT_SECRET='${{ secrets.JWT_SECRET }}'" >> ./envfile
+                  echo "SPACE_ELECTRICITY_TRACKER_SLUG='${{ vars.SPACE_ELECTRICITY_TRACKER_SLUG }}'" >> ./envfile
 
             - name: Docker Stack Deploy
               uses: cssnr/stack-deploy-action@v1
