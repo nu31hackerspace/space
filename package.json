@@ -12,7 +12,8 @@
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
-        "format:lint": "npm run format && npm run lint:fix"
+        "format:lint": "npm run format && npm run lint:fix",
+        "test": "vitest"
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.12",
@@ -35,6 +36,7 @@
         "eslint": "^9.35.0",
         "eslint-plugin-vue": "^10.4.0",
         "prettier": "^3.6.2",
-        "tailwindcss": "^4.1.12"
+        "tailwindcss": "^4.1.12",
+        "vitest": "^4.0.16"
     }
 }

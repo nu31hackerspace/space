@@ -19,7 +19,18 @@ export interface ImageBlock extends ContentBlockBase {
     imageAlt?: string
 }
 
-export type ContentBlock = HeaderBlock | TextBlock | ImageBlock
+export interface LinkBlock extends ContentBlockBase {
+    type: 'link'
+    linkUrl: string
+    linkText: string
+}
+
+export interface TagsBlock extends ContentBlockBase {
+    type: 'tags'
+    tags: string[]
+}
+
+export type ContentBlock = HeaderBlock | TextBlock | ImageBlock | LinkBlock | TagsBlock
 
 export interface ContentResponse {
     blocks: ContentBlock[]

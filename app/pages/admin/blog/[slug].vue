@@ -23,8 +23,7 @@
                 <textarea v-model="markdown" rows="24" placeholder="markdown"
                     class="w-full p-3 rounded bg-transparent border border-separator-primary text-label-primary font-mono"></textarea>
                 <div class="flex items-center gap-2">
-                    <button class="bg-accent-primary text-white px-4 py-2 rounded hover:opacity-90" @click="save"
-                        :disabled="saving">{{ saving ? 'Saving…' : 'Save' }}</button>
+                    <MainButton @click="save" :disabled="saving">{{ saving ? 'Saving…' : 'Save' }}</MainButton>
                     <span v-if="saveMsg" class="text-green-600">{{ saveMsg }}</span>
                     <span v-if="errorMsg" class="text-red-500">{{ errorMsg }}</span>
                 </div>

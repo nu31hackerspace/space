@@ -19,8 +19,45 @@ export function parseMarkdownToBlocks(markdownContent: string): ContentBlock[] {
         }
     }
 
+    let inTagsBlock = false
+    let currentTags: string[] = []
+
     for (const line of lines) {
         const trimmedLine = line.trim()
+
+        if (trimmedLine === '---') {
+            flushTextBlock()
+            if (inTagsBlock) {
+                // End of tags block
+                if (currentTags.length > 0) {
+                    blocks.push({
+                        type: 'tags',
+                        tags: currentTags
+                    })
+                }
+                currentTags = []
+                inTagsBlock = false
+            } else {
+                // Start of tags block (potentially)
+                // We assume if we see --- it might be tags. 
+                // But we need to ensure we don't treat HRs as tags start if we are not expecting it.
+                // For this simple implementation, we toggle mode.
+                inTagsBlock = true
+            }
+            continue
+        }
+
+        if (inTagsBlock) {
+            // Simple parser for tags:
+            // tags:
+            //   - tag1
+            //   - tag2
+            if (trimmedLine === 'tags:') continue
+            if (trimmedLine.startsWith('- ')) {
+                currentTags.push(trimmedLine.substring(2).trim())
+            }
+            continue
+        }
 
         const headerMatch = trimmedLine.match(/^(#{1,6})\s+(.+)$/)
 
@@ -34,7 +71,7 @@ export function parseMarkdownToBlocks(markdownContent: string): ContentBlock[] {
                 title,
             })
         } else {
-            const imageMatch = trimmedLine.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
+            const imageMatch = trimmedLine.match(/^!\[([^\]]*)\]\(([^)]+)\)\s*$/)
             if (imageMatch) {
                 flushTextBlock()
                 const alt = imageMatch[1] || ''
@@ -45,10 +82,22 @@ export function parseMarkdownToBlocks(markdownContent: string): ContentBlock[] {
                     imageAlt: alt,
                 })
             } else {
-                if (trimmedLine === '') {
+                const linkMatch = trimmedLine.match(/^\[([^\]]*)\]\(([^)]+)\)$/)
+                if (linkMatch) {
                     flushTextBlock()
+                    const text = linkMatch[1] || ''
+                    const url = linkMatch[2] || ''
+                    blocks.push({
+                        type: 'link',
+                        linkUrl: url,
+                        linkText: text,
+                    })
                 } else {
-                    currentTextBlock.push(trimmedLine)
+                    if (trimmedLine === '') {
+                        flushTextBlock()
+                    } else {
+                        currentTextBlock.push(trimmedLine)
+                    }
                 }
             }
         }

@@ -19,7 +19,8 @@
                 </code>
             </template>
             <template v-else-if="part.type === 'link'">
-                <a :href="part.url" class="text-accent-primary underline hover:text-accent-primary/80" target="_blank" rel="noopener noreferrer">
+                <a :href="part.url" class="text-accent-primary underline hover:text-accent-primary/80" target="_blank"
+                    rel="noopener noreferrer">
                     {{ part.text }}
                 </a>
             </template>
@@ -28,6 +29,10 @@
             </template>
             <template v-else-if="part.type === 'linebreak'">
                 <br />
+            </template>
+            <template v-else-if="part.type === 'image'">
+                <img :src="part.url" :alt="part.text || ''"
+                    class="inline-block max-w-full h-8 mx-1 align-middle rounded hover:opacity-90 transition-opacity cursor-zoom-in" />
             </template>
         </span>
     </p>
@@ -41,7 +46,7 @@ const props = defineProps<{
 }>()
 
 interface TextPart {
-    type: 'text' | 'bold' | 'italic' | 'boldItalic' | 'code' | 'link' | 'strikethrough' | 'linebreak'
+    type: 'text' | 'bold' | 'italic' | 'boldItalic' | 'code' | 'link' | 'strikethrough' | 'linebreak' | 'image'
     content?: string
     text?: string
     url?: string
@@ -50,7 +55,7 @@ interface TextPart {
 const parsedParts = computed((): TextPart[] => {
     const parts: TextPart[] = []
     const text = props.text
-    
+
     if (!text) {
         return parts
     }
@@ -66,10 +71,10 @@ const parsedParts = computed((): TextPart[] => {
     const findMatches = (regex: RegExp, type: string) => {
         const matches: Array<{ type: string; start: number; end: number; groups: RegExpMatchArray }> = []
         let match: RegExpExecArray | null
-        
+
         // Reset regex lastIndex
         regex.lastIndex = 0
-        
+
         while ((match = regex.exec(text)) !== null) {
             matches.push({
                 type,
@@ -77,40 +82,43 @@ const parsedParts = computed((): TextPart[] => {
                 end: match.index + match[0].length,
                 groups: match
             })
-            
+
             // Prevent infinite loop on zero-length matches
             if (match[0].length === 0) {
                 regex.lastIndex++
             }
         }
-        
+
         return matches
     }
 
     // Find all matches for each pattern type
     // Order matters: process more specific patterns first (e.g., boldItalic before bold/italic)
     const allMatches: Array<{ type: string; start: number; end: number; groups: RegExpMatchArray }> = []
-    
+
     // Bold+Italic (***text*** or ___text___)
     allMatches.push(...findMatches(/(\*\*\*|___)(.+?)\1/g, 'boldItalic'))
-    
+
     // Code (inline code - process first to avoid parsing inside code blocks)
     allMatches.push(...findMatches(/`([^`\n]+)`/g, 'code'))
-    
+
     // Links ([text](url))
     allMatches.push(...findMatches(/\[([^\]]+)\]\(([^)]+)\)/g, 'link'))
-    
+
+    // Inline Images (![alt](url))
+    allMatches.push(...findMatches(/!\[([^\]]*)\]\(([^)]+)\)/g, 'image'))
+
     // Strikethrough (~~text~~)
     allMatches.push(...findMatches(/~~(.+?)~~/g, 'strikethrough'))
-    
+
     // Bold (**text** or __text__)
     // Note: We check these are not part of boldItalic by processing boldItalic first and filtering overlaps
     allMatches.push(...findMatches(/(\*\*|__)([^*_\n]+?)\1/g, 'bold'))
-    
+
     // Italic (*text* or _text_)
     // Must have word boundary to avoid matching parts of bold or code
     allMatches.push(...findMatches(/(?<![*_])(?<!\w)(\*|_)([^*_\n]+?)\1(?![*_])(?!\w)/g, 'italic'))
-    
+
     // Line breaks (two spaces + newline or double newline)
     allMatches.push(...findMatches(/  \n|\n\n/g, 'linebreak'))
 
@@ -122,17 +130,17 @@ const parsedParts = computed((): TextPart[] => {
     for (let i = 0; i < allMatches.length; i++) {
         const current = allMatches[i] as { type: string; start: number; end: number; groups: RegExpMatchArray }
         let shouldAdd = true
-        
+
         // Check if current overlaps with any already filtered match
         for (let j = filteredMatches.length - 1; j >= 0; j--) {
             const existing = filteredMatches[j] as { type: string; start: number; end: number; groups: RegExpMatchArray }
             const overlaps = !(current.end <= existing.start || current.start >= existing.end)
-            
+
             if (overlaps) {
                 // If current is longer, replace the existing match
                 const currentLength = current.end - current.start
                 const existingLength = existing.end - existing.start
-                
+
                 if (currentLength > existingLength) {
                     filteredMatches.splice(j, 1)
                 } else {
@@ -142,24 +150,24 @@ const parsedParts = computed((): TextPart[] => {
                 }
             }
         }
-        
+
         if (shouldAdd) {
             filteredMatches.push(current)
         }
     }
-    
+
     // Re-sort after filtering (positions may have changed)
     filteredMatches.sort((a, b) => a.start - b.start)
 
     // Build parts array
     let lastPos = 0
-    
+
     for (const match of filteredMatches) {
         // Add text before this match
         if (match.start > lastPos) {
             addText(text.substring(lastPos, match.start))
         }
-        
+
         // Add the matched part
         switch (match.type) {
             case 'boldItalic':
@@ -177,6 +185,9 @@ const parsedParts = computed((): TextPart[] => {
             case 'link':
                 parts.push({ type: 'link', text: match.groups[1], url: match.groups[2] })
                 break
+            case 'image':
+                parts.push({ type: 'image', text: match.groups[1], url: match.groups[2] })
+                break
             case 'strikethrough':
                 parts.push({ type: 'strikethrough', content: match.groups[1] })
                 break
@@ -184,10 +195,10 @@ const parsedParts = computed((): TextPart[] => {
                 parts.push({ type: 'linebreak' })
                 break
         }
-        
+
         lastPos = match.end
     }
-    
+
     // Add remaining text
     if (lastPos < text.length) {
         addText(text.substring(lastPos))
@@ -201,4 +212,3 @@ const parsedParts = computed((): TextPart[] => {
     return parts
 })
 </script>
-

@@ -15,8 +15,9 @@
                     </select>
                     <textarea v-model="createForm.markdown" rows="8" placeholder="markdown"
                         class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary"></textarea>
-                    <button class="bg-accent-primary text-white px-4 py-2 rounded hover:opacity-90"
-                        :disabled="creating">{{ creating ? 'Creating…' : 'Create' }}</button>
+                    <MainButton type="submit" :disabled="creating">
+                        {{ creating ? 'Creating…' : 'Create' }}
+                    </MainButton>
                 </form>
                 <p v-if="createError" class="text-red-500 mt-2">{{ createError }}</p>
                 <p v-if="createOk" class="text-green-600 mt-2">Created</p>

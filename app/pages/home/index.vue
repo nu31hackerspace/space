@@ -44,7 +44,7 @@ const cards = [
         description: 'Переглянути рейтинг та карму всіх учасників спільноти',
     },
     {
-        route: '/design/buttons',
+        route: '/design',
         icon: 'mdi:palette',
         title: 'Подивитися на дизайн систему',
         description: 'Вивчити компоненти та стилі дизайн системи',
