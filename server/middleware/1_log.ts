@@ -12,15 +12,6 @@ export default defineEventHandler((event) => {
 
         const headers = event.node.req.headers
 
-        // useNitroApp().logger.info('http', {
-        //     method,
-        //     url,
-        //     status,
-        //     duration,
-        //     time: now,
-        //     headers,
-        // })
-
         useNitroApp().db.collection('http-logs').insertOne({
             method,
             url,
