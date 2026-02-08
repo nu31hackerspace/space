@@ -81,7 +81,7 @@ jobs:
             - name: Create .env file for Docker Stack
               run: |
                   echo "IMAGE_NAME='$IMAGE_NAME'" >> .env
-                  echo "GIT_COMMIT_SHA='$GIT_COMMIT_SHA'" >> .env
+                  echo "GIT_COMMIT_HASH='$GIT_COMMIT_SHA'" >> .env
                   for key in $ENV_KEYS; do
                       echo "$key='${!key}'" >> .env
                   done
