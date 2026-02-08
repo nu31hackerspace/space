@@ -7,6 +7,11 @@
                 </NuxtLink>
                 <MainBadge v-if="!isLoading && status" :variant="badgeVariant" :label="badgeLabel" />
             </div>
+            <nav class="flex items-center space-x-6">
+                <NuxtLink to="/blog" class="text-label-primary hover:text-accent-primary transition-colors font-medium">
+                    Блог
+                </NuxtLink>
+            </nav>
             <div class="flex items-center space-x-4">
                 <NuxtLink v-if="isLoggedIn && avatarUrl" to="/profile"
                     class="flex items-center space-x-3 hover:opacity-80 transition-opacity">

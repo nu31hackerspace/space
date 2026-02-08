@@ -5,6 +5,9 @@
                 <MainBadge v-if="!electricityLoading && electricityStatus" :variant="electricityBadgeVariant"
                     :label="electricityBadgeLabel" class="w-full sm:w-auto mb-4 sm:mb-0" />
             </div>
+            <NuxtLink to="/blog" class="text-label-primary hover:text-accent-primary transition-colors font-medium">
+                Блог
+            </NuxtLink>
             <div class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row">
                 <MainButton buttonStyle="primary" size="M" icon="ic:baseline-discord" label="Вхід для резедентів"
                     :link="data?.redirectUri" class="w-full sm:w-auto" />
