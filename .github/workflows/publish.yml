@@ -33,9 +33,9 @@ env:
     REGISTRY: ghcr.io
     
     # Deployment configuration
-    DEPLOY_USER: deploy
+    DEPLOY_USER: ${{ vars.USERNAME }}
     HOST: ${{ vars.HOST }}
-    DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+    DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.ROOT_SSH_PRIVATE_KEY }}
 
 jobs:
     build-and-push-image:
