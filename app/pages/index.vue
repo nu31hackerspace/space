@@ -9,7 +9,7 @@
                 Блог
             </NuxtLink>
             <div class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row">
-                <MainButton buttonStyle="primary" size="M" icon="ic:baseline-discord" label="Вхід для резедентів"
+                <MainButton buttonStyle="primary" size="M" icon="ic:baseline-discord" label="Вхід для резидентів"
                     :link="data?.redirectUri" class="w-full sm:w-auto" />
                 <ThemeSwitch />
             </div>
