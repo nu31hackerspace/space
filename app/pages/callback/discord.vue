@@ -95,7 +95,7 @@
                                         class="w-full md:w-auto"
                                         buttonStyle="primary"
                                         size="M"
-                                        link="https://discord.gg/kgTHaaHWyD"
+                                        link="https://discord.gg/X93qAG2jH6"
                                         icon="ic:baseline-discord"
                                     >
                                         Приєднатися до Discord
