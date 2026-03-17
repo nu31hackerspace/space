@@ -106,7 +106,7 @@
                 <p class="text-xl text-label-secondary mb-8">
                     Знаходимося в серці Києва, Україна
                 </p>
-                <MainButton class="justify-center" buttonStyle="primary" size="M" link="https://discord.gg/kgTHaaHWyD"
+                <MainButton class="justify-center" buttonStyle="primary" size="M" link="https://discord.gg/X93qAG2jH6"
                     icon="ic:baseline-discord">
                     Ми тусимо в Discord, приєднуйся!
                 </MainButton>
