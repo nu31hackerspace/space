@@ -164,7 +164,7 @@
                                 icon="mdi:github"></MainButton>
                             <MainButton buttonStyle="ghost" size="L" link="https://www.instagram.com/nu31hackerspace/"
                                 icon="mdi:instagram"></MainButton>
-                            <MainButton buttonStyle="ghost" size="L" link="https://discord.gg/kgTHaaHWyD"
+                            <MainButton buttonStyle="ghost" size="L" link="https://discord.gg/X93qAG2jH6"
                                 icon="ic:baseline-discord"></MainButton>
                         </div>
                     </div>
