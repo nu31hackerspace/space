@@ -123,6 +123,21 @@
                 </div>
             </div>
 
+            <div class="text-center mb-20 bg-fill-secondary p-8 rounded-xl border border-separator-primary max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-6 text-accent-primary">
+                    Підтримайте нас
+                </h2>
+                <p class="text-xl text-label-secondary mb-8">
+                    Ваша підтримка допомагає нам розвивати хакерспейс та створювати нові можливості для спільноти
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <MainButton buttonStyle="primary" size="M" link="https://www.patreon.com/cw/NU31"
+                        icon="mdi:patreon">
+                        Підтримати на Patreon
+                    </MainButton>
+                </div>
+            </div>
+
             <div v-if="galleryImages && galleryImages.length > 0" class="mb-20">
                 <h2 class="text-3xl font-bold mb-8 text-center text-accent-primary">
                     Галерея
@@ -166,6 +181,8 @@
                                 icon="mdi:instagram"></MainButton>
                             <MainButton buttonStyle="ghost" size="L" link="https://discord.gg/X93qAG2jH6"
                                 icon="ic:baseline-discord"></MainButton>
+                            <MainButton buttonStyle="ghost" size="L" link="https://www.patreon.com/cw/NU31"
+                                icon="mdi:patreon"></MainButton>
                         </div>
                     </div>
                 </div>
