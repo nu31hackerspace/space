@@ -1,0 +1,48 @@
+import { defineEventHandler, setHeader, useNitroApp, useRuntimeConfig } from '#imports'
+import { buildPublicFeedEntry } from '~~/server/core/content/publication'
+import { renderRssFeed } from '~~/server/core/content/rss'
+
+export default defineEventHandler(async (event) => {
+    const config = useRuntimeConfig(event)
+    const baseUrl = config.public.baseUrl
+    const feedUrl = new URL('/rss.xml', baseUrl).toString()
+    const db = useNitroApp().db
+
+    const posts = await db.collection('blogPosts')
+        .find(
+            { status: 'published' },
+            {
+                projection: {
+                    _id: 0,
+                    slug: 1,
+                    title: 1,
+                    rawMarkdown: 1,
+                    status: 1,
+                    summary: 1,
+                    tags: 1,
+                    coverImageUrl: 1,
+                    coverImageAlt: 1,
+                    publishedAt: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                },
+            }
+        )
+        .sort({ publishedAt: -1, createdAt: -1 })
+        .toArray()
+
+    const items = posts.map(post => buildPublicFeedEntry(post, baseUrl))
+    const lastBuildDate = items[0]?.updatedAt || new Date().toISOString()
+    const xml = renderRssFeed({
+        title: 'NU31 Blog',
+        feedUrl,
+        siteUrl: baseUrl,
+        description: 'NU31 blog feed',
+        language: 'uk-UA',
+        lastBuildDate,
+        items,
+    })
+
+    setHeader(event, 'content-type', 'application/rss+xml; charset=utf-8')
+    return xml
+})

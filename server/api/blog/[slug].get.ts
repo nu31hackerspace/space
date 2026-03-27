@@ -14,7 +14,23 @@ export default defineEventHandler(async (event) => {
     const db = useNitroApp().db
     const post = await db.collection('blogPosts').findOne(
         { slug },
-        { projection: { _id: 0, slug: 1, title: 1, status: 1, rawMarkdown: 1, updatedAt: 1, createdAt: 1 } }
+        {
+            projection: {
+                _id: 0,
+                slug: 1,
+                title: 1,
+                status: 1,
+                rawMarkdown: 1,
+                summary: 1,
+                tags: 1,
+                coverImageUrl: 1,
+                coverImageAlt: 1,
+                isFeatured: 1,
+                publishedAt: 1,
+                updatedAt: 1,
+                createdAt: 1,
+            },
+        }
     )
     if (!post) {
         throw createError({ statusCode: 404, statusMessage: 'Article not found' })
@@ -22,5 +38,4 @@ export default defineEventHandler(async (event) => {
 
     return post
 })
-
 

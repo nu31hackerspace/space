@@ -20,6 +20,18 @@
                     <option value="draft">draft</option>
                     <option value="published">published</option>
                 </select>
+                <textarea v-model="summary" rows="3" placeholder="summary"
+                    class="w-full p-3 rounded bg-transparent border border-separator-primary text-label-primary"></textarea>
+                <input v-model="tagsText" type="text" placeholder="tags, comma separated"
+                    class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                <input v-model="coverImageUrl" type="text" placeholder="cover image url"
+                    class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                <input v-model="coverImageAlt" type="text" placeholder="cover image alt"
+                    class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                <label class="flex items-center gap-2 text-sm text-label-secondary">
+                    <input v-model="isFeatured" type="checkbox" />
+                    Featured post
+                </label>
                 <textarea v-model="markdown" rows="24" placeholder="markdown"
                     class="w-full p-3 rounded bg-transparent border border-separator-primary text-label-primary font-mono"></textarea>
                 <div class="flex items-center gap-2">
@@ -43,6 +55,11 @@ const slug = route.params.slug as string
 
 const title = ref('')
 const status = ref<'draft' | 'published'>('draft')
+const summary = ref('')
+const tagsText = ref('')
+const coverImageUrl = ref('')
+const coverImageAlt = ref('')
+const isFeatured = ref(false)
 const markdown = ref('')
 const saving = ref(false)
 const saveMsg = ref('')
@@ -56,6 +73,16 @@ async function load() {
         // @ts-ignore
         status.value = data.value.status || 'draft'
         // @ts-ignore
+        summary.value = data.value.summary || ''
+        // @ts-ignore
+        tagsText.value = Array.isArray(data.value.tags) ? data.value.tags.join(', ') : ''
+        // @ts-ignore
+        coverImageUrl.value = data.value.coverImageUrl || ''
+        // @ts-ignore
+        coverImageAlt.value = data.value.coverImageAlt || ''
+        // @ts-ignore
+        isFeatured.value = Boolean(data.value.isFeatured)
+        // @ts-ignore
         markdown.value = data.value.rawMarkdown || ''
     }
 }
@@ -66,7 +93,16 @@ async function save() {
     errorMsg.value = ''
     const { error } = await useFetch(`/api/blog/${encodeURIComponent(slug)}`, {
         method: 'PUT',
-        body: { title: title.value, status: status.value, markdown: markdown.value },
+        body: {
+            title: title.value,
+            status: status.value,
+            summary: summary.value,
+            tags: tagsText.value.split(','),
+            coverImageUrl: coverImageUrl.value,
+            coverImageAlt: coverImageAlt.value,
+            isFeatured: isFeatured.value,
+            markdown: markdown.value,
+        },
     })
     saving.value = false
     if (error.value) {

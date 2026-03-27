@@ -32,7 +32,42 @@ export interface TagsBlock extends ContentBlockBase {
 
 export type ContentBlock = HeaderBlock | TextBlock | ImageBlock | LinkBlock | TagsBlock
 
-export interface ContentResponse {
+export interface PublicArticleListItem {
+    slug: string
+    title: string
+    summary: string
+    tags: string[]
+    coverImageUrl: string
+    coverImageAlt: string
+    status: 'draft' | 'published'
+    isFeatured: boolean
+    url: string
+    publishedAt: string
+    updatedAt: string
+}
+
+export interface PublicArticle extends PublicArticleListItem {
     blocks: ContentBlock[]
 }
 
+export interface ContentListResponse {
+    items: PublicArticleListItem[]
+    page: number
+    pageSize: number
+    total: number
+}
+
+export interface ContentResponse {
+    slug: string
+    title: string
+    summary: string
+    tags: string[]
+    coverImageUrl: string
+    coverImageAlt: string
+    status: 'draft' | 'published'
+    isFeatured: boolean
+    url: string
+    publishedAt: string
+    updatedAt: string
+    blocks: ContentBlock[]
+}

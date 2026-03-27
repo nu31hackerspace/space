@@ -13,6 +13,18 @@
                         <option value="draft">draft</option>
                         <option value="published">published</option>
                     </select>
+                    <textarea v-model="createForm.summary" rows="3" placeholder="summary"
+                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary"></textarea>
+                    <input v-model="createForm.tagsText" type="text" placeholder="tags, comma separated"
+                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                    <input v-model="createForm.coverImageUrl" type="text" placeholder="cover image url"
+                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                    <input v-model="createForm.coverImageAlt" type="text" placeholder="cover image alt"
+                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                    <label class="flex items-center gap-2 text-sm text-label-secondary">
+                        <input v-model="createForm.isFeatured" type="checkbox" />
+                        Featured post
+                    </label>
                     <textarea v-model="createForm.markdown" rows="8" placeholder="markdown"
                         class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary"></textarea>
                     <MainButton type="submit" :disabled="creating">
@@ -53,7 +65,16 @@ import { ref } from 'vue'
 
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
-const createForm = ref({ title: '', markdown: '', status: 'draft' as 'draft' | 'published' })
+const createForm = ref({
+    title: '',
+    markdown: '',
+    status: 'draft' as 'draft' | 'published',
+    summary: '',
+    tagsText: '',
+    coverImageUrl: '',
+    coverImageAlt: '',
+    isFeatured: false,
+})
 const creating = ref(false)
 const createError = ref('')
 const createOk = ref(false)
@@ -63,7 +84,19 @@ async function createPost() {
     createError.value = ''
     createOk.value = false
     try {
-        const { data, error } = await useFetch('/api/blog', { method: 'POST', body: createForm.value })
+        const { data, error } = await useFetch('/api/blog', {
+            method: 'POST',
+            body: {
+                title: createForm.value.title,
+                markdown: createForm.value.markdown,
+                status: createForm.value.status,
+                summary: createForm.value.summary,
+                tags: createForm.value.tagsText.split(','),
+                coverImageUrl: createForm.value.coverImageUrl,
+                coverImageAlt: createForm.value.coverImageAlt,
+                isFeatured: createForm.value.isFeatured,
+            },
+        })
         if (error.value) throw error.value
         createOk.value = true
         await refreshList()

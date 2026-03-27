@@ -1,6 +1,6 @@
-import { createError, defineEventHandler, getRouterParam, useNitroApp } from '#imports'
+import { createError, defineEventHandler, getRouterParam, useNitroApp, useRuntimeConfig } from '#imports'
 import type { ContentResponse } from '~~/shared/types/content'
-import { parseMarkdownToBlocks } from '~~/server/core/content/parse'
+import { buildContentResponse } from '~~/server/core/content/publication'
 
 export default defineEventHandler(async (event) => {
     const slug = getRouterParam(event, 'slug')
@@ -8,16 +8,32 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, statusMessage: 'Slug parameter is required' })
     }
 
+    const config = useRuntimeConfig(event)
     const db = useNitroApp().db
-    const post = await db.collection('blogPosts').findOne({ slug })
+    const post = await db.collection('blogPosts').findOne(
+        { slug, status: 'published' },
+        {
+            projection: {
+                _id: 0,
+                slug: 1,
+                title: 1,
+                rawMarkdown: 1,
+                status: 1,
+                summary: 1,
+                tags: 1,
+                coverImageUrl: 1,
+                coverImageAlt: 1,
+                isFeatured: 1,
+                publishedAt: 1,
+                createdAt: 1,
+                updatedAt: 1,
+            },
+        }
+    )
     if (!post) {
         throw createError({ statusCode: 404, statusMessage: 'Article not found' })
     }
 
-    const rawMarkdown: string = post.rawMarkdown || ''
-    const blocks = parseMarkdownToBlocks(rawMarkdown)
-
-    const response: ContentResponse = { blocks }
+    const response: ContentResponse = buildContentResponse(post, config.public.baseUrl)
     return response
 })
-

@@ -1,4 +1,5 @@
 import { createError, defineEventHandler, getRouterParam, readBody, useNitroApp } from '#imports'
+import { normalizeBlogPostWriteInput } from '~~/server/core/content/metadata'
 
 export default defineEventHandler(async (event) => {
     const user = event.context.user
@@ -11,12 +12,17 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, statusMessage: 'Slug required' })
     }
 
-    const body = await readBody<{ markdown?: string; title?: string; status?: 'draft' | 'published' }>(event)
-    const updates: any = {}
+    const body = await readBody<{
+        markdown?: string
+        title?: string
+        status?: 'draft' | 'published'
+        summary?: string
+        tags?: string[]
+        coverImageUrl?: string
+        coverImageAlt?: string
+        isFeatured?: boolean
+    }>(event)
     const now = new Date()
-
-    if (typeof body?.title === 'string') updates.title = body.title.trim()
-    if (typeof body?.status === 'string') updates.status = body.status
 
     const db = useNitroApp().db
 
@@ -25,14 +31,27 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 404, statusMessage: 'Article not found' })
     }
 
+    let updates
+    try {
+        updates = normalizeBlogPostWriteInput({
+            mode: 'update',
+            body,
+            existingPost: {
+                publishedAt: post.publishedAt,
+            },
+            now,
+        })
+    } catch (error: any) {
+        throw createError({ statusCode: 400, statusMessage: error.message })
+    }
+
     const ops: any = { $set: { updatedAt: now, ...updates } }
 
     if (typeof body?.markdown === 'string') {
-        ops.$set.rawMarkdown = body.markdown
         ops.$push = {
             versions: {
                 editor_id: user.userId,
-                markdown: body.markdown,
+                markdown: updates.rawMarkdown,
                 createdAt: now,
             }
         }
@@ -42,5 +61,4 @@ export default defineEventHandler(async (event) => {
 
     return { ok: true }
 })
-
 

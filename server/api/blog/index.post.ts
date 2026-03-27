@@ -1,4 +1,5 @@
 import { createError, defineEventHandler, readBody, useNitroApp } from '#imports'
+import { normalizeBlogPostWriteInput } from '~~/server/core/content/metadata'
 import { generateSlugFromTitle } from '~~/shared/utils'
 
 export default defineEventHandler(async (event) => {
@@ -7,33 +8,52 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
     }
 
-    const body = await readBody<{ title: string; markdown: string; status?: 'draft' | 'published' }>(event)
-    const title = (body?.title || '').trim()
-    const markdown = body?.markdown || ''
-    const status = body?.status || 'draft'
+    const body = await readBody<{
+        title: string
+        markdown: string
+        status?: 'draft' | 'published'
+        summary?: string
+        tags?: string[]
+        coverImageUrl?: string
+        coverImageAlt?: string
+        isFeatured?: boolean
+    }>(event)
+    const now = new Date()
+    let normalizedBody
 
-    if (!title) {
-        throw createError({ statusCode: 400, statusMessage: 'title is required' })
+    try {
+        normalizedBody = normalizeBlogPostWriteInput({
+            mode: 'create',
+            body,
+            now,
+        })
+    } catch (error: any) {
+        throw createError({ statusCode: 400, statusMessage: error.message })
     }
 
     const db = useNitroApp().db
-    const now = new Date()
-    const slug = generateSlugFromTitle(title)
+    const slug = generateSlugFromTitle(normalizedBody.title || '')
 
     try {
         await db.collection('blogPosts').insertOne({
             slug,
-            title,
+            title: normalizedBody.title,
             owner_id: user.userId,
-            rawMarkdown: markdown,
+            rawMarkdown: normalizedBody.rawMarkdown || '',
             versions: [
                 {
                     editor_id: user.userId,
-                    markdown,
+                    markdown: normalizedBody.rawMarkdown || '',
                     createdAt: now,
                 }
             ],
-            status,
+            status: normalizedBody.status,
+            summary: normalizedBody.summary || '',
+            tags: normalizedBody.tags || [],
+            coverImageUrl: normalizedBody.coverImageUrl || '',
+            coverImageAlt: normalizedBody.coverImageAlt || '',
+            isFeatured: normalizedBody.isFeatured || false,
+            publishedAt: normalizedBody.publishedAt || null,
             createdAt: now,
             updatedAt: now,
         })
@@ -46,5 +66,4 @@ export default defineEventHandler(async (event) => {
 
     return { ok: true, slug }
 })
-
 
