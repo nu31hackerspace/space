@@ -11,6 +11,8 @@
             <div class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row">
                 <MainButton buttonStyle="primary" size="M" icon="ic:baseline-discord" label="Вхід для резидентів"
                     :link="data?.redirectUri" class="w-full sm:w-auto" />
+                <MainButton v-if="isDevMode" buttonStyle="secondary" size="M" label="Dev Login"
+                    class="w-full sm:w-auto" @click="loginAsDev" />
                 <ThemeSwitch />
             </div>
         </div>
@@ -230,6 +232,8 @@ const { data: galleryImages } = await useFetch<Array<{
     createdAt: string
 }>>('/api/gallery')
 
+const isDevMode = import.meta.dev
+
 onMounted(async () => {
     trackEvent('page_view', { page: 'landing' })
 
@@ -242,4 +246,18 @@ onMounted(async () => {
 
     fetchElectricityStatus()
 })
+
+async function loginAsDev() {
+    const response = await $fetch<{ success: boolean; redirectTo: string }>('/api/auth/dev-login', {
+        method: 'POST',
+        body: {
+            redirectTo: '/home',
+        },
+        credentials: 'include',
+    })
+
+    if (response.success) {
+        window.location.href = response.redirectTo
+    }
+}
 </script>
