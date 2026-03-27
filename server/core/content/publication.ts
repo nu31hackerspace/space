@@ -62,12 +62,27 @@ function findFirstParagraph(blocks: ContentBlock[]): string {
     return textBlock?.content || ''
 }
 
+function removeDuplicatedLeadingTitle(blocks: ContentBlock[], title: string): ContentBlock[] {
+    const [firstBlock, ...restBlocks] = blocks
+
+    if (
+        firstBlock?.type === 'header' &&
+        firstBlock.size === '1' &&
+        trimText(firstBlock.title).toLowerCase() === trimText(title).toLowerCase()
+    ) {
+        return restBlocks
+    }
+
+    return blocks
+}
+
 function buildSummary(post: BlogPostRecord, blocks: ContentBlock[]): string {
     return trimText(post.summary) || findFirstParagraph(blocks)
 }
 
 function buildCommonPublicFields(post: BlogPostRecord, baseUrl: string) {
-    const blocks = parseMarkdownToBlocks(post.rawMarkdown || '')
+    const parsedBlocks = parseMarkdownToBlocks(post.rawMarkdown || '')
+    const blocks = removeDuplicatedLeadingTitle(parsedBlocks, post.title)
     const publishedAt = normalizeDate(post.publishedAt, post.createdAt)
     const updatedAt = normalizeDate(post.updatedAt, post.createdAt)
     const summary = buildSummary(post, blocks)

@@ -71,6 +71,24 @@ describe('publication helpers', () => {
         expect(article.blocks).toHaveLength(3)
     })
 
+    it('removes the leading heading block when it duplicates the article title', () => {
+        const article = buildPublicArticle({
+            ...basePost,
+            rawMarkdown: [
+                '# Orbital Log',
+                '',
+                'The first paragraph explains what happened on orbit.',
+            ].join('\n'),
+        }, 'https://space.example')
+
+        expect(article.blocks).toEqual([
+            {
+                type: 'text',
+                content: 'The first paragraph explains what happened on orbit.',
+            },
+        ])
+    })
+
     it('filters out drafts from list responses', () => {
         const response = buildPublicArticleListResponse([
             basePost,
