@@ -1,12 +1,13 @@
 import { defineEventHandler, setHeader, useNitroApp, useRuntimeConfig } from '#imports'
 import { buildPublicFeedEntry } from '~~/server/core/content/publication'
+import { requireDatabase } from '~~/server/core/runtime/database'
 import { renderRssFeed } from '~~/server/core/content/rss'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig(event)
     const baseUrl = config.public.baseUrl
     const feedUrl = new URL('/rss.xml', baseUrl).toString()
-    const db = useNitroApp().db
+    const db = requireDatabase(useNitroApp())
 
     const posts = await db.collection('blogPosts')
         .find(

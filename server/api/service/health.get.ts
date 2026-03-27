@@ -1,10 +1,8 @@
-import { defineEventHandler, useNitroApp, useRuntimeConfig } from '#imports'
+import { defineEventHandler, useNitroApp } from '#imports'
+import { pingDatabase } from '~~/server/core/runtime/database'
 
 export default defineEventHandler(async (event) => {
-    const isConnected: boolean = await useNitroApp()
-        .db.command({ ping: 1 })
-        .then((_) => true)
-        .catch((_) => false)
+    const isConnected = await pingDatabase(useNitroApp())
 
     if (!isConnected) {
         event.node.res.statusCode = 503

@@ -1,6 +1,7 @@
 import { createError, defineEventHandler, getRouterParam, useNitroApp, useRuntimeConfig } from '#imports'
 import type { ContentResponse } from '~~/shared/types/content'
 import { buildContentResponse } from '~~/server/core/content/publication'
+import { requireDatabase } from '~~/server/core/runtime/database'
 
 export default defineEventHandler(async (event) => {
     const slug = getRouterParam(event, 'slug')
@@ -9,7 +10,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const config = useRuntimeConfig(event)
-    const db = useNitroApp().db
+    const db = requireDatabase(useNitroApp())
     const post = await db.collection('blogPosts').findOne(
         { slug, status: 'published' },
         {

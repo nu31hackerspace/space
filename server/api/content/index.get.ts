@@ -1,5 +1,6 @@
 import { defineEventHandler, getQuery, useNitroApp, useRuntimeConfig } from '#imports'
 import { buildPublicArticleListResponse } from '~~/server/core/content/publication'
+import { requireDatabase } from '~~/server/core/runtime/database'
 
 export default defineEventHandler(async (event) => {
     const { page = '1', pageSize = '20' } = getQuery(event) as Record<string, string>
@@ -8,7 +9,7 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig(event)
     const baseUrl = config.public.baseUrl
 
-    const db = useNitroApp().db
+    const db = requireDatabase(useNitroApp())
     const cursor = db
         .collection('blogPosts')
         .find(

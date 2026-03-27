@@ -1,6 +1,7 @@
 import { Db } from 'mongodb'
 import { defineNitroPlugin, useNitroApp } from '#imports'
 import { GridFSBucket } from 'mongodb'
+import { waitForDatabase } from '~~/server/core/runtime/database'
 
 export enum FileStoreType {
     UserAvatar = "user_avatar",
@@ -135,18 +136,11 @@ export class FileStore {
 
 export default defineNitroPlugin(async (nitroApp) => {
     nitroApp.logger.info('Waiting for database to be ready...')
+    const isReady = await waitForDatabase(nitroApp)
 
-    // Wait for MongoDB to be available (with timeout)
-    const maxWaitTime = 10000; // 10 seconds
-    const checkInterval = 50; // 50ms
-    const startTime = Date.now();
-
-    while (!nitroApp.db) {
-        if (Date.now() - startTime > maxWaitTime) {
-            nitroApp.logger.error('Timeout waiting for database to initialize')
-            throw new Error('Database initialization timeout')
-        }
-        await new Promise(resolve => setTimeout(resolve, checkInterval));
+    if (!isReady || !nitroApp.db) {
+        nitroApp.logger.warn('Database is not ready, skipping file store initialization')
+        return
     }
 
     nitroApp.logger.info('Connecting to file store...')

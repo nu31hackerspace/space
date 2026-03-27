@@ -1,23 +1,27 @@
 import { defineEventHandler, useNitroApp } from '#imports'
+import { pingDatabase, requireDatabase } from '~~/server/core/runtime/database'
 
 export default defineEventHandler((event) => {
     const { method, url } = event.node.req
     const start = Date.now()
 
     event.node.res.on('finish', () => {
-        const duration = Date.now() - start
-        const status = event.node.res.statusCode
+        pingDatabase(useNitroApp()).then((isReady) => {
+            if (!isReady) {
+                return
+            }
 
-        const now = new Date()
+            const db = requireDatabase(useNitroApp())
+            const duration = Date.now() - start
+            const status = event.node.res.statusCode
 
-        const headers = event.node.req.headers
-
-        useNitroApp().db.collection('http-logs').insertOne({
-            method,
-            url,
-            status,
-            duration,
-            time: now,
-        })
+            db.collection('http-logs').insertOne({
+                method,
+                url,
+                status,
+                duration,
+                time: new Date(),
+            }).catch(() => {})
+        }).catch(() => {})
     })
 })

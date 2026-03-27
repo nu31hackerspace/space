@@ -1,11 +1,9 @@
 import { defineEventHandler, useNitroApp, useRuntimeConfig } from '#imports'
+import { pingDatabase } from '~~/server/core/runtime/database'
 import { UserSession } from '~~/server/core/user/user'
 
 export default defineEventHandler(async (event) => {
-    const isConnected: boolean = await useNitroApp()
-        .db.command({ ping: 1 })
-        .then((_) => true)
-        .catch((_) => false)
+    const isConnected = await pingDatabase(useNitroApp())
     let commitSha = 'init unknown'
 
     try {
@@ -19,8 +17,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const user = event.context.user as UserSession
-
-    console.log(user)
 
     return {
         isConnected: isConnected,
