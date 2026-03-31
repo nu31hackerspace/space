@@ -12,6 +12,9 @@ export default defineNuxtConfig({
         discordClientSecret: '',
         discordBotToken: '',
         jwtSecret: 'test-jwt-secret',
+        mqttHost: 'mqtt://192.168.64.2:1883',
+        mqttUser: 'admin',
+        mqttPass: 'admin',
         public: {
             baseUrl: 'http://localhost:3000',
             gitCommitSha: 'local',

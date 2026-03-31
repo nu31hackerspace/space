@@ -73,6 +73,12 @@ const cards = [
         title: 'Галерея',
         description: 'Керування зображеннями галереї',
     },
+    {
+        route: '/admin/mqtt',
+        icon: 'mdi:access-point-network',
+        title: 'MQTT',
+        description: 'Керування MQTT',
+    },
 ]
 
 onMounted(() => {

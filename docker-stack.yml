@@ -17,6 +17,9 @@ services:
             - NUXT_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
             - NUXT_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
             - NUXT_JWT_SECRET=${JWT_SECRET}
+            - NUXT_PUBLIC_MQTT_HOST=${MQTT_HOST}
+            - NUXT_PUBLIC_MQTT_USER=${MQTT_USER}
+            - NUXT_MQTT_PASS=${MQTT_PASS}
         deploy:
             update_config:
                 order: start-first
