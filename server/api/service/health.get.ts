@@ -1,15 +1,26 @@
-import { defineEventHandler, useNitroApp, useRuntimeConfig } from '#imports'
+import { defineEventHandler, useNitroApp } from '#imports'
+import { mqttClient } from '../../utils/mqttStore'
 
 export default defineEventHandler(async (event) => {
-    const isConnected: boolean = await useNitroApp()
+    const isDbConnected: boolean = await useNitroApp()
         .db.command({ ping: 1 })
         .then((_) => true)
         .catch((_) => false)
 
-    if (!isConnected) {
+    const isMqttConnected = mqttClient?.connected ?? false
+
+    if (!isDbConnected || !isMqttConnected) {
         event.node.res.statusCode = 503
-        return 'unhealthy'
+        return {
+            status: 'unhealthy',
+            db: isDbConnected,
+            mqtt: isMqttConnected
+        }
     }
 
-    return 'healthy'
+    return {
+        status: 'healthy',
+        db: true,
+        mqtt: true
+    }
 })
