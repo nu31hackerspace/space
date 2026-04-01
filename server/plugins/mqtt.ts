@@ -5,8 +5,8 @@ import { setMqttClient, activeTopics } from '../utils/mqttStore'
 export default defineNitroPlugin((nitroApp) => {
     const config = useRuntimeConfig()
 
-    const host = config.mqttHost
-    const username = config.mqttUser
+    const host = config.public.mqttHost
+    const username = config.public.mqttUser
     const password = config.mqttPass
 
     if (!host) {
