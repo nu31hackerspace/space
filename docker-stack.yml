@@ -26,6 +26,7 @@ services:
         networks:
             - infra_reverse-proxy
             - infra_mongo-rs-net
+            - infra_mqtt-net
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/api/service/health"]
             interval: 30s
