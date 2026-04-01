@@ -39,3 +39,5 @@ networks:
         external: true
     infra_mongo-rs-net:
         external: true
+    infra_mqtt-net:
+        external: true
