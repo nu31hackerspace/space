@@ -1,61 +1,13 @@
 <template>
     <div class="container mx-auto px-4 py-8 max-w-5xl">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+        <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold text-accent-primary flex items-center gap-2">
                 <Icon icon="mdi:security-network" /> MQTT Administration
             </h1>
-            
-            <div class="flex p-1 bg-fill-secondary rounded-lg border border-separator-primary">
-                <button 
-                    @click="activeTab = 'topics'"
-                    :class="['px-4 py-2 rounded-md text-sm font-medium transition-colors', activeTab === 'topics' ? 'bg-background-primary shadow text-accent-primary' : 'text-label-secondary hover:text-label-primary']">
-                    Live Topics
-                </button>
-                <button 
-                    @click="activeTab = 'access'"
-                    :class="['px-4 py-2 rounded-md text-sm font-medium transition-colors', activeTab === 'access' ? 'bg-background-primary shadow text-accent-primary' : 'text-label-secondary hover:text-label-primary']">
-                    Access Control
-                </button>
-            </div>
         </div>
 
-        <!-- Live Topics Tab -->
-        <div v-show="activeTab === 'topics'" class="grid grid-cols-1 gap-8 fade-in">
-            <div class="flex items-center justify-end mb-2">
-                <MainButton @click="refreshSelected" buttonStyle="ghost" size="S" icon="mdi:refresh" :disabled="pending">
-                    Refresh Topics
-                </MainButton>
-            </div>
-            <div class="bg-fill-secondary border border-separator-primary rounded-xl p-6">
-                <div v-if="pending && topics.length === 0" class="text-center text-label-secondary py-8">
-                    <Icon icon="mdi:loading" class="animate-spin text-3xl mx-auto mb-2" />
-                    <p>Loading active topics...</p>
-                </div>
-
-                <div v-else-if="topics.length === 0" class="text-center text-label-secondary py-8">
-                    <Icon icon="mdi:sleep" class="text-3xl mx-auto mb-2 text-separator-primary" />
-                    <p>No active topics detected yet.</p>
-                </div>
-
-                <div v-else class="space-y-4">
-                    <div v-for="item in topics" :key="item.topic" class="bg-background-primary p-4 rounded-lg flex flex-col sm:flex-row gap-4 justify-between border border-separator-primary">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-mono text-sm font-semibold text-accent-primary break-all mb-1">{{ item.topic }}</h3>
-                            <div class="text-xs text-label-secondary flex items-center gap-4">
-                                <span><Icon icon="mdi:email-outline" class="inline mr-1" />{{ item.messageCount }} msgs</span>
-                                <span><Icon icon="mdi:clock-outline" class="inline mr-1" />{{ formatTime(item.lastMessageAt) }}</span>
-                            </div>
-                        </div>
-                        <div class="sm:w-1/2 mt-2 sm:mt-0 bg-fill-tertiary p-2 rounded text-xs font-mono text-label-secondary break-all">
-                            {{ item.lastPayloadPreview || '(Empty Payload)' }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Access Control Tab -->
-        <div v-if="activeTab === 'access'" class="grid grid-cols-1 gap-8 fade-in">
+        <div class="space-y-10">
+            <!-- Access Control Panel -->
             <div class="flex flex-col md:flex-row gap-6">
                 <!-- User List -->
                 <div class="md:w-2/3 bg-fill-secondary border border-separator-primary rounded-xl p-6 flex flex-col">
@@ -95,6 +47,19 @@
                                         </div>
                                     </div>
                                     <div v-else class="text-xs italic text-label-secondary">No topic restrictions found</div>
+                                    
+                                    <div class="mt-2 flex items-center gap-2">
+                                        <div v-if="addingTopicToUser === user.username" class="flex items-center gap-2 w-full max-w-xs">
+                                            <input v-model="newTopic" type="text" placeholder="New topic path..." 
+                                                class="flex-1 bg-background-primary border border-separator-primary rounded px-2 py-1 text-xs text-label-primary focus:outline-none focus:border-accent-primary" 
+                                                @keyup.enter="submitAddTopic(user.username)" @keyup.escape="addingTopicToUser = null" />
+                                            <button @click="submitAddTopic(user.username)" class="text-accent-primary hover:text-accent-secondary" title="Save topic"><Icon icon="mdi:check" /></button>
+                                            <button @click="addingTopicToUser = null" class="text-label-secondary hover:text-label-primary" title="Cancel"><Icon icon="mdi:close" /></button>
+                                        </div>
+                                        <button v-else-if="user.username !== 'admin'" @click="startAddTopic(user.username)" class="text-xs text-accent-primary hover:underline flex items-center gap-1 mt-1">
+                                            <Icon icon="mdi:plus" /> Add Topic
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex items-start">
@@ -147,18 +112,53 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Live Topics Panel -->
+            <div class="bg-fill-secondary border border-separator-primary rounded-xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-semibold text-label-primary flex items-center gap-2">
+                        <Icon icon="mdi:access-point-network" /> Live Topics Monitor
+                    </h2>
+                    <MainButton @click="refreshSelected" buttonStyle="ghost" size="S" icon="mdi:refresh" :disabled="pending">
+                        Refresh Topics
+                    </MainButton>
+                </div>
+                
+                <div v-if="pending && topics.length === 0" class="text-center text-label-secondary py-8">
+                    <Icon icon="mdi:loading" class="animate-spin text-3xl mx-auto mb-2" />
+                    <p>Loading active topics...</p>
+                </div>
+
+                <div v-else-if="topics.length === 0" class="text-center text-label-secondary py-8">
+                    <Icon icon="mdi:sleep" class="text-3xl mx-auto mb-2 text-separator-primary" />
+                    <p>No active topics detected yet.</p>
+                </div>
+
+                <div v-else class="space-y-4">
+                    <div v-for="item in topics" :key="item.topic" class="bg-background-primary p-4 rounded-lg flex flex-col sm:flex-row gap-4 justify-between border border-separator-primary">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-mono text-sm font-semibold text-accent-primary break-all mb-1">{{ item.topic }}</h3>
+                            <div class="text-xs text-label-secondary flex items-center gap-4">
+                                <span><Icon icon="mdi:email-outline" class="inline mr-1" />{{ item.messageCount }} msgs</span>
+                                <span><Icon icon="mdi:clock-outline" class="inline mr-1" />{{ formatTime(item.lastMessageAt) }}</span>
+                            </div>
+                        </div>
+                        <div class="sm:w-1/2 mt-2 sm:mt-0 bg-fill-tertiary p-2 rounded text-xs font-mono text-label-secondary break-all">
+                            {{ item.lastPayloadPreview || '(Empty Payload)' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { definePageMeta, useFetch } from '#imports'
-import { ref, onMounted, onUnmounted, reactive } from 'vue'
+import { ref, onMounted, onUnmounted, reactive, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 
 definePageMeta({ layout: 'default', middleware: ['auth'] })
-
-const activeTab = ref('topics')
 
 // Live Topics Logic
 const { data, pending, refresh } = await useFetch('/api/admin/mqtt/topics')
@@ -185,9 +185,7 @@ async function refreshSelected() {
 
 onMounted(() => {
     interval = setInterval(async () => {
-        if (activeTab.value === 'topics') {
-            await refreshSelected()
-        }
+        await refreshSelected()
     }, 2000)
 })
 
@@ -205,15 +203,15 @@ function formatTime(dateStr: string) {
 const { data: usersData, pending: pendingUsers, refresh: refreshUsersData } = useFetch('/api/admin/mqtt/clients')
 
 const usersList = ref<Array<any>>([])
-if (usersData.value && (usersData.value as any).users) {
-    usersList.value = (usersData.value as any).users
-}
+
+watch(usersData, (newVal: any) => {
+    if (newVal && newVal.users) {
+        usersList.value = newVal.users
+    }
+}, { immediate: true })
 
 async function refreshUsers() {
     await refreshUsersData()
-    if (usersData.value && (usersData.value as any).users) {
-        usersList.value = (usersData.value as any).users
-    }
 }
 
 const newUser = reactive({
@@ -258,6 +256,33 @@ async function deleteUser(username: string) {
         await refreshUsers()
     } catch (e: any) {
         alert(e.data?.message || e.message || 'Failed to delete user')
+    }
+}
+
+const addingTopicToUser = ref<string | null>(null)
+const newTopic = ref('')
+
+function startAddTopic(username: string) {
+    addingTopicToUser.value = username
+    newTopic.value = ''
+}
+
+async function submitAddTopic(username: string) {
+    if (!newTopic.value.trim()) return
+    
+    try {
+        const res = await $fetch('/api/admin/mqtt/clients/topic', {
+            method: 'POST',
+            body: { username, topic: newTopic.value.trim() }
+        }) as any
+        
+        if (res.success) {
+            addingTopicToUser.value = null
+            newTopic.value = ''
+            await refreshUsers()
+        }
+    } catch (e: any) {
+        alert(e.data?.message || e.message || 'Failed to add topic')
     }
 }
 

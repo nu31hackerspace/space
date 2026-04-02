@@ -13,6 +13,20 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, message: 'Missing required fields: username, password, topic' })
     }
 
+    // Check if user already exists
+    try {
+        const checkRes = await executeDynSecCommands([
+            { command: 'getClient', username }
+        ])
+        const error = checkRes.responses[0]?.error
+        if (!error && checkRes.responses[0]?.data?.client) {
+            throw createError({ statusCode: 409, message: 'Client already exists' })
+        }
+    } catch (e: any) {
+        if (e.statusCode === 409) throw e
+        // Ignore "Client not found" error since we want to create it
+    }
+
     const rolename = `role-${username}`
 
     const commands = [
