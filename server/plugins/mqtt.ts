@@ -1,6 +1,6 @@
 import { defineNitroPlugin, useRuntimeConfig } from '#imports'
 import mqtt from 'mqtt'
-import { setMqttClient, activeTopics } from '../utils/mqttStore'
+import { setMqttClient, activeTopics, handleDynSecResponse } from '../utils/mqttStore'
 
 export default defineNitroPlugin((nitroApp) => {
     const config = useRuntimeConfig()
@@ -33,10 +33,24 @@ export default defineNitroPlugin((nitroApp) => {
                 console.log('MQTT: Subscribed to # to track active topics')
             }
         })
+
+        client.subscribe('$CONTROL/dynamic-security/v1/response', (err) => {
+            if (err) console.error('MQTT: Failed to subscribe to DynSec response', err)
+        })
     })
 
     client.on('message', (topic, payload) => {
+        if (topic === '$CONTROL/dynamic-security/v1/response') {
+            try {
+                handleDynSecResponse(JSON.parse(payload.toString()))
+            } catch (e) {
+                console.error('DynSec parse error', e)
+            }
+            return
+        }
+
         if (topic.startsWith('$SYS/')) return
+        if (topic.startsWith('$CONTROL/')) return
 
         const payloadStr = payload.toString()
         const preview = payloadStr.length > 50 ? payloadStr.slice(0, 50) + '...' : payloadStr
