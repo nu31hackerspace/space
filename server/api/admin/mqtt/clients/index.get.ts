@@ -2,6 +2,10 @@ import { defineEventHandler, createError } from '#imports'
 import { executeDynSecCommands, mqttClient } from '../../../../utils/mqttStore'
 
 export default defineEventHandler(async (event) => {
+    if (!event.context.user) {
+        throw createError({ statusCode: 401, message: 'Unauthorized' })
+    }
+
     if (!mqttClient) {
         throw new Error('MQTT client not connected')
     }
