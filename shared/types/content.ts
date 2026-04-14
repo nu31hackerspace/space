@@ -30,7 +30,24 @@ export interface TagsBlock extends ContentBlockBase {
     tags: string[]
 }
 
-export type ContentBlock = HeaderBlock | TextBlock | ImageBlock | LinkBlock | TagsBlock
+export interface CodeBlock extends ContentBlockBase {
+    type: 'code'
+    code: string
+    language: string
+}
+
+export interface ListBlock extends ContentBlockBase {
+    type: 'list'
+    items: string[]
+    ordered: boolean
+}
+
+export interface QuoteBlock extends ContentBlockBase {
+    type: 'quote'
+    content: string
+}
+
+export type ContentBlock = HeaderBlock | TextBlock | ImageBlock | LinkBlock | TagsBlock | CodeBlock | ListBlock | QuoteBlock
 
 export interface PublicArticleListItem {
     slug: string

@@ -1,6 +1,7 @@
 import { createError, defineEventHandler, getRouterParam, readBody, useNitroApp } from '#imports'
 import { normalizeBlogPostWriteInput } from '~~/server/core/content/metadata'
 import { assertPostOwner } from '~~/server/core/blog/ownership'
+import { parseMarkdownToBlocks } from '~~/server/core/content/parse'
 
 export default defineEventHandler(async (event) => {
     const user = event.context.user
@@ -52,6 +53,9 @@ export default defineEventHandler(async (event) => {
     const ops: any = { $set: { updatedAt: now, ...updates } }
 
     if (typeof body?.markdown === 'string') {
+        // Invalidate the cached blocks whenever markdown changes so the next GET re-parses correctly
+        ops.$set.cachedBlocks = parseMarkdownToBlocks(updates.rawMarkdown || '')
+
         ops.$push = {
             versions: {
                 editor_id: user.userId,

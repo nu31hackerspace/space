@@ -11,6 +11,9 @@ export interface BlogPostRecord {
     slug: string
     title: string
     rawMarkdown?: string
+    // Pre-parsed blocks stored in DB to avoid re-parsing on every request.
+    // When present, these are used directly instead of parsing rawMarkdown again.
+    cachedBlocks?: ContentBlock[]
     status?: 'draft' | 'published'
     summary?: string
     tags?: string[]
@@ -81,7 +84,8 @@ function buildSummary(post: BlogPostRecord, blocks: ContentBlock[]): string {
 }
 
 function buildCommonPublicFields(post: BlogPostRecord, baseUrl: string) {
-    const parsedBlocks = parseMarkdownToBlocks(post.rawMarkdown || '')
+    // Use pre-parsed cachedBlocks when available to skip redundant markdown parsing
+    const parsedBlocks = post.cachedBlocks ?? parseMarkdownToBlocks(post.rawMarkdown || '')
     const blocks = removeDuplicatedLeadingTitle(parsedBlocks, post.title)
     const publishedAt = normalizeDate(post.publishedAt, post.createdAt)
     const updatedAt = normalizeDate(post.updatedAt, post.createdAt)

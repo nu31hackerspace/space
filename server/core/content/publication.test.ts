@@ -116,6 +116,20 @@ describe('publication helpers', () => {
         })
     })
 
+    it('produces identical publishedAt and updatedAt ISO strings when both point to the same moment', () => {
+        // Guards against false "Updated" labels caused by date normalization producing different strings
+        // for Date objects and ISO strings representing the same point in time.
+        const sameDate = new Date('2025-01-31T09:00:00.000Z')
+
+        const article = buildPublicArticle({
+            ...basePost,
+            publishedAt: sameDate,
+            updatedAt: sameDate,
+        }, 'https://space.example')
+
+        expect(article.publishedAt).toBe(article.updatedAt)
+    })
+
     it('builds feed entries with custom metadata tags', () => {
         const entry = buildPublicFeedEntry({
             ...basePost,

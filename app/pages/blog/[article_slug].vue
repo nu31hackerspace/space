@@ -46,6 +46,9 @@
                         <BlogLinkItem v-else-if="block.type === 'link'" :link-url="block.linkUrl || ''"
                             :link-text="block.linkText || ''" />
                         <BlogTagsItem v-else-if="block.type === 'tags'" :tags="block.tags || []" />
+                        <BlogCodeItem v-else-if="block.type === 'code'" :code="block.code || ''" :language="block.language || ''" />
+                        <BlogListItem v-else-if="block.type === 'list'" :items="block.items || []" :ordered="block.ordered || false" />
+                        <BlogQuoteItem v-else-if="block.type === 'quote'" :content="block.content || ''" />
                     </template>
                 </div>
             </div>

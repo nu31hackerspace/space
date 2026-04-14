@@ -2,6 +2,7 @@ import { createError, defineEventHandler, getRouterParam, useNitroApp, useRuntim
 import type { ContentResponse } from '~~/shared/types/content'
 import { buildContentResponse } from '~~/server/core/content/publication'
 import { requireDatabase } from '~~/server/core/runtime/database'
+import { getOrCacheBlocks } from '~~/server/core/blog/blocks-cache'
 
 export default defineEventHandler(async (event) => {
     const slug = getRouterParam(event, 'slug')
@@ -19,6 +20,7 @@ export default defineEventHandler(async (event) => {
                 slug: 1,
                 title: 1,
                 rawMarkdown: 1,
+                cachedBlocks: 1,
                 status: 1,
                 summary: 1,
                 tags: 1,
@@ -35,6 +37,8 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 404, statusMessage: 'Article not found' })
     }
 
-    const response: ContentResponse = buildContentResponse(post, config.public.baseUrl)
+    // Use cached blocks if available, otherwise parse and persist them for future requests
+    const blocks = await getOrCacheBlocks(post, db.collection('blogPosts'))
+    const response: ContentResponse = buildContentResponse({ ...post, cachedBlocks: blocks }, config.public.baseUrl)
     return response
 })

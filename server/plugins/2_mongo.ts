@@ -1,11 +1,11 @@
 import { Db, MongoClient } from 'mongodb'
 import { defineNitroPlugin, useRuntimeConfig } from '#imports'
 
-const config = useRuntimeConfig()
-const uri = config.mongoUri
-const client = new MongoClient(uri)
-
 export default defineNitroPlugin(async (nitroApp) => {
+    // useRuntimeConfig must be called inside the plugin callback — it is not available at module level.
+    const config = useRuntimeConfig()
+    const client = new MongoClient(config.mongoUri)
+
     nitroApp.logger.info('Connecting to MongoDB...')
     try {
         nitroApp.mongo = await client.connect()
