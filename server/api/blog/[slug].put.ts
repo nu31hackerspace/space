@@ -1,5 +1,6 @@
 import { createError, defineEventHandler, getRouterParam, readBody, useNitroApp } from '#imports'
 import { normalizeBlogPostWriteInput } from '~~/server/core/content/metadata'
+import { assertPostOwner } from '~~/server/core/blog/ownership'
 
 export default defineEventHandler(async (event) => {
     const user = event.context.user
@@ -30,6 +31,9 @@ export default defineEventHandler(async (event) => {
     if (!post) {
         throw createError({ statusCode: 404, statusMessage: 'Article not found' })
     }
+
+    // Only the original author may edit the post.
+    assertPostOwner(post, user.userId)
 
     let updates
     try {
