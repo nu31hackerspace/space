@@ -74,6 +74,12 @@ export interface ContentListResponse {
     total: number
 }
 
+// Minimal shape for prev/next navigation links on article pages
+export interface NavPost {
+    slug: string
+    title: string
+}
+
 export interface ContentResponse {
     slug: string
     title: string
@@ -87,4 +93,23 @@ export interface ContentResponse {
     publishedAt: string
     updatedAt: string
     blocks: ContentBlock[]
+    // Adjacent published posts for prev/next navigation; null when no neighbour exists
+    prevPost: NavPost | null
+    nextPost: NavPost | null
+}
+
+// Shape returned by GET /api/blog/:slug (admin, authenticated)
+export interface AdminBlogPost {
+    slug: string
+    title: string
+    status: 'draft' | 'published'
+    rawMarkdown: string
+    summary: string
+    tags: string[]
+    coverImageUrl: string
+    coverImageAlt: string
+    isFeatured: boolean
+    publishedAt?: string
+    updatedAt?: string
+    createdAt?: string
 }

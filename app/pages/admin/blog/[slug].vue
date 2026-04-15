@@ -1,43 +1,71 @@
 <template>
     <div class="container mx-auto px-4 py-8 max-w-5xl">
-        <div class="flex items-center justify-between mb-4">
-            <h1 class="text-2xl font-bold text-accent-primary">Edit: {{ slug }}</h1>
-            <MainButton
-                label="Back to list"
-                buttonStyle="secondary"
-                size="M"
-                link="/admin/blog"
-                icon="mdi:arrow-left"
-            />
+        <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <h1 class="text-2xl font-bold text-accent-primary">Редагування: {{ slug }}</h1>
+            <div class="flex items-center gap-3">
+                <!-- Link to public page — opens in a new tab so the editor stays open -->
+                <NuxtLink
+                    :to="`/blog/${slug}`"
+                    target="_blank"
+                    class="text-sm text-label-secondary underline decoration-separator-primary underline-offset-4 hover:text-accent-primary"
+                >
+                    Публічна сторінка ↗
+                </NuxtLink>
+                <MainButton
+                    label="До списку"
+                    buttonStyle="secondary"
+                    size="M"
+                    link="/admin/blog"
+                    icon="mdi:arrow-left"
+                />
+            </div>
         </div>
 
         <div class="bg-fill-secondary border border-separator-primary rounded-xl p-4">
             <div class="grid grid-cols-1 gap-3">
-                <input v-model="title" type="text" placeholder="title"
+                <input v-model="title" type="text" placeholder="Заголовок"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                 <select v-model="status"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary">
-                    <option value="draft">draft</option>
-                    <option value="published">published</option>
+                    <option value="draft">Чернетка</option>
+                    <option value="published">Опублікований</option>
                 </select>
-                <textarea v-model="summary" rows="3" placeholder="summary"
+                <textarea v-model="summary" rows="3" placeholder="Короткий опис"
                     class="w-full p-3 rounded bg-transparent border border-separator-primary text-label-primary"></textarea>
-                <input v-model="tagsText" type="text" placeholder="tags, comma separated"
+                <input v-model="tagsText" type="text" placeholder="Теги через кому"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
-                <input v-model="coverImageUrl" type="text" placeholder="cover image url"
+                <input v-model="coverImageUrl" type="text" placeholder="URL обкладинки"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
-                <input v-model="coverImageAlt" type="text" placeholder="cover image alt"
+                <input v-model="coverImageAlt" type="text" placeholder="Alt-текст обкладинки"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                 <label class="flex items-center gap-2 text-sm text-label-secondary">
                     <input v-model="isFeatured" type="checkbox" />
-                    Featured post
+                    Закріплений пост
                 </label>
-                <textarea v-model="markdown" rows="24" placeholder="markdown"
-                    class="w-full p-3 rounded bg-transparent border border-separator-primary text-label-primary font-mono"></textarea>
-                <div class="flex items-center gap-2">
-                    <MainButton @click="save" :disabled="saving">{{ saving ? 'Saving…' : 'Save' }}</MainButton>
+
+                <!-- Split-view: textarea on the left, live markdown preview on the right -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <textarea v-model="markdown" rows="24" placeholder="Markdown"
+                        class="w-full p-3 rounded bg-transparent border border-separator-primary text-label-primary font-mono"></textarea>
+                    <div
+                        class="w-full p-3 rounded border border-separator-primary text-label-primary prose prose-invert max-w-none overflow-auto"
+                        style="min-height: 12rem"
+                        v-html="markdownPreview"
+                    ></div>
+                </div>
+
+                <div class="flex items-center gap-2 flex-wrap">
+                    <MainButton @click="save" :disabled="saving">{{ saving ? 'Збереження…' : 'Зберегти' }}</MainButton>
                     <span v-if="saveMsg" class="text-green-600">{{ saveMsg }}</span>
                     <span v-if="errorMsg" class="text-red-500">{{ errorMsg }}</span>
+
+                    <!-- Delete button with confirmation — only shown after post is loaded -->
+                    <MainButton
+                        v-if="loaded"
+                        buttonStyle="danger"
+                        :disabled="deleting"
+                        @click="deletePost"
+                    >{{ deleting ? 'Видалення…' : 'Видалити пост' }}</MainButton>
                 </div>
             </div>
         </div>
@@ -45,12 +73,19 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useFetch, useRoute } from '#imports'
-import { ref } from 'vue'
+import { definePageMeta, useFetch, useRoute, useRouter } from '#imports'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import type { AdminBlogPost } from '~~/shared/types/content'
+
+// marked is used for live markdown preview; imported dynamically to avoid SSR issues.
+// marked v18+ uses parse() instead of the default export as a function.
+let markedParse: ((src: string) => string) | null = null
+import('marked').then(m => { markedParse = m.marked.parse as unknown as (src: string) => string })
 
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
 const route = useRoute()
+const router = useRouter()
 const slug = route.params.slug as string
 
 const title = ref('')
@@ -62,28 +97,34 @@ const coverImageAlt = ref('')
 const isFeatured = ref(false)
 const markdown = ref('')
 const saving = ref(false)
+const deleting = ref(false)
 const saveMsg = ref('')
 const errorMsg = ref('')
+const loaded = ref(false)
+
+// isDirty tracks whether there are unsaved changes
+const isDirty = ref(false)
+
+// Computed live preview — falls back to raw text if marked is not loaded yet
+const markdownPreview = computed(() => {
+    if (!markdown.value) return ''
+    return markedParse ? markedParse(markdown.value) : markdown.value
+})
 
 async function load() {
-    const { data, error } = await useFetch(`/api/blog/${encodeURIComponent(slug)}`)
+    const { data, error } = await useFetch<AdminBlogPost>(`/api/blog/${encodeURIComponent(slug)}`)
     if (!error.value && data.value) {
-        // @ts-ignore
         title.value = data.value.title || ''
-        // @ts-ignore
         status.value = data.value.status || 'draft'
-        // @ts-ignore
         summary.value = data.value.summary || ''
-        // @ts-ignore
         tagsText.value = Array.isArray(data.value.tags) ? data.value.tags.join(', ') : ''
-        // @ts-ignore
         coverImageUrl.value = data.value.coverImageUrl || ''
-        // @ts-ignore
         coverImageAlt.value = data.value.coverImageAlt || ''
-        // @ts-ignore
         isFeatured.value = Boolean(data.value.isFeatured)
-        // @ts-ignore
         markdown.value = data.value.rawMarkdown || ''
+        loaded.value = true
+        // Reset dirty flag after load so the initial population is not treated as a change
+        isDirty.value = false
     }
 }
 
@@ -106,12 +147,41 @@ async function save() {
     })
     saving.value = false
     if (error.value) {
-        // @ts-ignore
-        errorMsg.value = error.value.statusMessage || 'Failed to save'
+        errorMsg.value = error.value.statusMessage || 'Помилка збереження'
     } else {
-        saveMsg.value = 'Saved'
+        saveMsg.value = 'Збережено'
+        // Clear dirty flag once the data is persisted
+        isDirty.value = false
     }
 }
+
+async function deletePost() {
+    if (!window.confirm(`Видалити пост «${slug}»? Це незворотно.`)) return
+    deleting.value = true
+    const { error } = await useFetch(`/api/blog/${encodeURIComponent(slug)}`, { method: 'DELETE' })
+    deleting.value = false
+    if (error.value) {
+        errorMsg.value = error.value.statusMessage || 'Помилка видалення'
+    } else {
+        // Navigate back to list after successful deletion
+        await router.push('/admin/blog')
+    }
+}
+
+// Mark as dirty whenever any field changes (watched after initial load)
+watch([title, status, summary, tagsText, coverImageUrl, coverImageAlt, isFeatured, markdown], () => {
+    if (loaded.value) isDirty.value = true
+})
+
+// Warn the user before leaving with unsaved changes
+function handleBeforeUnload(event: BeforeUnloadEvent) {
+    if (isDirty.value) {
+        event.preventDefault()
+    }
+}
+
+onMounted(() => window.addEventListener('beforeunload', handleBeforeUnload))
+onBeforeUnmount(() => window.removeEventListener('beforeunload', handleBeforeUnload))
 
 await load()
 </script>

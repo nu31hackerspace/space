@@ -3,6 +3,7 @@ import type { ContentResponse } from '~~/shared/types/content'
 import { buildContentResponse } from '~~/server/core/content/publication'
 import { requireDatabase } from '~~/server/core/runtime/database'
 import { getOrCacheBlocks } from '~~/server/core/blog/blocks-cache'
+import { pickNavPost } from '~~/server/core/content/navigation'
 
 export default defineEventHandler(async (event) => {
     const slug = getRouterParam(event, 'slug')
@@ -39,6 +40,31 @@ export default defineEventHandler(async (event) => {
 
     // Use cached blocks if available, otherwise parse and persist them for future requests
     const blocks = await getOrCacheBlocks(post, db.collection('blogPosts'))
-    const response: ContentResponse = buildContentResponse({ ...post, cachedBlocks: blocks }, config.public.baseUrl)
+
+    // Fetch the immediately adjacent published posts by publishedAt for prev/next navigation.
+    // "prev" is the post published just before this one (older), "next" is just after (newer).
+    const publishedAt = post.publishedAt ?? post.createdAt
+    const [prevRaw, nextRaw] = await Promise.all([
+        db.collection('blogPosts').findOne(
+            { status: 'published', $or: [
+                { publishedAt: { $lt: publishedAt } },
+                { publishedAt: { $exists: false }, createdAt: { $lt: post.createdAt } },
+            ] },
+            { sort: { publishedAt: -1, createdAt: -1 }, projection: { _id: 0, slug: 1, title: 1 } }
+        ),
+        db.collection('blogPosts').findOne(
+            { status: 'published', $or: [
+                { publishedAt: { $gt: publishedAt } },
+                { publishedAt: { $exists: false }, createdAt: { $gt: post.createdAt } },
+            ] },
+            { sort: { publishedAt: 1, createdAt: 1 }, projection: { _id: 0, slug: 1, title: 1 } }
+        ),
+    ])
+
+    const response: ContentResponse = {
+        ...buildContentResponse({ ...post, cachedBlocks: blocks }, config.public.baseUrl),
+        prevPost: pickNavPost(prevRaw),
+        nextPost: pickNavPost(nextRaw),
+    }
     return response
 })
