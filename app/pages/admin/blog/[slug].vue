@@ -3,7 +3,6 @@
         <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
             <h1 class="text-2xl font-bold text-accent-primary">Редагування: {{ slug }}</h1>
             <div class="flex items-center gap-3">
-                <!-- Link to public page — opens in a new tab so the editor stays open -->
                 <NuxtLink
                     :to="`/blog/${slug}`"
                     target="_blank"
@@ -44,24 +43,14 @@
                     <input v-model="isFeatured" type="checkbox" />
                     Закріплений пост
                 </label>
-
-                <!-- Split-view: textarea on the left, live markdown preview on the right -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <textarea v-model="markdown" rows="24" placeholder="Markdown"
-                        class="w-full p-3 rounded bg-transparent border border-separator-primary text-label-primary font-mono"></textarea>
-                    <div
-                        class="w-full p-3 rounded border border-separator-primary text-label-primary prose prose-invert max-w-none overflow-auto"
-                        style="min-height: 12rem"
-                        v-html="markdownPreview"
-                    ></div>
-                </div>
+                <textarea v-model="markdown" rows="32" placeholder="Markdown"
+                    class="w-full p-3 rounded bg-transparent border border-separator-primary text-label-primary font-mono"></textarea>
 
                 <div class="flex items-center gap-2 flex-wrap">
                     <MainButton @click="save" :disabled="saving">{{ saving ? 'Збереження…' : 'Зберегти' }}</MainButton>
                     <span v-if="saveMsg" class="text-green-600">{{ saveMsg }}</span>
                     <span v-if="errorMsg" class="text-red-500">{{ errorMsg }}</span>
 
-                    <!-- Delete button with confirmation — only shown after post is loaded -->
                     <MainButton
                         v-if="loaded"
                         buttonStyle="danger"
@@ -76,13 +65,8 @@
 
 <script setup lang="ts">
 import { definePageMeta, useRoute, useRouter } from '#imports'
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { AdminBlogPost } from '~~/shared/types/content'
-
-// marked is used for live markdown preview; imported dynamically to avoid SSR issues.
-// marked v18+ uses parse() instead of the default export as a function.
-let markedParse: ((src: string) => string) | null = null
-import('marked').then(m => { markedParse = m.marked.parse as unknown as (src: string) => string })
 
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
@@ -104,15 +88,7 @@ const deleting = ref(false)
 const saveMsg = ref('')
 const errorMsg = ref('')
 const loaded = ref(false)
-
-// isDirty tracks whether there are unsaved changes
 const isDirty = ref(false)
-
-// Computed live preview — falls back to raw text if marked is not loaded yet
-const markdownPreview = computed(() => {
-    if (!markdown.value) return ''
-    return markedParse ? markedParse(markdown.value) : markdown.value
-})
 
 async function load() {
     try {
@@ -174,12 +150,10 @@ async function deletePost() {
     }
 }
 
-// Mark as dirty whenever any field changes (watched after initial load)
 watch([title, status, summary, tagsText, coverImageUrl, coverImageAlt, isFeatured, authorName, markdown], () => {
     if (loaded.value) isDirty.value = true
 })
 
-// Warn the user before leaving with unsaved changes
 function handleBeforeUnload(event: BeforeUnloadEvent) {
     if (isDirty.value) {
         event.preventDefault()
