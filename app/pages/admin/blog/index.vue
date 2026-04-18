@@ -21,6 +21,8 @@
                         class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                     <input v-model="createForm.coverImageAlt" type="text" placeholder="Alt-текст обкладинки"
                         class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                    <input v-model="createForm.authorName" type="text" placeholder="Автор"
+                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                     <label class="flex items-center gap-2 text-sm text-label-secondary">
                         <input v-model="createForm.isFeatured" type="checkbox" />
                         Закріплений пост
@@ -78,6 +80,8 @@ import { ref } from 'vue'
 
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
+const { data: profile } = await useFetch<{ username: string }>('/api/profile')
+
 // Initial empty state for the create form — reused after successful creation
 function emptyForm() {
     return {
@@ -89,6 +93,7 @@ function emptyForm() {
         coverImageUrl: '',
         coverImageAlt: '',
         isFeatured: false,
+        authorName: profile.value?.username || '',
     }
 }
 
@@ -102,7 +107,7 @@ async function createPost() {
     createError.value = ''
     createOk.value = false
     try {
-        const { error } = await useFetch('/api/blog', {
+        await $fetch('/api/blog', {
             method: 'POST',
             body: {
                 title: createForm.value.title,
@@ -113,15 +118,14 @@ async function createPost() {
                 coverImageUrl: createForm.value.coverImageUrl,
                 coverImageAlt: createForm.value.coverImageAlt,
                 isFeatured: createForm.value.isFeatured,
+                authorName: createForm.value.authorName,
             },
         })
-        if (error.value) throw error.value
         createOk.value = true
-        // Reset form to empty state after successful creation
         createForm.value = emptyForm()
         await refreshList()
     } catch (e: any) {
-        createError.value = e?.statusMessage || 'Помилка створення'
+        createError.value = e?.data?.statusMessage || e?.message || 'Помилка створення'
     } finally {
         creating.value = false
     }
@@ -129,11 +133,11 @@ async function createPost() {
 
 async function deletePost(slug: string) {
     if (!window.confirm(`Видалити пост «${slug}»? Це незворотно.`)) return
-    const { error } = await useFetch(`/api/blog/${encodeURIComponent(slug)}`, { method: 'DELETE' })
-    if (error.value) {
-        alert(error.value.statusMessage || 'Помилка видалення')
-    } else {
+    try {
+        await $fetch(`/api/blog/${encodeURIComponent(slug)}`, { method: 'DELETE' })
         await refreshList()
+    } catch (e: any) {
+        alert(e?.data?.statusMessage || e?.message || 'Помилка видалення')
     }
 }
 
@@ -142,9 +146,11 @@ const listPending = ref(false)
 
 async function refreshList() {
     listPending.value = true
-    const { data, error } = await useFetch('/api/blog')
-    if (!error.value && data.value) {
-        items.value = (data.value as any).items || []
+    try {
+        const data = await $fetch<any>('/api/blog')
+        items.value = data?.items || []
+    } catch {
+        // ignore
     }
     listPending.value = false
 }

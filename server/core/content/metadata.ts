@@ -9,6 +9,7 @@ interface WriteBody {
     coverImageUrl?: string
     coverImageAlt?: string
     isFeatured?: boolean
+    authorName?: string
 }
 
 interface ExistingPost {
@@ -32,6 +33,7 @@ interface NormalizedWriteInput {
     coverImageAlt?: string
     isFeatured?: boolean
     publishedAt?: Date
+    authorName?: string
 }
 
 function trimOptionalString(value: string | undefined): string | undefined {
@@ -107,6 +109,12 @@ export function normalizeBlogPostWriteInput(options: NormalizeOptions): Normaliz
         normalized.isFeatured = options.body.isFeatured
     } else if (options.mode === 'create') {
         normalized.isFeatured = false
+    }
+
+    if (typeof options.body.authorName === 'string') {
+        normalized.authorName = options.body.authorName.trim()
+    } else if (options.mode === 'create') {
+        normalized.authorName = ''
     }
 
     if (

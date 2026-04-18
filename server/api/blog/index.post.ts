@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
         coverImageUrl?: string
         coverImageAlt?: string
         isFeatured?: boolean
+        authorName?: string
     }>(event)
     const now = new Date()
     let normalizedBody
@@ -53,6 +54,7 @@ export default defineEventHandler(async (event) => {
             coverImageUrl: normalizedBody.coverImageUrl || '',
             coverImageAlt: normalizedBody.coverImageAlt || '',
             isFeatured: normalizedBody.isFeatured || false,
+            authorName: normalizedBody.authorName || '',
             publishedAt: normalizedBody.publishedAt || null,
             createdAt: now,
             updatedAt: now,

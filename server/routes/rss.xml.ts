@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
                     tags: 1,
                     coverImageUrl: 1,
                     coverImageAlt: 1,
+                    authorName: 1,
                     publishedAt: 1,
                     createdAt: 1,
                     updatedAt: 1,

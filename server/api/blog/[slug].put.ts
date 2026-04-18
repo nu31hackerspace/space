@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
         coverImageUrl?: string
         coverImageAlt?: string
         isFeatured?: boolean
+        authorName?: string
     }>(event)
     const now = new Date()
 

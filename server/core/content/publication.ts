@@ -20,6 +20,7 @@ export interface BlogPostRecord {
     coverImageUrl?: string
     coverImageAlt?: string
     isFeatured?: boolean
+    authorName?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     publishedAt?: Date | string
@@ -34,6 +35,7 @@ export interface PublicFeedEntry {
     updatedAt: string
     categories: string[]
     customFields: Record<string, string>
+    author?: string
 }
 
 function normalizeDate(value: Date | string | undefined, fallback: Date | string | undefined): string {
@@ -102,6 +104,7 @@ function buildCommonPublicFields(post: BlogPostRecord, baseUrl: string) {
         coverImageAlt: trimText(post.coverImageAlt),
         status: post.status === 'draft' ? 'draft' : 'published',
         isFeatured: Boolean(post.isFeatured),
+        authorName: trimText(post.authorName),
         url: new URL(`/blog/${post.slug}`, baseUrl).toString(),
         publishedAt,
         updatedAt,
@@ -156,5 +159,6 @@ export function buildPublicFeedEntry(post: BlogPostRecord, baseUrl: string): Pub
         updatedAt: article.updatedAt,
         categories: article.tags,
         customFields,
+        author: article.authorName || undefined,
     }
 }

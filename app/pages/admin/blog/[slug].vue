@@ -38,6 +38,8 @@
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                 <input v-model="coverImageAlt" type="text" placeholder="Alt-текст обкладинки"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                <input v-model="authorName" type="text" placeholder="Автор"
+                    class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                 <label class="flex items-center gap-2 text-sm text-label-secondary">
                     <input v-model="isFeatured" type="checkbox" />
                     Закріплений пост
@@ -73,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useFetch, useRoute, useRouter } from '#imports'
+import { definePageMeta, useRoute, useRouter } from '#imports'
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { AdminBlogPost } from '~~/shared/types/content'
 
@@ -95,6 +97,7 @@ const tagsText = ref('')
 const coverImageUrl = ref('')
 const coverImageAlt = ref('')
 const isFeatured = ref(false)
+const authorName = ref('')
 const markdown = ref('')
 const saving = ref(false)
 const deleting = ref(false)
@@ -112,19 +115,21 @@ const markdownPreview = computed(() => {
 })
 
 async function load() {
-    const { data, error } = await useFetch<AdminBlogPost>(`/api/blog/${encodeURIComponent(slug)}`)
-    if (!error.value && data.value) {
-        title.value = data.value.title || ''
-        status.value = data.value.status || 'draft'
-        summary.value = data.value.summary || ''
-        tagsText.value = Array.isArray(data.value.tags) ? data.value.tags.join(', ') : ''
-        coverImageUrl.value = data.value.coverImageUrl || ''
-        coverImageAlt.value = data.value.coverImageAlt || ''
-        isFeatured.value = Boolean(data.value.isFeatured)
-        markdown.value = data.value.rawMarkdown || ''
+    try {
+        const data = await $fetch<AdminBlogPost>(`/api/blog/${encodeURIComponent(slug)}`)
+        title.value = data.title || ''
+        status.value = data.status || 'draft'
+        summary.value = data.summary || ''
+        tagsText.value = Array.isArray(data.tags) ? data.tags.join(', ') : ''
+        coverImageUrl.value = data.coverImageUrl || ''
+        coverImageAlt.value = data.coverImageAlt || ''
+        isFeatured.value = Boolean(data.isFeatured)
+        authorName.value = data.authorName || ''
+        markdown.value = data.rawMarkdown || ''
         loaded.value = true
-        // Reset dirty flag after load so the initial population is not treated as a change
         isDirty.value = false
+    } catch {
+        errorMsg.value = 'Помилка завантаження поста'
     }
 }
 
@@ -132,44 +137,45 @@ async function save() {
     saving.value = true
     saveMsg.value = ''
     errorMsg.value = ''
-    const { error } = await useFetch(`/api/blog/${encodeURIComponent(slug)}`, {
-        method: 'PUT',
-        body: {
-            title: title.value,
-            status: status.value,
-            summary: summary.value,
-            tags: tagsText.value.split(','),
-            coverImageUrl: coverImageUrl.value,
-            coverImageAlt: coverImageAlt.value,
-            isFeatured: isFeatured.value,
-            markdown: markdown.value,
-        },
-    })
-    saving.value = false
-    if (error.value) {
-        errorMsg.value = error.value.statusMessage || 'Помилка збереження'
-    } else {
+    try {
+        await $fetch(`/api/blog/${encodeURIComponent(slug)}`, {
+            method: 'PUT',
+            body: {
+                title: title.value,
+                status: status.value,
+                summary: summary.value,
+                tags: tagsText.value.split(','),
+                coverImageUrl: coverImageUrl.value,
+                coverImageAlt: coverImageAlt.value,
+                isFeatured: isFeatured.value,
+                authorName: authorName.value,
+                markdown: markdown.value,
+            },
+        })
         saveMsg.value = 'Збережено'
-        // Clear dirty flag once the data is persisted
         isDirty.value = false
+    } catch (e: any) {
+        errorMsg.value = e?.data?.statusMessage || e?.message || 'Помилка збереження'
+    } finally {
+        saving.value = false
     }
 }
 
 async function deletePost() {
     if (!window.confirm(`Видалити пост «${slug}»? Це незворотно.`)) return
     deleting.value = true
-    const { error } = await useFetch(`/api/blog/${encodeURIComponent(slug)}`, { method: 'DELETE' })
-    deleting.value = false
-    if (error.value) {
-        errorMsg.value = error.value.statusMessage || 'Помилка видалення'
-    } else {
-        // Navigate back to list after successful deletion
+    try {
+        await $fetch(`/api/blog/${encodeURIComponent(slug)}`, { method: 'DELETE' })
         await router.push('/admin/blog')
+    } catch (e: any) {
+        errorMsg.value = e?.data?.statusMessage || e?.message || 'Помилка видалення'
+    } finally {
+        deleting.value = false
     }
 }
 
 // Mark as dirty whenever any field changes (watched after initial load)
-watch([title, status, summary, tagsText, coverImageUrl, coverImageAlt, isFeatured, markdown], () => {
+watch([title, status, summary, tagsText, coverImageUrl, coverImageAlt, isFeatured, authorName, markdown], () => {
     if (loaded.value) isDirty.value = true
 })
 

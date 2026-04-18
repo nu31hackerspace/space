@@ -58,6 +58,7 @@ export interface PublicArticleListItem {
     coverImageAlt: string
     status: 'draft' | 'published'
     isFeatured: boolean
+    authorName?: string
     url: string
     publishedAt: string
     updatedAt: string
@@ -89,6 +90,7 @@ export interface ContentResponse {
     coverImageAlt: string
     status: 'draft' | 'published'
     isFeatured: boolean
+    authorName?: string
     url: string
     publishedAt: string
     updatedAt: string
@@ -109,6 +111,7 @@ export interface AdminBlogPost {
     coverImageUrl: string
     coverImageAlt: string
     isFeatured: boolean
+    authorName?: string
     publishedAt?: string
     updatedAt?: string
     createdAt?: string

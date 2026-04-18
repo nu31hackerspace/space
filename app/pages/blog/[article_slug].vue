@@ -23,6 +23,7 @@
                             <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-label-tertiary">
                                 <span>{{ formatDate(content.publishedAt) }}</span>
                                 <span v-if="content.updatedAt !== content.publishedAt">Оновлено {{ formatDate(content.updatedAt) }}</span>
+                                <span v-if="content.authorName">{{ content.authorName }}</span>
                                 <span>~{{ estimatedReadingTime }} хв читання</span>
                                 <a href="/rss.xml" class="underline decoration-separator-primary underline-offset-4">RSS</a>
                             </div>
@@ -48,6 +49,7 @@
                             <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-label-tertiary">
                                 <span>{{ formatDate(content.publishedAt) }}</span>
                                 <span v-if="content.updatedAt !== content.publishedAt">Оновлено {{ formatDate(content.updatedAt) }}</span>
+                                <span v-if="content.authorName">{{ content.authorName }}</span>
                                 <span>~{{ estimatedReadingTime }} хв читання</span>
                                 <a href="/rss.xml" class="underline decoration-separator-primary underline-offset-4">RSS</a>
                             </div>

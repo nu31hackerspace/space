@@ -55,6 +55,7 @@
                         <h2 class="mb-1.5 text-base sm:text-lg font-semibold text-accent-primary group-hover:underline leading-snug">
                             {{ article.title }}
                         </h2>
+                        <p v-if="article.authorName" class="mb-1 text-xs text-label-tertiary">{{ article.authorName }}</p>
                         <p class="mb-2 line-clamp-2 text-sm leading-6 text-label-secondary">
                             {{ article.summary }}
                         </p>
