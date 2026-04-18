@@ -1,44 +1,11 @@
 <template>
     <div class="container mx-auto px-4 py-8 max-w-5xl">
-        <h1 class="text-2xl font-bold text-accent-primary mb-6">Адмінка блогу</h1>
-
-        <div class="grid grid-cols-1 gap-8">
-            <div class="bg-fill-secondary border border-separator-primary rounded-xl p-4">
-                <h2 class="text-lg font-semibold text-accent-primary mb-4">Новий пост</h2>
-                <form class="flex flex-col gap-3" @submit.prevent="createPost">
-                    <input v-model="createForm.title" type="text" placeholder="Заголовок"
-                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
-                    <select v-model="createForm.status"
-                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary">
-                        <option value="draft">Чернетка</option>
-                        <option value="published">Опублікований</option>
-                    </select>
-                    <textarea v-model="createForm.summary" rows="3" placeholder="Короткий опис"
-                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary"></textarea>
-                    <input v-model="createForm.tagsText" type="text" placeholder="Теги через кому"
-                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
-                    <input v-model="createForm.coverImageUrl" type="text" placeholder="URL обкладинки"
-                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
-                    <input v-model="createForm.coverImageAlt" type="text" placeholder="Alt-текст обкладинки"
-                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
-                    <input v-model="createForm.authorName" type="text" placeholder="Автор"
-                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
-                    <label class="flex items-center gap-2 text-sm text-label-secondary">
-                        <input v-model="createForm.isFeatured" type="checkbox" />
-                        Закріплений пост
-                    </label>
-                    <textarea v-model="createForm.markdown" rows="8" placeholder="Markdown"
-                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary"></textarea>
-                    <MainButton type="submit" :disabled="creating">
-                        {{ creating ? 'Створення…' : 'Створити' }}
-                    </MainButton>
-                </form>
-                <p v-if="createError" class="text-red-500 mt-2">{{ createError }}</p>
-                <p v-if="createOk" class="text-green-600 mt-2">Створено</p>
-            </div>
+        <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+            <h1 class="text-2xl font-bold text-accent-primary">Адмінка блогу</h1>
+            <MainButton label="Створити публікацію" size="M" link="/admin/blog/new" icon="mdi:plus" />
         </div>
 
-        <div class="mt-10 bg-fill-secondary border border-separator-primary rounded-xl p-4">
+        <div class="bg-fill-secondary border border-separator-primary rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-lg font-semibold text-accent-primary">Пости</h2>
             </div>
@@ -71,7 +38,8 @@
                         <NuxtLink class="text-accent-primary underline text-sm" :to="`/admin/blog/${item.slug}`">Редагувати</NuxtLink>
                         <button
                             @click="deletePost(item.slug)"
-                            class="text-xs text-red-500 hover:text-red-400 underline"
+                            class="text-xs font-medium"
+                            style="color: #ef4444"
                         >Видалити</button>
                     </div>
                 </div>
@@ -81,61 +49,10 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useFetch } from '#imports'
+import { definePageMeta } from '#imports'
 import { ref } from 'vue'
 
 definePageMeta({ layout: 'default', middleware: ['auth'] })
-
-const { data: profile } = await useFetch<{ username: string }>('/api/profile')
-
-// Initial empty state for the create form — reused after successful creation
-function emptyForm() {
-    return {
-        title: '',
-        markdown: '',
-        status: 'draft' as 'draft' | 'published',
-        summary: '',
-        tagsText: '',
-        coverImageUrl: '',
-        coverImageAlt: '',
-        isFeatured: false,
-        authorName: profile.value?.username || '',
-    }
-}
-
-const createForm = ref(emptyForm())
-const creating = ref(false)
-const createError = ref('')
-const createOk = ref(false)
-
-async function createPost() {
-    creating.value = true
-    createError.value = ''
-    createOk.value = false
-    try {
-        await $fetch('/api/blog', {
-            method: 'POST',
-            body: {
-                title: createForm.value.title,
-                markdown: createForm.value.markdown,
-                status: createForm.value.status,
-                summary: createForm.value.summary,
-                tags: createForm.value.tagsText.split(','),
-                coverImageUrl: createForm.value.coverImageUrl,
-                coverImageAlt: createForm.value.coverImageAlt,
-                isFeatured: createForm.value.isFeatured,
-                authorName: createForm.value.authorName,
-            },
-        })
-        createOk.value = true
-        createForm.value = emptyForm()
-        await refreshList()
-    } catch (e: any) {
-        createError.value = e?.data?.statusMessage || e?.message || 'Помилка створення'
-    } finally {
-        creating.value = false
-    }
-}
 
 async function deletePost(slug: string) {
     if (!window.confirm(`Видалити пост «${slug}»? Це незворотно.`)) return

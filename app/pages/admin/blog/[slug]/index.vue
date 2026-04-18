@@ -56,8 +56,8 @@
 
                 <div class="flex items-center gap-2 flex-wrap">
                     <MainButton @click="save" :disabled="saving">{{ saving ? 'Збереження…' : 'Зберегти' }}</MainButton>
-                    <span v-if="saveMsg" class="text-green-600">{{ saveMsg }}</span>
-                    <span v-if="errorMsg" class="text-red-500">{{ errorMsg }}</span>
+                    <span v-if="saveMsg" style="color: #4ade80">{{ saveMsg }}</span>
+                    <span v-if="errorMsg" style="color: #ef4444">{{ errorMsg }}</span>
 
                     <MainButton
                         v-if="loaded"

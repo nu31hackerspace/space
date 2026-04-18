@@ -6,6 +6,7 @@
             variantClasses[buttonStyle],
             sizeClasses[size],
         ]"
+        :style="buttonStyle === 'danger' ? 'color: #ef4444' : undefined"
         :href="link"
         :rel="link ? 'noopener noreferrer' : undefined"
         @click="link ? undefined : $emit('click', $event)"
@@ -30,7 +31,7 @@ import { Icon } from '@iconify/vue'
 interface Props {
     label?: string
     size?: 'S' | 'M' | 'L'
-    buttonStyle?: 'primary' | 'secondary' | 'ghost'
+    buttonStyle?: 'primary' | 'secondary' | 'ghost' | 'danger'
     state?: 'default' | 'disabled'
     link?: string
     icon?: string
@@ -68,5 +69,6 @@ const variantClasses = {
         'bg-accent-primary hover:bg-accent-secondary text-background-primary',
     secondary: 'bg-fill-tertiary hover:bg-fill-secondary text-label-primary',
     ghost: 'bg-transparent hover:bg-fill-tertiary text-label-primary',
+    danger: 'bg-transparent',
 }
 </script>
