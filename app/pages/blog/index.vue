@@ -118,14 +118,14 @@ const activeTag = ref((route.query.tag as string) || '')
 
 const PAGE_SIZE = 10
 
-function buildQuery() {
+const fetchQuery = computed(() => {
     const q: Record<string, string> = { page: String(currentPage.value), pageSize: String(PAGE_SIZE) }
     if (activeTag.value) q.tag = activeTag.value
     return q
-}
+})
 
 const { data: articles, pending, error, refresh } = await useFetch<ContentListResponse>('/api/content', {
-    query: buildQuery(),
+    query: fetchQuery,
 })
 
 async function navigate(newPage: number, newTag: string) {
