@@ -4,6 +4,14 @@
             <h1 class="text-2xl font-bold text-accent-primary">Редагування: {{ slug }}</h1>
             <div class="flex items-center gap-3">
                 <NuxtLink
+                    :to="`/admin/blog/${slug}/preview`"
+                    target="_blank"
+                    class="text-sm text-label-secondary underline decoration-separator-primary underline-offset-4 hover:text-accent-primary"
+                >
+                    Переглянути ↗
+                </NuxtLink>
+                <NuxtLink
+                    v-if="status === 'published'"
                     :to="`/blog/${slug}`"
                     target="_blank"
                     class="text-sm text-label-secondary underline decoration-separator-primary underline-offset-4 hover:text-accent-primary"

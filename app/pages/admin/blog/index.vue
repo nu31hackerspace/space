@@ -56,12 +56,18 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <!-- Link to public page for quick preview -->
                         <NuxtLink
+                            v-if="item.status === 'published'"
                             :to="`/blog/${item.slug}`"
                             target="_blank"
                             class="text-xs text-label-secondary underline decoration-separator-primary underline-offset-2 hover:text-accent-primary"
                         >Публічна ↗</NuxtLink>
+                        <NuxtLink
+                            v-else
+                            :to="`/admin/blog/${item.slug}/preview`"
+                            target="_blank"
+                            class="text-xs text-label-secondary underline decoration-separator-primary underline-offset-2 hover:text-accent-primary"
+                        >Preview ↗</NuxtLink>
                         <NuxtLink class="text-accent-primary underline text-sm" :to="`/admin/blog/${item.slug}`">Редагувати</NuxtLink>
                         <button
                             @click="deletePost(item.slug)"
