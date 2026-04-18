@@ -14,31 +14,54 @@
                     <NuxtLink to="/blog" class="mb-8 inline-flex text-sm uppercase tracking-[0.2em] text-label-tertiary transition-colors hover:text-accent-primary">
                         ← До блогу
                     </NuxtLink>
-                    <div class="max-w-3xl">
-                        <p class="mb-4 font-display text-2xl uppercase tracking-[0.25em] text-label-tertiary">Публікація</p>
-                        <h1 class="mb-6 text-4xl font-semibold text-accent-primary md:text-6xl">{{ content.title }}</h1>
-                        <p v-if="content.summary" class="mb-8 text-lg leading-8 text-label-secondary">{{ content.summary }}</p>
-                        <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-label-tertiary">
-                            <span>{{ formatDate(content.publishedAt) }}</span>
-                            <span v-if="content.updatedAt !== content.publishedAt">Оновлено {{ formatDate(content.updatedAt) }}</span>
-                            <!-- Estimated reading time computed from content blocks -->
-                            <span>~{{ estimatedReadingTime }} хв читання</span>
-                            <a href="/rss.xml" class="underline decoration-separator-primary underline-offset-4">RSS</a>
+                    <!-- Vertical cover image: side by side with header on desktop, stacked on mobile -->
+                    <div v-if="content.coverImageUrl && coverIsPortrait" class="flex flex-col md:flex-row items-start gap-8">
+                        <div class="flex-1 min-w-0">
+                            <p class="mb-4 font-display text-2xl uppercase tracking-[0.25em] text-label-tertiary">Публікація</p>
+                            <h1 class="mb-6 text-4xl font-semibold text-accent-primary md:text-6xl">{{ content.title }}</h1>
+                            <p v-if="content.summary" class="mb-8 text-lg leading-8 text-label-secondary">{{ content.summary }}</p>
+                            <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-label-tertiary">
+                                <span>{{ formatDate(content.publishedAt) }}</span>
+                                <span v-if="content.updatedAt !== content.publishedAt">Оновлено {{ formatDate(content.updatedAt) }}</span>
+                                <span>~{{ estimatedReadingTime }} хв читання</span>
+                                <a href="/rss.xml" class="underline decoration-separator-primary underline-offset-4">RSS</a>
+                            </div>
+                            <div v-if="content.tags.length" class="mt-8 flex flex-wrap gap-2">
+                                <NuxtLink v-for="tag in content.tags" :key="tag" :to="`/blog?tag=${encodeURIComponent(tag)}`"
+                                    class="rounded-full border border-separator-primary px-3 py-1 text-xs uppercase tracking-[0.18em] text-label-secondary hover:border-accent-primary hover:text-accent-primary transition-colors">
+                                    {{ tag }}
+                                </NuxtLink>
+                            </div>
                         </div>
-                        <div v-if="content.tags.length" class="mt-8 flex flex-wrap gap-2">
-                            <!-- Clickable tags link back to the filtered blog list -->
-                            <NuxtLink
-                                v-for="tag in content.tags"
-                                :key="tag"
-                                :to="`/blog?tag=${encodeURIComponent(tag)}`"
-                                class="rounded-full border border-separator-primary px-3 py-1 text-xs uppercase tracking-[0.18em] text-label-secondary hover:border-accent-primary hover:text-accent-primary transition-colors"
-                            >
-                                {{ tag }}
-                            </NuxtLink>
+                        <div class="shrink-0 mt-2">
+                            <img :src="content.coverImageUrl" :alt="content.coverImageAlt || content.title"
+                                class="max-h-96 w-auto max-w-xs rounded-[1.5rem] border border-separator-primary object-contain" />
                         </div>
                     </div>
-                    <div v-if="content.coverImageUrl" class="mt-10 overflow-hidden rounded-[2rem] border border-separator-primary">
-                        <img :src="content.coverImageUrl" :alt="content.coverImageAlt || content.title" class="h-full max-h-[32rem] w-full object-cover" />
+
+                    <!-- Horizontal cover image: header above, image below full-width -->
+                    <div v-else>
+                        <div class="max-w-3xl">
+                            <p class="mb-4 font-display text-2xl uppercase tracking-[0.25em] text-label-tertiary">Публікація</p>
+                            <h1 class="mb-6 text-4xl font-semibold text-accent-primary md:text-6xl">{{ content.title }}</h1>
+                            <p v-if="content.summary" class="mb-8 text-lg leading-8 text-label-secondary">{{ content.summary }}</p>
+                            <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-label-tertiary">
+                                <span>{{ formatDate(content.publishedAt) }}</span>
+                                <span v-if="content.updatedAt !== content.publishedAt">Оновлено {{ formatDate(content.updatedAt) }}</span>
+                                <span>~{{ estimatedReadingTime }} хв читання</span>
+                                <a href="/rss.xml" class="underline decoration-separator-primary underline-offset-4">RSS</a>
+                            </div>
+                            <div v-if="content.tags.length" class="mt-8 flex flex-wrap gap-2">
+                                <NuxtLink v-for="tag in content.tags" :key="tag" :to="`/blog?tag=${encodeURIComponent(tag)}`"
+                                    class="rounded-full border border-separator-primary px-3 py-1 text-xs uppercase tracking-[0.18em] text-label-secondary hover:border-accent-primary hover:text-accent-primary transition-colors">
+                                    {{ tag }}
+                                </NuxtLink>
+                            </div>
+                        </div>
+                        <div v-if="content.coverImageUrl" class="mt-10 overflow-hidden rounded-[2rem] border border-separator-primary">
+                            <img :src="content.coverImageUrl" :alt="content.coverImageAlt || content.title"
+                                class="w-full object-cover max-h-[32rem]" />
+                        </div>
                     </div>
                 </div>
             </section>
@@ -87,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { createError, definePageMeta, useFetch, useHead, useRoute, useRuntimeConfig } from '#imports'
 import type { ContentResponse } from '~~/shared/types/content'
 import { readingTime } from '~~/shared/reading-time'
@@ -125,6 +148,15 @@ useHead(computed(() => {
         ],
     }
 }))
+
+// Detect portrait cover image by loading it and checking natural dimensions
+const coverIsPortrait = ref(false)
+onMounted(() => {
+    if (!content.value?.coverImageUrl) return
+    const img = new Image()
+    img.onload = () => { coverIsPortrait.value = img.naturalHeight >= img.naturalWidth }
+    img.src = content.value.coverImageUrl
+})
 
 // Estimated reading time is computed from parsed content blocks
 const estimatedReadingTime = computed(() => {
