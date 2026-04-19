@@ -3,13 +3,12 @@
         <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
             <h1 class="text-2xl font-bold text-accent-primary">Редагування: {{ slug }}</h1>
             <div class="flex items-center gap-3">
-                <NuxtLink
-                    :to="`/admin/blog/${slug}/preview`"
-                    target="_blank"
+                <button
                     class="text-sm text-label-secondary underline decoration-separator-primary underline-offset-4 hover:text-accent-primary"
+                    @click="saveAndPreview"
                 >
                     Переглянути ↗
-                </NuxtLink>
+                </button>
                 <NuxtLink
                     v-if="status === 'published'"
                     :to="`/blog/${slug}`"
@@ -143,6 +142,11 @@ async function save() {
     } finally {
         saving.value = false
     }
+}
+
+async function saveAndPreview() {
+    if (isDirty.value) await save()
+    window.open(`/admin/blog/${slug}/preview`, '_blank')
 }
 
 async function deletePost() {
