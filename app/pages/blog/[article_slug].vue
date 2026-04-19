@@ -19,7 +19,6 @@
                         <div class="flex-1 min-w-0">
                             <p class="mb-4 font-display text-2xl uppercase tracking-[0.25em] text-label-tertiary">Публікація</p>
                             <h1 class="mb-6 text-4xl font-semibold text-accent-primary md:text-6xl">{{ content.title }}</h1>
-                            <p v-if="content.excerpt" class="mb-8 text-lg leading-8 text-label-secondary">{{ content.excerpt }}</p>
                             <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-label-tertiary">
                                 <span>{{ formatDate(content.publishedAt) }}</span>
                                 <span v-if="content.updatedAt !== content.publishedAt">Оновлено {{ formatDate(content.updatedAt) }}</span>
@@ -46,7 +45,6 @@
                         <div class="max-w-3xl">
                             <p class="mb-4 font-display text-2xl uppercase tracking-[0.25em] text-label-tertiary">Публікація</p>
                             <h1 class="mb-6 text-4xl font-semibold text-accent-primary md:text-6xl">{{ content.title }}</h1>
-                            <p v-if="content.excerpt" class="mb-8 text-lg leading-8 text-label-secondary">{{ content.excerpt }}</p>
                             <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-label-tertiary">
                                 <span>{{ formatDate(content.publishedAt) }}</span>
                                 <span v-if="content.updatedAt !== content.publishedAt">Оновлено {{ formatDate(content.updatedAt) }}</span>
