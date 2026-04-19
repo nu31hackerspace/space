@@ -4,7 +4,6 @@ interface WriteBody {
     title?: string
     markdown?: string
     status?: BlogStatus
-    summary?: string
     tags?: string[]
     coverImageUrl?: string
     coverImageAlt?: string
@@ -27,7 +26,6 @@ interface NormalizedWriteInput {
     title?: string
     rawMarkdown?: string
     status?: BlogStatus
-    summary?: string
     tags?: string[]
     coverImageUrl?: string
     coverImageAlt?: string
@@ -80,11 +78,6 @@ export function normalizeBlogPostWriteInput(options: NormalizeOptions): Normaliz
         normalized.status = options.body.status
     } else if (options.mode === 'create') {
         normalized.status = 'draft'
-    }
-
-    const summary = trimOptionalString(options.body.summary)
-    if (typeof options.body.summary === 'string') {
-        normalized.summary = summary || ''
     }
 
     const tags = normalizeTags(options.body.tags)

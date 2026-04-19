@@ -23,7 +23,6 @@ export default defineEventHandler(async (event) => {
                 rawMarkdown: 1,
                 cachedBlocks: 1,
                 status: 1,
-                summary: 1,
                 tags: 1,
                 coverImageUrl: 1,
                 coverImageAlt: 1,

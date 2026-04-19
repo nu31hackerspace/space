@@ -15,7 +15,6 @@ export interface BlogPostRecord {
     // When present, these are used directly instead of parsing rawMarkdown again.
     cachedBlocks?: ContentBlock[]
     status?: 'draft' | 'published'
-    summary?: string
     tags?: string[]
     coverImageUrl?: string
     coverImageAlt?: string
@@ -32,11 +31,39 @@ export interface PublicFeedEntry {
     title: string
     url: string
     description: string
+    contentHtml: string
     publishedAt: string
     updatedAt: string
     categories: string[]
     customFields: Record<string, string>
     author?: string
+}
+
+function escapeHtml(value: string): string {
+    return value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+}
+
+function renderBlocksToHtml(blocks: ContentBlock[]): string {
+    return blocks.map(block => {
+        switch (block.type) {
+            case 'header': return `<h${block.size}>${escapeHtml(block.title)}</h${block.size}>`
+            case 'text': return `<p>${escapeHtml(block.content)}</p>`
+            case 'image': return `<img src="${escapeHtml(block.imageUrl)}" alt="${escapeHtml(block.imageAlt || '')}" />`
+            case 'code': return `<pre><code class="language-${escapeHtml(block.language)}">${escapeHtml(block.code)}</code></pre>`
+            case 'list': {
+                const tag = block.ordered ? 'ol' : 'ul'
+                const items = block.items.map(i => `<li>${escapeHtml(i)}</li>`).join('')
+                return `<${tag}>${items}</${tag}>`
+            }
+            case 'quote': return `<blockquote><p>${escapeHtml(block.content)}</p></blockquote>`
+            case 'link': return `<p><a href="${escapeHtml(block.linkUrl)}">${escapeHtml(block.linkText)}</a></p>`
+            default: return ''
+        }
+    }).join('\n')
 }
 
 function normalizeDate(value: Date | string | undefined, fallback: Date | string | undefined): string {
@@ -82,24 +109,20 @@ function removeDuplicatedLeadingTitle(blocks: ContentBlock[], title: string): Co
     return blocks
 }
 
-function buildSummary(post: BlogPostRecord, blocks: ContentBlock[]): string {
-    return trimText(post.summary) || findFirstParagraph(blocks)
-}
-
 function buildCommonPublicFields(post: BlogPostRecord, baseUrl: string) {
     // Use pre-parsed cachedBlocks when available to skip redundant markdown parsing
     const parsedBlocks = post.cachedBlocks ?? parseMarkdownToBlocks(post.rawMarkdown || '')
     const blocks = removeDuplicatedLeadingTitle(parsedBlocks, post.title)
     const publishedAt = normalizeDate(post.publishedAt, post.createdAt)
     const updatedAt = normalizeDate(post.updatedAt, post.createdAt)
-    const summary = buildSummary(post, blocks)
+    const excerpt = findFirstParagraph(blocks)
     const coverImageUrl = toAbsoluteUrl(post.coverImageUrl, baseUrl)
 
     return {
         blocks,
         slug: post.slug,
         title: trimText(post.title),
-        summary,
+        excerpt,
         tags: normalizeTags(post.tags),
         coverImageUrl,
         coverImageAlt: trimText(post.coverImageAlt),
@@ -156,7 +179,8 @@ export function buildPublicFeedEntry(post: BlogPostRecord, baseUrl: string): Pub
         id: article.url,
         title: article.title,
         url: article.url,
-        description: article.summary,
+        description: article.excerpt,
+        contentHtml: renderBlocksToHtml(article.blocks),
         publishedAt: article.publishedAt,
         updatedAt: article.updatedAt,
         categories: article.tags,

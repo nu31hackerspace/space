@@ -1,5 +1,5 @@
 import { defineEventHandler, setHeader, useNitroApp, useRuntimeConfig } from '#imports'
-import { buildPublicFeedEntry } from '~~/server/core/content/publication'
+import { buildPublicFeedEntry, type BlogPostRecord } from '~~/server/core/content/publication'
 import { requireDatabase } from '~~/server/core/runtime/database'
 import { renderRssFeed } from '~~/server/core/content/rss'
 
@@ -19,7 +19,6 @@ export default defineEventHandler(async (event) => {
                     title: 1,
                     rawMarkdown: 1,
                     status: 1,
-                    summary: 1,
                     tags: 1,
                     coverImageUrl: 1,
                     coverImageAlt: 1,
@@ -33,7 +32,7 @@ export default defineEventHandler(async (event) => {
         .sort({ publishedAt: -1, createdAt: -1 })
         .toArray()
 
-    const items = posts.map(post => buildPublicFeedEntry(post, baseUrl))
+    const items = posts.map(post => buildPublicFeedEntry(post as unknown as BlogPostRecord, baseUrl))
     const lastBuildDate = items[0]?.updatedAt || new Date().toISOString()
     const xml = renderRssFeed({
         title: 'NU31 Blog',

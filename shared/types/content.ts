@@ -61,7 +61,7 @@ export interface TagCloudResponse {
 export interface PublicArticleListItem {
     slug: string
     title: string
-    summary: string
+    excerpt: string
     tags: string[]
     coverImageUrl: string
     coverImageAlt: string
@@ -94,7 +94,7 @@ export interface NavPost {
 export interface ContentResponse {
     slug: string
     title: string
-    summary: string
+    excerpt: string
     tags: string[]
     coverImageUrl: string
     coverImageAlt: string
@@ -117,7 +117,6 @@ export interface AdminBlogPost {
     title: string
     status: 'draft' | 'published'
     rawMarkdown: string
-    summary: string
     tags: string[]
     coverImageUrl: string
     coverImageAlt: string

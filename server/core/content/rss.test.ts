@@ -16,6 +16,7 @@ describe('rss feed renderer', () => {
                     title: 'Orbital <Log>',
                     url: 'https://space.example/blog/orbital-log',
                     description: 'Station & module "A"',
+                    contentHtml: '<p>Full article content.</p>',
                     publishedAt: '2025-01-31T09:00:00.000Z',
                     updatedAt: '2025-02-04T15:30:00.000Z',
                     categories: ['space', 'ops'],
@@ -28,10 +29,10 @@ describe('rss feed renderer', () => {
         })
 
         expect(xml).toContain('<?xml version="1.0" encoding="UTF-8"?>')
-        expect(xml).toContain('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:space="https://space.nu31/rss">')
+        expect(xml).toContain('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:space="https://space.nu31/rss">')
         expect(xml).toContain('<atom:link href="https://space.example/rss.xml" rel="self" type="application/rss+xml" />')
         expect(xml).toContain('<title>Orbital &lt;Log&gt;</title>')
-        expect(xml).toContain('<description>Station &amp; module &quot;A&quot;</description>')
+        expect(xml).toContain('<content:encoded><![CDATA[<p>Full article content.</p>]]></content:encoded>')
         expect(xml).toContain('<guid isPermaLink="false">https://space.example/blog/orbital-log</guid>')
         expect(xml).toContain('<category>space</category>')
         expect(xml).toContain('<space:coverImage>https://space.example/media/station-cover.png</space:coverImage>')
@@ -54,6 +55,7 @@ describe('rss feed renderer', () => {
                     title: 'Orbital Log',
                     url: 'https://space.example/blog/orbital-log',
                     description: 'Station update',
+                    contentHtml: '',
                     publishedAt: '2025-01-31T09:00:00.000Z',
                     updatedAt: '2025-02-04T15:30:00.000Z',
                     categories: [],

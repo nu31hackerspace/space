@@ -29,7 +29,7 @@
                     <h1 class="mb-6 text-4xl font-semibold text-accent-primary md:text-6xl">
                         {{ data.title }}
                     </h1>
-                    <p v-if="data.summary" class="mb-8 text-lg leading-8 text-label-secondary">{{ data.summary }}</p>
+                    <p v-if="data.excerpt" class="mb-8 text-lg leading-8 text-label-secondary">{{ data.excerpt }}</p>
                     <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-label-tertiary">
                         <span>{{ formatDate(data.publishedAt) }}</span>
                         <span v-if="data.authorName">{{ data.authorName }}</span>

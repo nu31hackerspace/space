@@ -43,16 +43,20 @@ export function renderRssFeed(feed: RssFeedDocument): string {
 
         const creatorXml = item.author ? `<dc:creator>${escapeXml(item.author)}</dc:creator>` : ''
 
+        const contentEncodedXml = item.contentHtml
+            ? `<content:encoded><![CDATA[${item.contentHtml}]]></content:encoded>`
+            : ''
+
         return [
             '<item>',
             `<title>${escapeXml(item.title)}</title>`,
             `<link>${escapeXml(item.url)}</link>`,
             `<guid isPermaLink="false">${escapeXml(item.id)}</guid>`,
-            `<description>${escapeXml(item.description)}</description>`,
             `<pubDate>${formatRfc822Date(item.publishedAt)}</pubDate>`,
             `<lastBuildDate>${formatRfc822Date(item.updatedAt)}</lastBuildDate>`,
             creatorXml,
             categoriesXml,
+            contentEncodedXml,
             customFieldsXml,
             '</item>',
         ].join('')
@@ -60,7 +64,7 @@ export function renderRssFeed(feed: RssFeedDocument): string {
 
     return [
         '<?xml version="1.0" encoding="UTF-8"?>',
-        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:space="https://space.nu31/rss">',
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:space="https://space.nu31/rss">',
         '<channel>',
         `<title>${escapeXml(feed.title)}</title>`,
         `<link>${escapeXml(feed.siteUrl)}</link>`,

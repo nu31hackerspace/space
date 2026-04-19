@@ -14,8 +14,6 @@
                     <option value="draft">Чернетка</option>
                     <option value="published">Опублікований</option>
                 </select>
-                <textarea v-model="form.summary" rows="3" placeholder="Короткий опис"
-                    class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary"></textarea>
                 <input v-model="form.tagsText" type="text" placeholder="Теги через кому"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                 <input v-model="form.coverImageUrl" type="text" placeholder="URL обкладинки"
@@ -55,7 +53,6 @@ const form = ref({
     title: '',
     markdown: '',
     status: 'draft' as 'draft' | 'published',
-    summary: '',
     tagsText: '',
     coverImageUrl: '',
     coverImageAlt: '',
@@ -76,7 +73,6 @@ async function createPost() {
                 title: form.value.title,
                 markdown: form.value.markdown,
                 status: form.value.status,
-                summary: form.value.summary,
                 tags: form.value.tagsText.split(',').map(t => t.trim()).filter(Boolean),
                 coverImageUrl: form.value.coverImageUrl,
                 coverImageAlt: form.value.coverImageAlt,

@@ -36,8 +36,6 @@
                     <option value="draft">Чернетка</option>
                     <option value="published">Опублікований</option>
                 </select>
-                <textarea v-model="summary" rows="3" placeholder="Короткий опис"
-                    class="w-full p-3 rounded bg-transparent border border-separator-primary text-label-primary"></textarea>
                 <input v-model="tagsText" type="text" placeholder="Теги через кому"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                 <input v-model="coverImageUrl" type="text" placeholder="URL обкладинки"
@@ -83,7 +81,6 @@ const slug = route.params.slug as string
 
 const title = ref('')
 const status = ref<'draft' | 'published'>('draft')
-const summary = ref('')
 const tagsText = ref('')
 const coverImageUrl = ref('')
 const coverImageAlt = ref('')
@@ -102,7 +99,6 @@ async function load() {
         const data = await $fetch<AdminBlogPost>(`/api/blog/${encodeURIComponent(slug)}`)
         title.value = data.title || ''
         status.value = data.status || 'draft'
-        summary.value = data.summary || ''
         tagsText.value = Array.isArray(data.tags) ? data.tags.join(', ') : ''
         coverImageUrl.value = data.coverImageUrl || ''
         coverImageAlt.value = data.coverImageAlt || ''
@@ -126,7 +122,6 @@ async function save() {
             body: {
                 title: title.value,
                 status: status.value,
-                summary: summary.value,
                 tags: tagsText.value.split(','),
                 coverImageUrl: coverImageUrl.value,
                 coverImageAlt: coverImageAlt.value,
@@ -162,7 +157,7 @@ async function deletePost() {
     }
 }
 
-watch([title, status, summary, tagsText, coverImageUrl, coverImageAlt, isFeatured, authorName, markdown], () => {
+watch([title, status, tagsText, coverImageUrl, coverImageAlt, isFeatured, authorName, markdown], () => {
     if (loaded.value) isDirty.value = true
 })
 

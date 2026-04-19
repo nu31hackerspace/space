@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
         title: string
         markdown: string
         status?: 'draft' | 'published'
-        summary?: string
         tags?: string[]
         coverImageUrl?: string
         coverImageAlt?: string
@@ -49,7 +48,6 @@ export default defineEventHandler(async (event) => {
                 }
             ],
             status: normalizedBody.status,
-            summary: normalizedBody.summary || '',
             tags: normalizedBody.tags || [],
             coverImageUrl: normalizedBody.coverImageUrl || '',
             coverImageAlt: normalizedBody.coverImageAlt || '',

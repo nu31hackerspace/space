@@ -11,7 +11,6 @@ describe('blog post metadata normalization', () => {
                 title: '  Orbital Log  ',
                 markdown: '# Mission',
                 status: 'published',
-                summary: '  Station update  ',
                 tags: [' space ', '', 'ops'],
                 coverImageUrl: '/media/cover.png',
                 coverImageAlt: '  Cupola  ',
@@ -24,11 +23,11 @@ describe('blog post metadata normalization', () => {
             title: 'Orbital Log',
             rawMarkdown: '# Mission',
             status: 'published',
-            summary: 'Station update',
             tags: ['space', 'ops'],
             coverImageUrl: '/media/cover.png',
             coverImageAlt: 'Cupola',
             isFeatured: true,
+            authorName: '',
             publishedAt: now,
         })
     })
@@ -40,7 +39,6 @@ describe('blog post metadata normalization', () => {
             mode: 'update',
             body: {
                 status: 'published',
-                summary: 'Station update',
             },
             existingPost: {
                 publishedAt: existingPublishedAt,
@@ -50,7 +48,6 @@ describe('blog post metadata normalization', () => {
 
         expect(payload).toEqual({
             status: 'published',
-            summary: 'Station update',
         })
     })
 

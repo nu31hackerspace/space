@@ -25,7 +25,6 @@ describe('publication helpers', () => {
     it('builds a public list item with metadata fallbacks', () => {
         const item = buildPublicArticleListItem({
             ...basePost,
-            summary: 'Manual summary',
             tags: ['space', 'station'],
             coverImageUrl: '/media/cover.png',
             isFeatured: true,
@@ -34,22 +33,24 @@ describe('publication helpers', () => {
         expect(item).toEqual({
             slug: 'orbital-log',
             title: 'Orbital Log',
-            summary: 'Manual summary',
+            excerpt: 'The first paragraph explains what happened on orbit.',
             tags: ['space', 'station'],
             coverImageUrl: 'https://space.example/media/cover.png',
             coverImageAlt: '',
             status: 'published',
             isFeatured: true,
+            authorName: '',
             url: 'https://space.example/blog/orbital-log',
             publishedAt: '2025-02-03T10:00:00.000Z',
             updatedAt: '2025-02-04T15:30:00.000Z',
+            views: 0,
         })
     })
 
-    it('falls back to the first text paragraph when summary is missing', () => {
+    it('extracts excerpt from the first text paragraph', () => {
         const item = buildPublicArticleListItem(basePost, 'https://space.example')
 
-        expect(item.summary).toBe('The first paragraph explains what happened on orbit.')
+        expect(item.excerpt).toBe('The first paragraph explains what happened on orbit.')
         expect(item.tags).toEqual([])
         expect(item.coverImageUrl).toBe('')
         expect(item.coverImageAlt).toBe('')
@@ -64,7 +65,7 @@ describe('publication helpers', () => {
         }, 'https://space.example')
 
         expect(article.slug).toBe('orbital-log')
-        expect(article.summary).toBe('The first paragraph explains what happened on orbit.')
+        expect(article.excerpt).toBe('The first paragraph explains what happened on orbit.')
         expect(article.coverImageAlt).toBe('Station viewport')
         expect(article.url).toBe('https://space.example/blog/orbital-log')
         expect(article.publishedAt).toBe('2025-01-31T09:00:00.000Z')
@@ -117,8 +118,6 @@ describe('publication helpers', () => {
     })
 
     it('produces identical publishedAt and updatedAt ISO strings when both point to the same moment', () => {
-        // Guards against false "Updated" labels caused by date normalization producing different strings
-        // for Date objects and ISO strings representing the same point in time.
         const sameDate = new Date('2025-01-31T09:00:00.000Z')
 
         const article = buildPublicArticle({
@@ -130,10 +129,9 @@ describe('publication helpers', () => {
         expect(article.publishedAt).toBe(article.updatedAt)
     })
 
-    it('builds feed entries with custom metadata tags', () => {
+    it('builds feed entries with content HTML and custom metadata tags', () => {
         const entry = buildPublicFeedEntry({
             ...basePost,
-            summary: 'Station update',
             tags: ['space', 'ops'],
             coverImageUrl: '/media/station-cover.png',
             coverImageAlt: 'Station cover',
@@ -144,10 +142,12 @@ describe('publication helpers', () => {
             id: 'https://space.example/blog/orbital-log',
             title: 'Orbital Log',
             url: 'https://space.example/blog/orbital-log',
-            description: 'Station update',
+            description: 'The first paragraph explains what happened on orbit.',
+            contentHtml: expect.stringContaining('<p>The first paragraph explains what happened on orbit.</p>'),
             publishedAt: '2025-01-31T09:00:00.000Z',
             updatedAt: '2025-02-04T15:30:00.000Z',
             categories: ['space', 'ops'],
+            author: undefined,
             customFields: {
                 coverImage: 'https://space.example/media/station-cover.png',
                 coverImageAlt: 'Station cover',
