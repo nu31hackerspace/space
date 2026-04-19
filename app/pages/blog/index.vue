@@ -42,7 +42,7 @@
             <p class="text-red-500">Помилка завантаження: {{ error.message }}</p>
         </div>
 
-        <div v-else-if="articles && articles.items.length > 0" class="container mx-auto max-w-6xl px-4 py-10">
+        <div v-else-if="articles && articles.items.length > 0" class="container mx-auto max-w-6xl px-6 py-10">
             <!-- Active tag filter indicator with reset button -->
             <div v-if="activeTag" class="mb-6 flex items-center gap-3">
                 <span class="text-sm text-label-secondary">Фільтр:</span>
