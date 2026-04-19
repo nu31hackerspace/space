@@ -3,7 +3,7 @@ name: Deploy docker image and update production
 on:
     push:
         branches:
-            - "main"
+            - 'main'
 
 env:
     ENV_KEYS: >-
@@ -15,6 +15,9 @@ env:
         DISCORD_GUILD_ID
         JWT_SECRET
         SPACE_ELECTRICITY_TRACKER_SLUG
+        MQTT_USER
+        MQTT_PASS
+        MQTT_HOST
 
     # Application environment variables
     GIT_COMMIT_SHA: ${{ github.sha }}
@@ -26,16 +29,20 @@ env:
     DISCORD_GUILD_ID: ${{ vars.DISCORD_GUILD_ID }}
     JWT_SECRET: ${{ secrets.JWT_SECRET }}
     SPACE_ELECTRICITY_TRACKER_SLUG: ${{ vars.SPACE_ELECTRICITY_TRACKER_SLUG }}
-    
+
     # Docker image configuration
     IMAGE_NAME: nu31hackerspace/space
     DOCKER_STACK_NAME: nu31space
     REGISTRY: ghcr.io
-    
+
     # Deployment configuration
     DEPLOY_USER: ${{ vars.USERNAME }}
     HOST: ${{ vars.HOST }}
     DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.ROOT_SSH_PRIVATE_KEY }}
+
+    MQTT_USER: ${{ vars.USERNAME }}
+    MQTT_PASS: ${{ secrets.PASSWORD }}
+    MQTT_HOST: ${{ vars.MQTT_HOST }}
 
 jobs:
     build-and-push-image:
@@ -50,7 +57,7 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
               with:
-                  submodules: "true"
+                  submodules: 'true'
 
             - name: Log in to the Container registry
               uses: docker/login-action@v2

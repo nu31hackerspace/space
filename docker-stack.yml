@@ -17,12 +17,16 @@ services:
             - NUXT_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
             - NUXT_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
             - NUXT_JWT_SECRET=${JWT_SECRET}
+            - NUXT_PUBLIC_MQTT_HOST=${MQTT_HOST}
+            - NUXT_PUBLIC_MQTT_USER=${MQTT_USER}
+            - NUXT_MQTT_PASS=${MQTT_PASS}
         deploy:
             update_config:
                 order: start-first
         networks:
             - infra_reverse-proxy
             - infra_mongo-rs-net
+            - infra_mqtt-net
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/api/service/health"]
             interval: 30s
@@ -34,4 +38,6 @@ networks:
     infra_reverse-proxy:
         external: true
     infra_mongo-rs-net:
+        external: true
+    infra_mqtt-net:
         external: true

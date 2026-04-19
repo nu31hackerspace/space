@@ -1,9 +1,14 @@
 import { defineEventHandler, useNitroApp, useRuntimeConfig } from '#imports'
-import { pingDatabase } from '~~/server/core/runtime/database'
 import { UserSession } from '~~/server/core/user/user'
+import { mqttClient } from '../../utils/mqttStore'
 
 export default defineEventHandler(async (event) => {
-    const isConnected = await pingDatabase(useNitroApp())
+    const isConnected: boolean = await useNitroApp()
+        .db.command({ ping: 1 })
+        .then((_) => true)
+        .catch((_) => false)
+
+    const isMqttConnected = mqttClient?.connected ?? false
     let commitSha = 'init unknown'
 
     try {
@@ -20,6 +25,7 @@ export default defineEventHandler(async (event) => {
 
     return {
         isConnected: isConnected,
+        isMqttConnected: isMqttConnected,
         commitSha: commitSha,
         user: user,
     }
