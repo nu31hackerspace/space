@@ -19,6 +19,7 @@
         "@tailwindcss/vite": "^4.1.12",
         "discord.js": "^14.23.2",
         "jsonwebtoken": "^9.0.2",
+        "marked": "^18.0.0",
         "mongodb": "^6.18.0",
         "mqtt": "^5.15.1",
         "nuxt": "^4.0.3",

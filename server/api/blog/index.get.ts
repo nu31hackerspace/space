@@ -1,3 +1,6 @@
+// GET /api/blog — lists all posts (drafts and published) for the admin dashboard.
+// Joins blogPostViews to include a view count per post.
+// Supports optional ?status filter and pagination (?page, ?pageSize).
 import { createError, defineEventHandler, getQuery, useNitroApp } from '#imports'
 
 export default defineEventHandler(async (event) => {
@@ -14,15 +17,21 @@ export default defineEventHandler(async (event) => {
     if (status) filter.status = status
 
     const db = useNitroApp().db
-    const cursor = db
-        .collection('blogPosts')
-        .find(filter, { projection: { _id: 0, slug: 1, title: 1, status: 1, updatedAt: 1, createdAt: 1 } })
-        .sort({ updatedAt: -1 })
-        .skip((p - 1) * ps)
-        .limit(ps)
-
     const [items, total] = await Promise.all([
-        cursor.toArray(),
+        db.collection('blogPosts').aggregate([
+            { $match: filter },
+            { $sort: { updatedAt: -1 } },
+            { $skip: (p - 1) * ps },
+            { $limit: ps },
+            { $lookup: {
+                from: 'blogPostViews',
+                localField: 'slug',
+                foreignField: 'slug',
+                as: '_views',
+            }},
+            { $addFields: { views: { $size: '$_views' } } },
+            { $project: { _id: 0, slug: 1, title: 1, status: 1, updatedAt: 1, createdAt: 1, views: 1 } },
+        ]).toArray(),
         db.collection('blogPosts').countDocuments(filter),
     ])
 

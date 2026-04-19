@@ -1,11 +1,11 @@
 import { Db, MongoClient } from 'mongodb'
 import { defineNitroPlugin, useRuntimeConfig } from '#imports'
 
-const config = useRuntimeConfig()
-const uri = config.mongoUri
-const client = new MongoClient(uri)
-
 export default defineNitroPlugin(async (nitroApp) => {
+    // useRuntimeConfig must be called inside the plugin callback — it is not available at module level.
+    const config = useRuntimeConfig()
+    const client = new MongoClient(config.mongoUri)
+
     nitroApp.logger.info('Connecting to MongoDB...')
     try {
         nitroApp.mongo = await client.connect()
@@ -18,6 +18,7 @@ export default defineNitroPlugin(async (nitroApp) => {
     }
 })
 
+// Creates all required indexes on startup. createIndex is idempotent — safe to run on every boot.
 async function initializeDatabaseSchema(db: Db, logger: any) {
     try {
         logger.info('Initializing database schema...')
@@ -86,6 +87,11 @@ async function createIndexes(db: Db, logger: any) {
             {
                 name: 'status_updatedAt_idx'
             }
+        )
+
+        await db.collection('blogPostViews').createIndex(
+            { slug: 1, sessionKey: 1 },
+            { unique: true, name: 'unique_blog_post_view' }
         )
 
         logger.info('Database indexes created successfully')

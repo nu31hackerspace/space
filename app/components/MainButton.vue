@@ -30,7 +30,7 @@ import { Icon } from '@iconify/vue'
 interface Props {
     label?: string
     size?: 'S' | 'M' | 'L'
-    buttonStyle?: 'primary' | 'secondary' | 'ghost'
+    buttonStyle?: 'primary' | 'secondary' | 'ghost' | 'danger'
     state?: 'default' | 'disabled'
     link?: string
     icon?: string
@@ -68,5 +68,6 @@ const variantClasses = {
         'bg-accent-primary hover:bg-accent-secondary text-background-primary',
     secondary: 'bg-fill-tertiary hover:bg-fill-secondary text-label-primary',
     ghost: 'bg-transparent hover:bg-fill-tertiary text-label-primary',
+    danger: 'bg-transparent text-red-500',
 }
 </script>

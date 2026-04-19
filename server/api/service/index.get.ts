@@ -8,9 +8,7 @@ export default defineEventHandler(async (event) => {
         .then((_) => true)
         .catch((_) => false)
 
-
     const isMqttConnected = mqttClient?.connected ?? false
-
     let commitSha = 'init unknown'
 
     try {
@@ -24,8 +22,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const user = event.context.user as UserSession
-
-    console.log(user)
 
     return {
         isConnected: isConnected,

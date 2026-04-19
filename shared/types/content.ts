@@ -1,3 +1,6 @@
+// Content blocks represent discrete sections of a blog post.
+// Markdown is parsed once into this typed format; the frontend renders each block
+// using the matching Vue component (BlogContentBlocks.vue dispatches by `type`).
 export interface ContentBlockBase {
     type: string
 }
@@ -30,9 +33,102 @@ export interface TagsBlock extends ContentBlockBase {
     tags: string[]
 }
 
-export type ContentBlock = HeaderBlock | TextBlock | ImageBlock | LinkBlock | TagsBlock
+export interface CodeBlock extends ContentBlockBase {
+    type: 'code'
+    code: string
+    language: string
+}
 
-export interface ContentResponse {
+export interface ListBlock extends ContentBlockBase {
+    type: 'list'
+    items: string[]
+    ordered: boolean
+}
+
+export interface QuoteBlock extends ContentBlockBase {
+    type: 'quote'
+    content: string
+}
+
+export type ContentBlock = HeaderBlock | TextBlock | ImageBlock | LinkBlock | TagsBlock | CodeBlock | ListBlock | QuoteBlock
+
+// Tag cloud: each item carries the tag name and how many published posts use it.
+// Used by the admin tag picker and the public blog sidebar.
+export interface TagCloudItem {
+    tag: string
+    count: number
+}
+
+export interface TagCloudResponse {
+    tags: TagCloudItem[]
+}
+
+export interface PublicArticleListItem {
+    slug: string
+    title: string
+    excerpt: string
+    tags: string[]
+    coverImageUrl: string
+    coverImageAlt: string
+    status: 'draft' | 'published'
+    isFeatured: boolean
+    authorName?: string
+    url: string
+    publishedAt: string
+    updatedAt: string
+    views: number
+}
+
+// Full article for the single-post page — same as list item but includes parsed blocks.
+export interface PublicArticle extends PublicArticleListItem {
     blocks: ContentBlock[]
 }
 
+export interface ContentListResponse {
+    items: PublicArticleListItem[]
+    page: number
+    pageSize: number
+    total: number
+}
+
+// Minimal shape for prev/next navigation links on article pages
+export interface NavPost {
+    slug: string
+    title: string
+}
+
+export interface ContentResponse {
+    slug: string
+    title: string
+    excerpt: string
+    tags: string[]
+    coverImageUrl: string
+    coverImageAlt: string
+    status: 'draft' | 'published'
+    isFeatured: boolean
+    authorName?: string
+    url: string
+    publishedAt: string
+    updatedAt: string
+    views: number
+    blocks: ContentBlock[]
+    // Adjacent published posts for prev/next navigation; null when no neighbour exists
+    prevPost: NavPost | null
+    nextPost: NavPost | null
+}
+
+// Shape returned by GET /api/blog/:slug — admin view with editable fields and raw markdown.
+export interface AdminBlogPost {
+    slug: string
+    title: string
+    status: 'draft' | 'published'
+    rawMarkdown: string
+    tags: string[]
+    coverImageUrl: string
+    coverImageAlt: string
+    isFeatured: boolean
+    authorName?: string
+    publishedAt?: string
+    updatedAt?: string
+    createdAt?: string
+}

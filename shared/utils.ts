@@ -1,3 +1,5 @@
+// Ukrainian → Latin transliteration table.
+// Used by slug generation so Cyrillic post titles produce readable URL slugs.
 const ukrainianMap: Record<string, string> = {
     'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e',
     'є': 'ye', 'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'yi', 'й': 'y',
@@ -27,6 +29,10 @@ export function createSlugFromName(name: string): string {
         .substring(0, 64)
 }
 
+// Converts a blog post title into a URL-safe slug.
+// The base slug is derived deterministically from the title — no randomness.
+// If the title is empty, a timestamp-based fallback is used to guarantee uniqueness.
+// Collision handling (when two posts share the same slug) is left to the DB layer via a unique index.
 export function generateSlugFromTitle(title: string): string {
     const base = transliterate(title || '')
         .toLowerCase()
@@ -37,6 +43,5 @@ export function generateSlugFromTitle(title: string): string {
         .replace(/-{2,}/g, '-')
         .slice(0, 60)
 
-    const rand = Math.random().toString(36).slice(2, 8)
-    return base ? `${base}-${rand}` : rand
+    return base || Date.now().toString(36)
 }

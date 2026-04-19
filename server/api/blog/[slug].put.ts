@@ -1,4 +1,23 @@
+// PUT /api/blog/:slug — updates an existing post.
+// Only the original author (owner_id) may edit.
+// When markdown changes, re-parses blocks immediately and appends a version snapshot for audit history.
 import { createError, defineEventHandler, getRouterParam, readBody, useNitroApp } from '#imports'
+import type { UpdateFilter } from 'mongodb'
+import { normalizeBlogPostWriteInput } from '~~/server/core/content/metadata'
+import { assertPostOwner } from '~~/server/core/blog/ownership'
+import { parseMarkdownToBlocks } from '~~/server/core/content/parse'
+import type { BlogPostRecord } from '~~/server/core/content/publication'
+
+interface BlogPostVersionRecord {
+    editor_id: string
+    markdown?: string
+    createdAt: Date
+}
+
+type BlogPostUpdateDoc = BlogPostRecord & {
+    updatedAt?: Date
+    versions?: BlogPostVersionRecord[]
+}
 
 export default defineEventHandler(async (event) => {
     const user = event.context.user
@@ -11,12 +30,17 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, statusMessage: 'Slug required' })
     }
 
-    const body = await readBody<{ markdown?: string; title?: string; status?: 'draft' | 'published' }>(event)
-    const updates: any = {}
+    const body = await readBody<{
+        markdown?: string
+        title?: string
+        status?: 'draft' | 'published'
+        tags?: string[]
+        coverImageUrl?: string
+        coverImageAlt?: string
+        isFeatured?: boolean
+        authorName?: string
+    }>(event)
     const now = new Date()
-
-    if (typeof body?.title === 'string') updates.title = body.title.trim()
-    if (typeof body?.status === 'string') updates.status = body.status
 
     const db = useNitroApp().db
 
@@ -25,16 +49,35 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 404, statusMessage: 'Article not found' })
     }
 
-    const ops: any = { $set: { updatedAt: now, ...updates } }
+    // Only the original author may edit the post.
+    assertPostOwner(post, user.userId)
+
+    let updates
+    try {
+        updates = normalizeBlogPostWriteInput({
+            mode: 'update',
+            body,
+            existingPost: {
+                publishedAt: post.publishedAt,
+            },
+            now,
+        })
+    } catch (error: any) {
+        throw createError({ statusCode: 400, statusMessage: error.message })
+    }
+
+    const ops: UpdateFilter<BlogPostUpdateDoc> = { $set: { updatedAt: now, ...updates } }
 
     if (typeof body?.markdown === 'string') {
-        ops.$set.rawMarkdown = body.markdown
+        // Invalidate the cached blocks whenever markdown changes so the next GET re-parses correctly
+        ops.$set.cachedBlocks = parseMarkdownToBlocks(updates.rawMarkdown || '')
+
         ops.$push = {
             versions: {
                 editor_id: user.userId,
-                markdown: body.markdown,
+                markdown: updates.rawMarkdown,
                 createdAt: now,
-            }
+            },
         }
     }
 
@@ -42,5 +85,3 @@ export default defineEventHandler(async (event) => {
 
     return { ok: true }
 })
-
-
