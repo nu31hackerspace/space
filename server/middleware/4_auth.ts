@@ -1,26 +1,24 @@
 import { defineEventHandler, deleteCookie, getCookie, useNitroApp, useRuntimeConfig } from '#imports'
 import jwt from 'jsonwebtoken'
 import { UserSession } from '~~/server/core/user/user'
-
-interface AuthUserRecord {
-    sessions?: Array<{ sessionKey: string }>
-}
+import { hasUserSession, isJwtSessionPayload } from '~~/server/core/auth/session-validation'
 
 export default defineEventHandler(async (event) => {
     const jwtToken = getCookie(event, 'jwt') as string
 
     if (jwtToken) {
         try {
-            const decoded = jwt.verify(jwtToken, useRuntimeConfig().jwtSecret) as { sessionKey: string, userId: string }
+            const decoded = jwt.verify(jwtToken, useRuntimeConfig().jwtSecret)
+            if (!isJwtSessionPayload(decoded)) {
+                event.context.user = undefined
+                return
+            }
+
             const db = useNitroApp().db
 
-            const user = await db.collection('users').findOne({ id: decoded.userId }) as AuthUserRecord | null
+            const user = await db.collection('users').findOne({ id: decoded.userId })
 
-            if (
-                !user ||
-                !Array.isArray(user.sessions) ||
-                !user.sessions.some((session) => session.sessionKey === decoded.sessionKey)
-            ) {
+            if (!hasUserSession(user, decoded.sessionKey)) {
                 event.context.user = undefined
                 return
             }

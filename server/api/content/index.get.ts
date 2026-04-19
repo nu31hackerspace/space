@@ -1,6 +1,6 @@
 import { createError, defineEventHandler, getQuery, useNitroApp, useRuntimeConfig } from '#imports'
 import { buildPublicArticleListResponse } from '~~/server/core/content/publication'
-import { buildContentQuery, buildPaginationParams } from '~~/server/core/content/query'
+import { buildContentQuery, buildPaginationParams, ContentQueryValidationError } from '~~/server/core/content/query'
 import { requireDatabase } from '~~/server/core/runtime/database'
 
 export default defineEventHandler(async (event) => {
@@ -11,9 +11,13 @@ export default defineEventHandler(async (event) => {
     try {
         filter = buildContentQuery(rawQuery)
     } catch (error) {
+        if (!(error instanceof ContentQueryValidationError)) {
+            throw error
+        }
+
         throw createError({
             statusCode: 400,
-            statusMessage: error instanceof Error ? error.message : 'Invalid content query',
+            statusMessage: error.message,
         })
     }
 

@@ -2,9 +2,10 @@ import { createError, defineEventHandler, getRouterParam, useNitroApp, useRuntim
 import { assertPostOwner } from '~~/server/core/blog/ownership'
 import { buildPublicArticle, type BlogPostRecord } from '~~/server/core/content/publication'
 import { requireDatabase } from '~~/server/core/runtime/database'
-import type { ContentResponse } from '~~/shared/types/content'
+import type { ContentBlock, ContentResponse } from '~~/shared/types/content'
 
-interface PreviewPostRecord extends BlogPostRecord {
+interface PreviewPostProjection extends BlogPostRecord {
+    cachedBlocks?: ContentBlock[]
     owner_id?: string
 }
 
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const db = requireDatabase(useNitroApp())
-    const post = await db.collection('blogPosts').findOne(
+    const post = await db.collection<PreviewPostProjection>('blogPosts').findOne(
         { slug },
         {
             projection: {
@@ -47,13 +48,12 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 404, statusMessage: 'Article not found' })
     }
 
-    const record = post as PreviewPostRecord
-    assertPostOwner(record, user.userId)
+    assertPostOwner(post, user.userId)
 
     const config = useRuntimeConfig(event)
     const baseUrl = config.public.baseUrl as string
 
-    const article = buildPublicArticle(record, baseUrl)
+    const article = buildPublicArticle(post, baseUrl)
 
     const response: ContentResponse = {
         ...article,

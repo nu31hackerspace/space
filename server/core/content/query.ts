@@ -7,6 +7,10 @@ export interface ContentQueryParams {
     pageSize?: string
 }
 
+// Raised for user-supplied content query params that violate the supported
+// request contract and should map to a 400 response at the route boundary.
+export class ContentQueryValidationError extends Error {}
+
 // Returns a MongoDB filter object for published posts.
 // When a tag is provided, restricts results to posts that include that tag.
 export function buildContentQuery(params: Pick<ContentQueryParams, 'tag'>): Record<string, unknown> {
@@ -15,7 +19,7 @@ export function buildContentQuery(params: Pick<ContentQueryParams, 'tag'>): Reco
     const tag = params.tag?.trim()
     if (tag) {
         if (tag.length > 100) {
-            throw new Error('tag too long')
+            throw new ContentQueryValidationError('tag too long')
         }
 
         filter.tags = tag
