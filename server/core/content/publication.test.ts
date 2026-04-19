@@ -129,12 +129,11 @@ describe('publication helpers', () => {
         expect(article.publishedAt).toBe(article.updatedAt)
     })
 
-    it('builds feed entries with content HTML and custom metadata tags', () => {
+    it('builds feed entries with content HTML and media thumbnail', () => {
         const entry = buildPublicFeedEntry({
             ...basePost,
             tags: ['space', 'ops'],
             coverImageUrl: '/media/station-cover.png',
-            coverImageAlt: 'Station cover',
             publishedAt: new Date('2025-01-31T09:00:00.000Z'),
         }, 'https://space.example')
 
@@ -147,11 +146,8 @@ describe('publication helpers', () => {
             publishedAt: '2025-01-31T09:00:00.000Z',
             updatedAt: '2025-02-04T15:30:00.000Z',
             categories: ['space', 'ops'],
+            mediaThumbnail: 'https://space.example/media/station-cover.png',
             author: undefined,
-            customFields: {
-                coverImage: 'https://space.example/media/station-cover.png',
-                coverImageAlt: 'Station cover',
-            },
         })
     })
 })

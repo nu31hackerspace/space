@@ -35,7 +35,7 @@ export interface PublicFeedEntry {
     publishedAt: string
     updatedAt: string
     categories: string[]
-    customFields: Record<string, string>
+    mediaThumbnail?: string
     author?: string
 }
 
@@ -165,15 +165,6 @@ export function buildContentResponse(post: BlogPostRecord, baseUrl: string): Con
 
 export function buildPublicFeedEntry(post: BlogPostRecord, baseUrl: string): PublicFeedEntry {
     const article = buildPublicArticle(post, baseUrl)
-    const customFields: Record<string, string> = {}
-
-    if (article.coverImageUrl) {
-        customFields.coverImage = article.coverImageUrl
-    }
-
-    if (article.coverImageAlt) {
-        customFields.coverImageAlt = article.coverImageAlt
-    }
 
     return {
         id: article.url,
@@ -184,7 +175,7 @@ export function buildPublicFeedEntry(post: BlogPostRecord, baseUrl: string): Pub
         publishedAt: article.publishedAt,
         updatedAt: article.updatedAt,
         categories: article.tags,
-        customFields,
+        mediaThumbnail: article.coverImageUrl || undefined,
         author: article.authorName || undefined,
     }
 }

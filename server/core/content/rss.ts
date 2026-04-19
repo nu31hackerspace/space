@@ -36,15 +36,12 @@ export function renderRssFeed(feed: RssFeedDocument): string {
         const categoriesXml = item.categories
             .map(category => `<category>${escapeXml(category)}</category>`)
             .join('')
-        const customFieldsXml = Object.entries(item.customFields)
-            .filter(([, value]) => Boolean(value))
-            .map(([name, value]) => `<space:${name}>${escapeXml(value)}</space:${name}>`)
-            .join('')
-
         const creatorXml = item.author ? `<dc:creator>${escapeXml(item.author)}</dc:creator>` : ''
-
         const contentEncodedXml = item.contentHtml
             ? `<content:encoded><![CDATA[${item.contentHtml}]]></content:encoded>`
+            : ''
+        const mediaThumbnailXml = item.mediaThumbnail
+            ? `<media:thumbnail url="${escapeXml(item.mediaThumbnail)}" />`
             : ''
 
         return [
@@ -56,15 +53,15 @@ export function renderRssFeed(feed: RssFeedDocument): string {
             `<lastBuildDate>${formatRfc822Date(item.updatedAt)}</lastBuildDate>`,
             creatorXml,
             categoriesXml,
+            mediaThumbnailXml,
             contentEncodedXml,
-            customFieldsXml,
             '</item>',
         ].join('')
     }).join('')
 
     return [
         '<?xml version="1.0" encoding="UTF-8"?>',
-        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:space="https://space.nu31/rss">',
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">',
         '<channel>',
         `<title>${escapeXml(feed.title)}</title>`,
         `<link>${escapeXml(feed.siteUrl)}</link>`,

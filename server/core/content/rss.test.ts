@@ -20,23 +20,19 @@ describe('rss feed renderer', () => {
                     publishedAt: '2025-01-31T09:00:00.000Z',
                     updatedAt: '2025-02-04T15:30:00.000Z',
                     categories: ['space', 'ops'],
-                    customFields: {
-                        coverImage: 'https://space.example/media/station-cover.png',
-                        coverImageAlt: 'Station & cover',
-                    },
+                    mediaThumbnail: 'https://space.example/media/station-cover.png',
                 },
             ],
         })
 
         expect(xml).toContain('<?xml version="1.0" encoding="UTF-8"?>')
-        expect(xml).toContain('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:space="https://space.nu31/rss">')
+        expect(xml).toContain('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">')
         expect(xml).toContain('<atom:link href="https://space.example/rss.xml" rel="self" type="application/rss+xml" />')
         expect(xml).toContain('<title>Orbital &lt;Log&gt;</title>')
         expect(xml).toContain('<content:encoded><![CDATA[<p>Full article content.</p>]]></content:encoded>')
         expect(xml).toContain('<guid isPermaLink="false">https://space.example/blog/orbital-log</guid>')
         expect(xml).toContain('<category>space</category>')
-        expect(xml).toContain('<space:coverImage>https://space.example/media/station-cover.png</space:coverImage>')
-        expect(xml).toContain('<space:coverImageAlt>Station &amp; cover</space:coverImageAlt>')
+        expect(xml).toContain('<media:thumbnail url="https://space.example/media/station-cover.png" />')
         expect(xml).toContain('<pubDate>Fri, 31 Jan 2025 09:00:00 GMT</pubDate>')
         expect(xml).toContain('<lastBuildDate>Tue, 04 Feb 2025 15:30:00 GMT</lastBuildDate>')
     })
@@ -64,7 +60,6 @@ describe('rss feed renderer', () => {
             ],
         })
 
-        expect(xml).not.toContain('space:coverImage')
-        expect(xml).not.toContain('space:coverImageAlt')
+        expect(xml).not.toContain('media:thumbnail')
     })
 })
