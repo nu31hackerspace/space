@@ -60,35 +60,37 @@
                     v-for="article in allArticles"
                     :key="article.slug"
                     :to="`/blog/${article.slug}`"
-                    :class="['group flex items-start gap-4 py-5 px-3 -mx-3 rounded-xl transition-colors hover:bg-fill-secondary/40', article.isFeatured && !activeTag ? 'bg-fill-secondary/20' : '']"
+                    :class="['group block relative py-5 px-3 -mx-3 rounded-xl transition-colors hover:bg-fill-secondary/40', article.isFeatured && !activeTag ? 'bg-fill-secondary/20' : '']"
                 >
-                    <div v-if="article.coverImageUrl" class="shrink-0">
-                        <img :src="article.coverImageUrl" :alt="article.coverImageAlt || article.title"
-                            class="w-20 h-14 sm:w-28 sm:h-18 rounded-lg object-cover border border-separator-primary" />
+                    <div class="flex items-start gap-3 mb-2">
+                        <div v-if="article.coverImageUrl" class="shrink-0">
+                            <img :src="article.coverImageUrl" :alt="article.coverImageAlt || article.title"
+                                class="w-16 h-16 rounded-lg object-cover border border-separator-primary" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <p class="text-xs text-label-tertiary shrink-0">{{ formatDate(article.publishedAt) }}</p>
+                                <span v-if="article.views" class="text-xs text-label-tertiary">· {{ article.views }} переглядів</span>
+                            </div>
+                            <div v-if="article.isFeatured && !activeTag" class="absolute top-5 right-3 w-2 h-2 rounded-full bg-accent-primary"></div>
+                            <h2 class="text-base sm:text-lg font-semibold text-accent-primary group-hover:underline leading-snug">
+                                {{ article.title }}
+                            </h2>
+                        </div>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2 mb-1">
-                            <p class="text-xs text-label-tertiary shrink-0">{{ formatDate(article.publishedAt) }}</p>
-                            <span v-if="article.isFeatured && !activeTag" class="text-xs uppercase tracking-[0.18em] text-label-tertiary">· Закріплено</span>
-                            <span v-if="article.views" class="text-xs text-label-tertiary">· {{ article.views }} переглядів</span>
-                        </div>
-                        <h2 class="mb-1.5 text-base sm:text-lg font-semibold text-accent-primary group-hover:underline leading-snug">
-                            {{ article.title }}
-                        </h2>
-                        <p v-if="article.authorName" class="mb-1 text-xs text-label-tertiary">{{ article.authorName }}</p>
-                        <p class="mb-2 line-clamp-2 text-sm leading-6 text-label-secondary">
-                            {{ article.excerpt }}
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <button
-                                v-for="tag in article.tags"
-                                :key="tag"
-                                @click.prevent.stop="setTag(tag)"
-                                class="rounded-full border border-separator-primary px-2.5 py-0.5 text-xs uppercase tracking-[0.15em] text-label-secondary hover:border-accent-primary hover:text-accent-primary transition-colors"
-                            >
-                                {{ tag }}
-                            </button>
-                        </div>
+                    <p v-if="article.authorName" class="mb-1 text-xs text-label-tertiary">{{ article.authorName }}</p>
+                    <p class="mb-2 line-clamp-2 text-sm leading-6 text-label-secondary">
+                        {{ article.excerpt }}
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-1">
+                        <button
+                            v-for="tag in article.tags"
+                            :key="tag"
+                            @click.prevent.stop="setTag(tag)"
+                            class="rounded-full border border-separator-primary px-2.5 py-0.5 text-xs uppercase tracking-[0.15em] text-label-secondary hover:border-accent-primary hover:text-accent-primary transition-colors"
+                        >
+                            {{ tag }}
+                        </button>
                     </div>
                 </NuxtLink>
             </div>
