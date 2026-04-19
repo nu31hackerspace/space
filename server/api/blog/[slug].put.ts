@@ -1,7 +1,20 @@
 import { createError, defineEventHandler, getRouterParam, readBody, useNitroApp } from '#imports'
+import type { UpdateFilter } from 'mongodb'
 import { normalizeBlogPostWriteInput } from '~~/server/core/content/metadata'
 import { assertPostOwner } from '~~/server/core/blog/ownership'
 import { parseMarkdownToBlocks } from '~~/server/core/content/parse'
+import type { BlogPostRecord } from '~~/server/core/content/publication'
+
+interface BlogPostVersionRecord {
+    editor_id: string
+    markdown?: string
+    createdAt: Date
+}
+
+type BlogPostUpdateDoc = BlogPostRecord & {
+    updatedAt?: Date
+    versions?: BlogPostVersionRecord[]
+}
 
 export default defineEventHandler(async (event) => {
     const user = event.context.user
@@ -50,7 +63,7 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, statusMessage: error.message })
     }
 
-    const ops: any = { $set: { updatedAt: now, ...updates } }
+    const ops: UpdateFilter<BlogPostUpdateDoc> = { $set: { updatedAt: now, ...updates } }
 
     if (typeof body?.markdown === 'string') {
         // Invalidate the cached blocks whenever markdown changes so the next GET re-parses correctly
@@ -61,7 +74,7 @@ export default defineEventHandler(async (event) => {
                 editor_id: user.userId,
                 markdown: updates.rawMarkdown,
                 createdAt: now,
-            }
+            },
         }
     }
 
@@ -69,4 +82,3 @@ export default defineEventHandler(async (event) => {
 
     return { ok: true }
 })
-

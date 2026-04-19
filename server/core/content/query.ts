@@ -14,6 +14,10 @@ export function buildContentQuery(params: Pick<ContentQueryParams, 'tag'>): Reco
 
     const tag = params.tag?.trim()
     if (tag) {
+        if (tag.length > 100) {
+            throw new Error('tag too long')
+        }
+
         filter.tags = tag
     }
 

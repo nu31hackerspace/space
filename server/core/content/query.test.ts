@@ -17,6 +17,10 @@ describe('buildContentQuery', () => {
     it('ignores whitespace-only tag', () => {
         expect(buildContentQuery({ tag: '   ' })).toEqual({ status: 'published' })
     })
+
+    it('throws when tag exceeds 100 characters', () => {
+        expect(() => buildContentQuery({ tag: 'a'.repeat(101) })).toThrow('tag too long')
+    })
 })
 
 describe('buildPaginationParams', () => {

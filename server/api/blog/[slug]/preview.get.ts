@@ -4,6 +4,10 @@ import { buildPublicArticle, type BlogPostRecord } from '~~/server/core/content/
 import { requireDatabase } from '~~/server/core/runtime/database'
 import type { ContentResponse } from '~~/shared/types/content'
 
+interface PreviewPostRecord extends BlogPostRecord {
+    owner_id?: string
+}
+
 export default defineEventHandler(async (event) => {
     const user = event.context.user
     if (!user) {
@@ -43,12 +47,13 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 404, statusMessage: 'Article not found' })
     }
 
-    assertPostOwner(post as unknown as { owner_id?: string }, user.userId)
+    const record = post as PreviewPostRecord
+    assertPostOwner(record, user.userId)
 
     const config = useRuntimeConfig(event)
     const baseUrl = config.public.baseUrl as string
 
-    const article = buildPublicArticle(post as unknown as BlogPostRecord, baseUrl)
+    const article = buildPublicArticle(record, baseUrl)
 
     const response: ContentResponse = {
         ...article,

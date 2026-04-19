@@ -84,7 +84,7 @@ function onKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter' || e.key === ',') {
         e.preventDefault()
         addTag(inputValue.value)
-    } else if (e.key === 'Backspace' && inputValue.value === '') {
+    } else if (e.key === 'Backspace' && inputValue.value === '' && props.modelValue.length > 0) {
         removeTag(props.modelValue.length - 1)
     } else if (e.key === 'Escape') {
         open.value = false

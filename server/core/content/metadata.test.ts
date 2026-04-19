@@ -51,6 +51,24 @@ describe('blog post metadata normalization', () => {
         })
     })
 
+    it('stamps publishedAt when an update publishes a post for the first time', () => {
+        const now = new Date('2025-02-04T15:30:00.000Z')
+
+        const payload = normalizeBlogPostWriteInput({
+            mode: 'update',
+            body: {
+                status: 'published',
+            },
+            existingPost: {},
+            now,
+        })
+
+        expect(payload).toEqual({
+            status: 'published',
+            publishedAt: now,
+        })
+    })
+
     it('rejects blank titles when title is provided', () => {
         expect(() => normalizeBlogPostWriteInput({
             mode: 'update',

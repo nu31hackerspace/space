@@ -1,6 +1,6 @@
 import { createError, defineEventHandler, getRouterParam, getCookie, useNitroApp } from '#imports'
 import { requireDatabase } from '~~/server/core/runtime/database'
-import { TRACKING_COOKIE_NAME } from '~~/server/tracking/const'
+import { isValidTrackingSessionKey, TRACKING_COOKIE_NAME } from '~~/server/tracking/const'
 
 export default defineEventHandler(async (event) => {
     const slug = getRouterParam(event, 'slug')
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     const sessionKey = getCookie(event, TRACKING_COOKIE_NAME) || ''
     let counted = false
 
-    if (sessionKey) {
+    if (isValidTrackingSessionKey(sessionKey)) {
         try {
             await db.collection('blogPostViews').insertOne({
                 slug,

@@ -112,16 +112,7 @@ export function normalizeBlogPostWriteInput(options: NormalizeOptions): Normaliz
 
     if (
         normalized.status === 'published' &&
-        !options.existingPost?.publishedAt &&
-        options.mode === 'create'
-    ) {
-        normalized.publishedAt = options.now
-    }
-
-    if (
-        normalized.status === 'published' &&
-        !options.existingPost?.publishedAt &&
-        options.mode === 'update'
+        !options.existingPost?.publishedAt
     ) {
         normalized.publishedAt = options.now
     }

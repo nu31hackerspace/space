@@ -1,4 +1,4 @@
-import { defineEventHandler, getQuery, useNitroApp, useRuntimeConfig } from '#imports'
+import { createError, defineEventHandler, getQuery, useNitroApp, useRuntimeConfig } from '#imports'
 import { buildPublicArticleListResponse } from '~~/server/core/content/publication'
 import { buildContentQuery, buildPaginationParams } from '~~/server/core/content/query'
 import { requireDatabase } from '~~/server/core/runtime/database'
@@ -6,7 +6,16 @@ import { requireDatabase } from '~~/server/core/runtime/database'
 export default defineEventHandler(async (event) => {
     const rawQuery = getQuery(event) as Record<string, string>
     const { page, pageSize } = buildPaginationParams(rawQuery)
-    const filter = buildContentQuery(rawQuery)
+    let filter: Record<string, unknown>
+
+    try {
+        filter = buildContentQuery(rawQuery)
+    } catch (error) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: error instanceof Error ? error.message : 'Invalid content query',
+        })
+    }
 
     const config = useRuntimeConfig(event)
     const baseUrl = config.public.baseUrl

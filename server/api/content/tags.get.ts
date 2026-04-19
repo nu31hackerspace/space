@@ -9,7 +9,8 @@ export default defineEventHandler(async () => {
         { $unwind: '$tags' },
         { $match: { tags: { $ne: '' } } },
         { $group: { _id: '$tags', count: { $sum: 1 } } },
-        { $sort: { count: -1 } },
+        { $sort: { count: -1, _id: 1 } },
+        { $limit: 100 },
         { $project: { _id: 0, tag: '$_id', count: 1 } },
     ]).toArray()
 
