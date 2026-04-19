@@ -20,6 +20,7 @@
                         </div>
                         <div class="text-xs text-label-secondary">
                             {{ item.slug }} • оновлено {{ new Date(item.updatedAt).toLocaleString('uk-UA') }}
+                            <span v-if="item.views !== undefined"> • {{ item.views }} переглядів</span>
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
@@ -64,7 +65,7 @@ async function deletePost(slug: string) {
     }
 }
 
-const items = ref<Array<{ slug: string; title: string; status: string; updatedAt: string }>>([])
+const items = ref<Array<{ slug: string; title: string; status: string; updatedAt: string; views?: number }>>([])
 const listPending = ref(false)
 
 async function refreshList() {

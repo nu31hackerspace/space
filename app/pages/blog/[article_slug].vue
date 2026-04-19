@@ -25,6 +25,7 @@
                                 <span v-if="content.updatedAt !== content.publishedAt">Оновлено {{ formatDate(content.updatedAt) }}</span>
                                 <span v-if="content.authorName">{{ content.authorName }}</span>
                                 <span>~{{ estimatedReadingTime }} хв читання</span>
+                                <span v-if="content.views">{{ content.views }} переглядів</span>
                                 <a href="/rss.xml" class="underline decoration-separator-primary underline-offset-4">RSS</a>
                             </div>
                             <div v-if="content.tags.length" class="mt-8 flex flex-wrap gap-2">
@@ -51,6 +52,7 @@
                                 <span v-if="content.updatedAt !== content.publishedAt">Оновлено {{ formatDate(content.updatedAt) }}</span>
                                 <span v-if="content.authorName">{{ content.authorName }}</span>
                                 <span>~{{ estimatedReadingTime }} хв читання</span>
+                                <span v-if="content.views">{{ content.views }} переглядів</span>
                                 <a href="/rss.xml" class="underline decoration-separator-primary underline-offset-4">RSS</a>
                             </div>
                             <div v-if="content.tags.length" class="mt-8 flex flex-wrap gap-2">
@@ -140,11 +142,19 @@ useHead(computed(() => {
 
 // Detect portrait cover image by loading it and checking natural dimensions
 const coverIsPortrait = ref(false)
-onMounted(() => {
-    if (!content.value?.coverImageUrl) return
-    const img = new Image()
-    img.onload = () => { coverIsPortrait.value = img.naturalHeight >= img.naturalWidth }
-    img.src = content.value.coverImageUrl
+onMounted(async () => {
+    if (content.value?.coverImageUrl) {
+        const img = new Image()
+        img.onload = () => { coverIsPortrait.value = img.naturalHeight >= img.naturalWidth }
+        img.src = content.value.coverImageUrl
+    }
+
+    if (content.value?.slug) {
+        try {
+            const result = await $fetch<{ counted: boolean; views: number }>(`/api/content/${content.value.slug}/view`, { method: 'POST' })
+            if (content.value) content.value.views = result.views
+        } catch {}
+    }
 })
 
 // Estimated reading time is computed from parsed content blocks

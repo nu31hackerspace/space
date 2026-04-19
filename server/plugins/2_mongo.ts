@@ -88,6 +88,11 @@ async function createIndexes(db: Db, logger: any) {
             }
         )
 
+        await db.collection('blogPostViews').createIndex(
+            { slug: 1, sessionKey: 1 },
+            { unique: true, name: 'unique_blog_post_view' }
+        )
+
         logger.info('Database indexes created successfully')
     } catch (error) {
         logger.error('Failed to create database indexes:', error)

@@ -62,8 +62,10 @@ export default defineEventHandler(async (event) => {
         ),
     ])
 
+    const views = await db.collection('blogPostViews').countDocuments({ slug })
+
     const response: ContentResponse = {
-        ...buildContentResponse({ ...post, cachedBlocks: blocks }, config.public.baseUrl),
+        ...buildContentResponse({ ...post, cachedBlocks: blocks, views }, config.public.baseUrl),
         prevPost: pickNavPost(prevRaw),
         nextPost: pickNavPost(nextRaw),
     }

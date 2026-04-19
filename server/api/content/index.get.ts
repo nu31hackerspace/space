@@ -12,10 +12,20 @@ export default defineEventHandler(async (event) => {
     const baseUrl = config.public.baseUrl
 
     const db = requireDatabase(useNitroApp())
-    const cursor = db
-        .collection('blogPosts')
-        .find(filter, {
-            projection: {
+    const [items, total] = await Promise.all([
+        db.collection('blogPosts').aggregate([
+            { $match: filter },
+            { $sort: { publishedAt: -1, createdAt: -1 } },
+            { $skip: (page - 1) * pageSize },
+            { $limit: pageSize },
+            { $lookup: {
+                from: 'blogPostViews',
+                localField: 'slug',
+                foreignField: 'slug',
+                as: '_views',
+            }},
+            { $addFields: { views: { $size: '$_views' } } },
+            { $project: {
                 _id: 0,
                 slug: 1,
                 title: 1,
@@ -30,14 +40,9 @@ export default defineEventHandler(async (event) => {
                 publishedAt: 1,
                 createdAt: 1,
                 updatedAt: 1,
-            },
-        })
-        .sort({ publishedAt: -1, createdAt: -1 })
-        .skip((page - 1) * pageSize)
-        .limit(pageSize)
-
-    const [items, total] = await Promise.all([
-        cursor.toArray(),
+                views: 1,
+            }},
+        ]).toArray(),
         db.collection('blogPosts').countDocuments(filter),
     ])
 

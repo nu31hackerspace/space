@@ -15,6 +15,25 @@
             </div>
         </section>
 
+        <!-- Tag cloud — always visible regardless of post list state -->
+        <div v-if="tagCloud && tagCloud.tags.length" class="container mx-auto max-w-6xl px-4 pt-6 pb-2">
+            <div class="flex flex-wrap gap-2">
+                <button
+                    v-for="item in tagCloud.tags"
+                    :key="item.tag"
+                    @click="activeTag === item.tag ? clearTag() : setTag(item.tag)"
+                    :class="[
+                        'rounded-full border px-3 py-1 text-xs uppercase tracking-[0.15em] transition-colors',
+                        activeTag === item.tag
+                            ? 'border-accent-primary bg-accent-primary/10 text-accent-primary'
+                            : 'border-separator-primary text-label-secondary hover:border-accent-primary hover:text-accent-primary'
+                    ]"
+                >
+                    {{ item.tag }} <span class="opacity-50">{{ item.count }}</span>
+                </button>
+            </div>
+        </div>
+
         <div v-if="pending" class="text-center py-12">
             <p class="text-label-secondary">Завантаження статей...</p>
         </div>
@@ -51,6 +70,7 @@
                         <div class="flex items-center gap-2 mb-1">
                             <p class="text-xs text-label-tertiary shrink-0">{{ formatDate(article.publishedAt) }}</p>
                             <span v-if="article.isFeatured && !activeTag" class="text-xs uppercase tracking-[0.18em] text-label-tertiary">· Закріплено</span>
+                            <span v-if="article.views" class="text-xs text-label-tertiary">· {{ article.views }} переглядів</span>
                         </div>
                         <h2 class="mb-1.5 text-base sm:text-lg font-semibold text-accent-primary group-hover:underline leading-snug">
                             {{ article.title }}
@@ -102,7 +122,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { definePageMeta, useFetch, useHead, useRoute, useRouter } from '#imports'
-import type { ContentListResponse, PublicArticleListItem } from '~~/shared/types/content'
+import type { ContentListResponse, PublicArticleListItem, TagCloudResponse } from '~~/shared/types/content'
 
 definePageMeta({ layout: 'default' })
 
@@ -128,6 +148,8 @@ const fetchQuery = computed(() => {
 const { data: articles, pending, error, refresh } = await useFetch<ContentListResponse>('/api/content', {
     query: fetchQuery,
 })
+
+const { data: tagCloud } = await useFetch<TagCloudResponse>('/api/content/tags')
 
 async function navigate(newPage: number, newTag: string) {
     currentPage.value = newPage

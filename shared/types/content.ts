@@ -49,6 +49,15 @@ export interface QuoteBlock extends ContentBlockBase {
 
 export type ContentBlock = HeaderBlock | TextBlock | ImageBlock | LinkBlock | TagsBlock | CodeBlock | ListBlock | QuoteBlock
 
+export interface TagCloudItem {
+    tag: string
+    count: number
+}
+
+export interface TagCloudResponse {
+    tags: TagCloudItem[]
+}
+
 export interface PublicArticleListItem {
     slug: string
     title: string
@@ -62,6 +71,7 @@ export interface PublicArticleListItem {
     url: string
     publishedAt: string
     updatedAt: string
+    views: number
 }
 
 export interface PublicArticle extends PublicArticleListItem {
@@ -94,6 +104,7 @@ export interface ContentResponse {
     url: string
     publishedAt: string
     updatedAt: string
+    views: number
     blocks: ContentBlock[]
     // Adjacent published posts for prev/next navigation; null when no neighbour exists
     prevPost: NavPost | null

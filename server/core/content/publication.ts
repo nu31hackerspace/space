@@ -24,6 +24,7 @@ export interface BlogPostRecord {
     createdAt?: Date | string
     updatedAt?: Date | string
     publishedAt?: Date | string
+    views?: number
 }
 
 export interface PublicFeedEntry {
@@ -108,6 +109,7 @@ function buildCommonPublicFields(post: BlogPostRecord, baseUrl: string) {
         url: new URL(`/blog/${post.slug}`, baseUrl).toString(),
         publishedAt,
         updatedAt,
+        views: post.views ?? 0,
     }
 }
 
