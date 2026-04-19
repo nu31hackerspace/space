@@ -14,8 +14,7 @@
                     <option value="draft">Чернетка</option>
                     <option value="published">Опублікований</option>
                 </select>
-                <input v-model="form.tagsText" type="text" placeholder="Теги через кому"
-                    class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                <TagInput v-model="form.tags" :suggestions="tagCloud?.tags.map(t => t.tag) ?? []" />
                 <input v-model="form.coverImageUrl" type="text" placeholder="URL обкладинки"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                 <input v-model="form.coverImageAlt" type="text" placeholder="Alt-текст обкладинки"
@@ -42,18 +41,22 @@
 <script setup lang="ts">
 import { definePageMeta, useRouter, useFetch } from '#imports'
 import { ref } from 'vue'
+import type { TagCloudResponse } from '~~/shared/types/content'
 
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
 const router = useRouter()
 
-const { data: profile } = await useFetch<{ username: string }>('/api/profile')
+const [{ data: profile }, { data: tagCloud }] = await Promise.all([
+    useFetch<{ username: string }>('/api/profile'),
+    useFetch<TagCloudResponse>('/api/content/tags'),
+])
 
 const form = ref({
     title: '',
     markdown: '',
     status: 'draft' as 'draft' | 'published',
-    tagsText: '',
+    tags: [] as string[],
     coverImageUrl: '',
     coverImageAlt: '',
     isFeatured: false,
@@ -73,7 +76,7 @@ async function createPost() {
                 title: form.value.title,
                 markdown: form.value.markdown,
                 status: form.value.status,
-                tags: form.value.tagsText.split(',').map(t => t.trim()).filter(Boolean),
+                tags: form.value.tags,
                 coverImageUrl: form.value.coverImageUrl,
                 coverImageAlt: form.value.coverImageAlt,
                 isFeatured: form.value.isFeatured,

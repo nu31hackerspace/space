@@ -36,8 +36,7 @@
                     <option value="draft">Чернетка</option>
                     <option value="published">Опублікований</option>
                 </select>
-                <input v-model="tagsText" type="text" placeholder="Теги через кому"
-                    class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
+                <TagInput v-model="tags" :suggestions="tagCloud?.tags.map(t => t.tag) ?? []" />
                 <input v-model="coverImageUrl" type="text" placeholder="URL обкладинки"
                     class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
                 <input v-model="coverImageAlt" type="text" placeholder="Alt-текст обкладинки"
@@ -69,9 +68,9 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useRoute, useRouter } from '#imports'
+import { definePageMeta, useRoute, useRouter, useFetch } from '#imports'
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import type { AdminBlogPost } from '~~/shared/types/content'
+import type { AdminBlogPost, TagCloudResponse } from '~~/shared/types/content'
 
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
@@ -79,9 +78,11 @@ const route = useRoute()
 const router = useRouter()
 const slug = route.params.slug as string
 
+const { data: tagCloud } = await useFetch<TagCloudResponse>('/api/content/tags')
+
 const title = ref('')
 const status = ref<'draft' | 'published'>('draft')
-const tagsText = ref('')
+const tags = ref<string[]>([])
 const coverImageUrl = ref('')
 const coverImageAlt = ref('')
 const isFeatured = ref(false)
@@ -99,7 +100,7 @@ async function load() {
         const data = await $fetch<AdminBlogPost>(`/api/blog/${encodeURIComponent(slug)}`)
         title.value = data.title || ''
         status.value = data.status || 'draft'
-        tagsText.value = Array.isArray(data.tags) ? data.tags.join(', ') : ''
+        tags.value = Array.isArray(data.tags) ? data.tags : []
         coverImageUrl.value = data.coverImageUrl || ''
         coverImageAlt.value = data.coverImageAlt || ''
         isFeatured.value = Boolean(data.isFeatured)
@@ -122,7 +123,7 @@ async function save() {
             body: {
                 title: title.value,
                 status: status.value,
-                tags: tagsText.value.split(','),
+                tags: tags.value,
                 coverImageUrl: coverImageUrl.value,
                 coverImageAlt: coverImageAlt.value,
                 isFeatured: isFeatured.value,
@@ -157,7 +158,7 @@ async function deletePost() {
     }
 }
 
-watch([title, status, tagsText, coverImageUrl, coverImageAlt, isFeatured, authorName, markdown], () => {
+watch([title, status, tags, coverImageUrl, coverImageAlt, isFeatured, authorName, markdown], () => {
     if (loaded.value) isDirty.value = true
 })
 
