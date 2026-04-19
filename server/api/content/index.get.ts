@@ -1,3 +1,6 @@
+// GET /api/content — public paginated list of published posts.
+// Supports optional ?tag filter and ?page/?pageSize pagination.
+// Tag validation errors (e.g. tag longer than 100 chars) are surfaced as 400.
 import { createError, defineEventHandler, getQuery, useNitroApp, useRuntimeConfig } from '#imports'
 import { buildPublicArticleListResponse } from '~~/server/core/content/publication'
 import { buildContentQuery, buildPaginationParams, ContentQueryValidationError } from '~~/server/core/content/query'

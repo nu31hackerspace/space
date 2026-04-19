@@ -1,3 +1,7 @@
+// Authentication middleware — runs on every request after session-key setup (prefix 4_).
+// Verifies the JWT cookie, checks that the session is still active in the DB,
+// and attaches a UserSession to event.context.user so route handlers can check auth without
+// repeating token validation. Removes the cookie on tampered or expired tokens.
 import { defineEventHandler, deleteCookie, getCookie, useNitroApp, useRuntimeConfig } from '#imports'
 import jwt from 'jsonwebtoken'
 import { UserSession } from '~~/server/core/user/user'

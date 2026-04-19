@@ -1,3 +1,6 @@
+// GET /api/blog — lists all posts (drafts and published) for the admin dashboard.
+// Joins blogPostViews to include a view count per post.
+// Supports optional ?status filter and pagination (?page, ?pageSize).
 import { createError, defineEventHandler, getQuery, useNitroApp } from '#imports'
 
 export default defineEventHandler(async (event) => {

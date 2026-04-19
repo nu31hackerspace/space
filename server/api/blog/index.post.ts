@@ -1,3 +1,6 @@
+// POST /api/blog — creates a new blog post.
+// Slug is derived from the title; if the resulting slug already exists, returns 409.
+// The initial markdown snapshot is stored in `versions` for audit history.
 import { createError, defineEventHandler, readBody, useNitroApp } from '#imports'
 import { normalizeBlogPostWriteInput } from '~~/server/core/content/metadata'
 import { generateSlugFromTitle } from '~~/shared/utils'

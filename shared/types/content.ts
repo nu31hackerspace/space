@@ -1,3 +1,6 @@
+// Content blocks represent discrete sections of a blog post.
+// Markdown is parsed once into this typed format; the frontend renders each block
+// using the matching Vue component (BlogContentBlocks.vue dispatches by `type`).
 export interface ContentBlockBase {
     type: string
 }
@@ -49,6 +52,8 @@ export interface QuoteBlock extends ContentBlockBase {
 
 export type ContentBlock = HeaderBlock | TextBlock | ImageBlock | LinkBlock | TagsBlock | CodeBlock | ListBlock | QuoteBlock
 
+// Tag cloud: each item carries the tag name and how many published posts use it.
+// Used by the admin tag picker and the public blog sidebar.
 export interface TagCloudItem {
     tag: string
     count: number
@@ -74,6 +79,7 @@ export interface PublicArticleListItem {
     views: number
 }
 
+// Full article for the single-post page — same as list item but includes parsed blocks.
 export interface PublicArticle extends PublicArticleListItem {
     blocks: ContentBlock[]
 }
@@ -111,7 +117,7 @@ export interface ContentResponse {
     nextPost: NavPost | null
 }
 
-// Shape returned by GET /api/blog/:slug (admin, authenticated)
+// Shape returned by GET /api/blog/:slug — admin view with editable fields and raw markdown.
 export interface AdminBlogPost {
     slug: string
     title: string

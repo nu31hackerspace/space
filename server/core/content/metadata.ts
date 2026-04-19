@@ -1,3 +1,7 @@
+// Normalizes and validates blog post write input from API request bodies.
+// Centralizes all field cleaning and business rules so individual endpoints
+// don't need to repeat validation logic.
+
 type BlogStatus = 'draft' | 'published'
 
 interface WriteBody {
@@ -42,6 +46,7 @@ function trimOptionalString(value: string | undefined): string | undefined {
     return value.trim()
 }
 
+// Trims each tag and drops empty strings that result from whitespace-only entries.
 function normalizeTags(tags: string[] | undefined): string[] | undefined {
     if (!Array.isArray(tags)) {
         return undefined
@@ -50,10 +55,17 @@ function normalizeTags(tags: string[] | undefined): string[] | undefined {
     return tags.map(tag => tag.trim()).filter(Boolean)
 }
 
+// Accepts absolute http(s) URLs and root-relative paths like /uploads/img.png.
+// Rejects arbitrary strings to prevent storing garbage or injection payloads.
 function isValidCoverImageUrl(url: string): boolean {
     return url.startsWith('/') || /^https?:\/\//.test(url)
 }
 
+// Validates and sanitizes body fields from a create or update request.
+// Only fields present in the body are included in the result —
+// undefined means "not provided", so the caller can safely spread the result into a $set
+// without overwriting unrelated fields.
+// Throws an Error (mapped to 400 by callers) for constraint violations.
 export function normalizeBlogPostWriteInput(options: NormalizeOptions): NormalizedWriteInput {
     const normalized: NormalizedWriteInput = {}
     const title = trimOptionalString(options.body.title)
@@ -110,6 +122,8 @@ export function normalizeBlogPostWriteInput(options: NormalizeOptions): Normaliz
         normalized.authorName = ''
     }
 
+    // Set publishedAt only on the first publication — once set it should never change
+    // so readers and RSS consumers see a stable "originally published" date.
     if (
         normalized.status === 'published' &&
         !options.existingPost?.publishedAt

@@ -1,3 +1,5 @@
+// Ukrainian → Latin transliteration table.
+// Used by slug generation so Cyrillic post titles produce readable URL slugs.
 const ukrainianMap: Record<string, string> = {
     'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e',
     'є': 'ye', 'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'yi', 'й': 'y',

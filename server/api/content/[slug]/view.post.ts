@@ -1,3 +1,7 @@
+// POST /api/content/:slug/view — records a page view for an article.
+// One view per (slug, sessionKey) pair, enforced by a unique DB index.
+// Duplicate inserts (11000) are silently ignored so the response is always 200.
+// Only well-formed UUID session keys are accepted; malformed cookies are skipped entirely.
 import { createError, defineEventHandler, getRouterParam, getCookie, useNitroApp } from '#imports'
 import { requireDatabase } from '~~/server/core/runtime/database'
 import { isValidTrackingSessionKey, TRACKING_COOKIE_NAME } from '~~/server/tracking/const'

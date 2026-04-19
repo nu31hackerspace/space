@@ -1,3 +1,6 @@
+// Renders a valid RSS 2.0 feed with optional extensions:
+//   dc:creator (author), content:encoded (full HTML body), media:thumbnail (cover image).
+// All values are XML-escaped; content:encoded uses CDATA to allow raw HTML inside the envelope.
 import type { PublicFeedEntry } from './publication'
 
 export interface RssFeedDocument {

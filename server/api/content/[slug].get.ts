@@ -1,3 +1,6 @@
+// GET /api/content/:slug — public endpoint for reading a published post.
+// Returns full content blocks, prev/next navigation posts, and live view count.
+// Parsed blocks are cached in the DB on first request to avoid re-parsing markdown on every load.
 import { createError, defineEventHandler, getRouterParam, useNitroApp, useRuntimeConfig } from '#imports'
 import type { ContentResponse } from '~~/shared/types/content'
 import { buildContentResponse } from '~~/server/core/content/publication'

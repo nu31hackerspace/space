@@ -1,3 +1,6 @@
+// PUT /api/blog/:slug — updates an existing post.
+// Only the original author (owner_id) may edit.
+// When markdown changes, re-parses blocks immediately and appends a version snapshot for audit history.
 import { createError, defineEventHandler, getRouterParam, readBody, useNitroApp } from '#imports'
 import type { UpdateFilter } from 'mongodb'
 import { normalizeBlogPostWriteInput } from '~~/server/core/content/metadata'

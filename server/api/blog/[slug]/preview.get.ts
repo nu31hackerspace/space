@@ -1,9 +1,15 @@
+// GET /api/blog/:slug/preview — lets the owner preview a draft before publishing.
+// Returns the post in the same PublicArticle format used by the public page,
+// but without prev/next navigation and regardless of publication status.
+// Only the post owner may access; other authenticated users get 403.
 import { createError, defineEventHandler, getRouterParam, useNitroApp, useRuntimeConfig } from '#imports'
 import { assertPostOwner } from '~~/server/core/blog/ownership'
 import { buildPublicArticle, type BlogPostRecord } from '~~/server/core/content/publication'
 import { requireDatabase } from '~~/server/core/runtime/database'
 import type { ContentBlock, ContentResponse } from '~~/shared/types/content'
 
+// Minimal local type covering all fields returned by the DB projection below.
+// Using a typed collection avoids double-casting with `as unknown as` at the call site.
 interface PreviewPostProjection extends BlogPostRecord {
     cachedBlocks?: ContentBlock[]
     owner_id?: string

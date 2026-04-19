@@ -18,6 +18,7 @@ export default defineNitroPlugin(async (nitroApp) => {
     }
 })
 
+// Creates all required indexes on startup. createIndex is idempotent — safe to run on every boot.
 async function initializeDatabaseSchema(db: Db, logger: any) {
     try {
         logger.info('Initializing database schema...')

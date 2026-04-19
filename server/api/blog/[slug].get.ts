@@ -1,3 +1,6 @@
+// GET /api/blog/:slug — fetches a post for the admin editor.
+// Returns raw fields (rawMarkdown, status, tags, etc.) without parsing blocks or checking publication status.
+// Requires authentication; any authenticated user can read any post (write/delete are owner-only).
 import { createError, defineEventHandler, getRouterParam, useNitroApp } from '#imports'
 
 export default defineEventHandler(async (event) => {

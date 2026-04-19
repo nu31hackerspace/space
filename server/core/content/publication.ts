@@ -1,3 +1,6 @@
+// Transforms raw DB records into the public-facing response shapes used by the frontend and RSS.
+// All formatting, normalization, and HTML rendering lives here so endpoint handlers stay thin.
+
 import type {
     ContentResponse,
     PublicArticle,
@@ -39,6 +42,8 @@ export interface PublicFeedEntry {
     author?: string
 }
 
+// Used when rendering blocks to HTML for the RSS feed — not applied to blocks served to the frontend,
+// since the Vue components handle their own rendering safely.
 function escapeHtml(value: string): string {
     return value
         .replaceAll('&', '&amp;')
@@ -95,6 +100,8 @@ function findFirstParagraph(blocks: ContentBlock[]): string {
     return textBlock?.content || ''
 }
 
+// Removes a leading h1 that repeats the post title.
+// Authors sometimes start their markdown with "# Title" which duplicates the page heading.
 function removeDuplicatedLeadingTitle(blocks: ContentBlock[], title: string): ContentBlock[] {
     const [firstBlock, ...restBlocks] = blocks
 
@@ -145,6 +152,8 @@ export function buildPublicArticle(post: BlogPostRecord, baseUrl: string): Publi
     return buildCommonPublicFields(post, baseUrl)
 }
 
+// Builds the paginated list response for GET /api/content.
+// Filters out drafts as a safety net in case the DB query was broader than expected.
 export function buildPublicArticleListResponse(
     posts: BlogPostRecord[],
     options: { baseUrl: string; page: number; pageSize: number; total: number }
