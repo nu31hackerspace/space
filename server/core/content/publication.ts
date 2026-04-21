@@ -9,6 +9,7 @@ import type {
 } from '~~/shared/types/content'
 import type { ContentBlock, TextBlock } from '~~/shared/types/content'
 import { parseMarkdownToBlocks } from './parse'
+import { marked } from 'marked'
 
 export interface BlogPostRecord {
     slug: string
@@ -52,11 +53,25 @@ function escapeHtml(value: string): string {
         .replaceAll('"', '&quot;')
 }
 
+// Custom renderer that strips links with non-http(s) schemes (javascript:, data:, etc.)
+// to prevent unsafe URLs from appearing in RSS output.
+const safeRenderer = new marked.Renderer()
+safeRenderer.link = ({ href, text }) => {
+    if (!/^https?:\/\//i.test(href)) return text
+    return `<a href="${href}">${text}</a>`
+}
+
+// Converts inline Markdown within a plain-text string to HTML using the marked library.
+// Applied only to text blocks in RSS output — the frontend renders inline Markdown via Vue components.
+export function renderInlineMarkdown(text: string): string {
+    return marked.parseInline(text, { renderer: safeRenderer }) as string
+}
+
 function renderBlocksToHtml(blocks: ContentBlock[]): string {
     return blocks.map(block => {
         switch (block.type) {
             case 'header': return `<h${block.size}>${escapeHtml(block.title)}</h${block.size}>`
-            case 'text': return `<p>${escapeHtml(block.content)}</p>`
+            case 'text': return `<p>${renderInlineMarkdown(block.content)}</p>`
             case 'image': return `<img src="${escapeHtml(block.imageUrl)}" alt="${escapeHtml(block.imageAlt || '')}" />`
             case 'code': return `<pre><code class="language-${escapeHtml(block.language)}">${escapeHtml(block.code)}</code></pre>`
             case 'list': {

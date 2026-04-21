@@ -4,7 +4,52 @@ import {
     buildPublicArticleListItem,
     buildPublicArticleListResponse,
     buildPublicFeedEntry,
+    renderInlineMarkdown,
 } from './publication'
+
+describe('renderInlineMarkdown', () => {
+    it('converts **bold** to <strong>', () => {
+        expect(renderInlineMarkdown('**bold**')).toBe('<strong>bold</strong>')
+    })
+
+    it('converts __bold__ to <strong>', () => {
+        expect(renderInlineMarkdown('__bold__')).toBe('<strong>bold</strong>')
+    })
+
+    it('converts *italic* to <em>', () => {
+        expect(renderInlineMarkdown('*italic*')).toBe('<em>italic</em>')
+    })
+
+    it('converts _italic_ to <em>', () => {
+        expect(renderInlineMarkdown('_italic_')).toBe('<em>italic</em>')
+    })
+
+    it('converts `code` to <code>', () => {
+        expect(renderInlineMarkdown('`code`')).toBe('<code>code</code>')
+    })
+
+    it('converts [label](https://example.com) to <a href>', () => {
+        expect(renderInlineMarkdown('[label](https://example.com)')).toBe('<a href="https://example.com">label</a>')
+    })
+
+    it('strips unsafe link schemes — renders label only', () => {
+        expect(renderInlineMarkdown('[click](javascript:void0)')).toBe('click')
+        expect(renderInlineMarkdown('[click](data:text/html,hi)')).toBe('click')
+    })
+
+    it('HTML-escapes special chars before applying Markdown rules', () => {
+        expect(renderInlineMarkdown('a < b & c')).toBe('a &lt; b &amp; c')
+    })
+
+    it('leaves plain text unchanged beyond HTML escaping', () => {
+        expect(renderInlineMarkdown('no markup here')).toBe('no markup here')
+    })
+
+    it('handles mixed inline constructs in one string', () => {
+        const result = renderInlineMarkdown('**bold** and [link](https://x.com)')
+        expect(result).toBe('<strong>bold</strong> and <a href="https://x.com">link</a>')
+    })
+})
 
 describe('publication helpers', () => {
     const basePost = {
@@ -127,6 +172,21 @@ describe('publication helpers', () => {
         }, 'https://space.example')
 
         expect(article.publishedAt).toBe(article.updatedAt)
+    })
+
+    it('renders inline markdown in text blocks for RSS content:encoded', () => {
+        const entry = buildPublicFeedEntry({
+            slug: 'inline-test',
+            title: 'Inline Test',
+            rawMarkdown: '**bold** and *italic* and `code`',
+            status: 'published',
+            createdAt: new Date('2025-02-03T10:00:00.000Z'),
+            updatedAt: new Date('2025-02-04T15:30:00.000Z'),
+        }, 'https://space.example')
+
+        expect(entry.contentHtml).toContain('<strong>bold</strong>')
+        expect(entry.contentHtml).toContain('<em>italic</em>')
+        expect(entry.contentHtml).toContain('<code>code</code>')
     })
 
     it('builds feed entries with content HTML and media thumbnail', () => {
