@@ -3,6 +3,23 @@
 // All values are XML-escaped; content:encoded uses CDATA to allow raw HTML inside the envelope.
 import type { PublicFeedEntry } from './publication'
 
+const MIME_BY_EXTENSION: Record<string, string> = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    avif: 'image/avif',
+    svg: 'image/svg+xml',
+}
+
+// Infers an image MIME type from the URL file extension.
+// Defaults to image/jpeg for CDN URLs that have no extension (e.g. Discord CDN).
+export function inferImageMimeType(url: string): string {
+    const ext = url.split('?')[0].split('.').pop()?.toLowerCase() ?? ''
+    return MIME_BY_EXTENSION[ext] ?? 'image/jpeg'
+}
+
 export interface RssFeedDocument {
     title: string
     feedUrl: string
@@ -44,7 +61,7 @@ export function renderRssFeed(feed: RssFeedDocument): string {
             ? `<content:encoded><![CDATA[${item.contentHtml}]]></content:encoded>`
             : ''
         const mediaThumbnailXml = item.mediaThumbnail
-            ? `<media:thumbnail url="${escapeXml(item.mediaThumbnail)}" />`
+            ? `<media:thumbnail url="${escapeXml(item.mediaThumbnail)}" type="${inferImageMimeType(item.mediaThumbnail)}" />`
             : ''
 
         return [
