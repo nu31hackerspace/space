@@ -15,6 +15,12 @@
                         Privacy Policy
                     </NuxtLink>
                     <NuxtLink
+                        to="/legal-docs"
+                        class="text-sm text-label-secondary hover:text-accent-primary transition-colors"
+                    >
+                        Документи
+                    </NuxtLink>
+                    <NuxtLink
                         to="/terms-of-service"
                         class="text-sm text-label-secondary hover:text-accent-primary transition-colors"
                     >
