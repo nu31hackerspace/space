@@ -207,18 +207,17 @@ import { definePageMeta, navigateTo, useHead } from '#imports'
 import { onMounted } from 'vue'
 import { trackEvent } from '~~/app/utils/track'
 import { useFetch } from '#imports'
+import { useUser } from '~/composables/useUser'
+import { useElectricityStatus } from '~/composables/useElectricityStatus'
+import { useTheme } from '~/composables/useTheme'
 
 useHead({
     script: [
         {
             src: 'https://events.nu31.space/gancio-events.es.js',
-            type: 'module',
         },
     ],
 })
-import { useUser } from '~/composables/useUser'
-import { useElectricityStatus } from '~/composables/useElectricityStatus'
-import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({
     layout: 'void',
