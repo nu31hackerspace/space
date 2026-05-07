@@ -26,6 +26,13 @@ export default defineNuxtConfig({
     },
     vite: {
         plugins: [tailwindcss()],
+        vue: {
+            template: {
+                compilerOptions: {
+                    isCustomElement: (tag) => tag === 'gancio-events',
+                },
+            },
+        },
     },
     css: ['~/assets/css/main.css'],
     app: {

@@ -114,6 +114,15 @@
                 </MainButton>
             </div>
 
+            <div class="mb-20">
+                <h2 class="text-3xl font-bold mb-8 text-center text-accent-primary">
+                    Наші події
+                </h2>
+                <ClientOnly>
+                    <gancio-events baseurl="https://events.nu31.space" show_recurrent="true" maxlength="10" sidebar="false" theme="light" />
+                </ClientOnly>
+            </div>
+
             <div v-if="mediaPosts && mediaPosts.length > 0" class="mb-20">
                 <h2 class="text-3xl font-bold mb-8 text-center text-accent-primary">
                     Медіа про нас
@@ -194,10 +203,19 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, navigateTo } from '#imports'
+import { definePageMeta, navigateTo, useHead } from '#imports'
 import { onMounted } from 'vue'
 import { trackEvent } from '~~/app/utils/track'
 import { useFetch } from '#imports'
+
+useHead({
+    script: [
+        {
+            src: 'https://events.nu31.space/gancio-events.es.js',
+            type: 'module',
+        },
+    ],
+})
 import { useUser } from '~/composables/useUser'
 import { useElectricityStatus } from '~/composables/useElectricityStatus'
 
