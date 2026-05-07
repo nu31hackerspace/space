@@ -119,7 +119,7 @@
                     Наші події
                 </h2>
                 <ClientOnly>
-                    <gancio-events baseurl="https://events.nu31.space" show_recurrent="true" maxlength="10" sidebar="false" theme="light" />
+                    <gancio-events baseurl="https://events.nu31.space" show_recurrent="true" maxlength="10" sidebar="false" :theme="theme" />
                 </ClientOnly>
             </div>
 
@@ -218,6 +218,7 @@ useHead({
 })
 import { useUser } from '~/composables/useUser'
 import { useElectricityStatus } from '~/composables/useElectricityStatus'
+import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({
     layout: 'void',
@@ -234,6 +235,8 @@ const {
     badgeLabel: electricityBadgeLabel,
     fetchStatus: fetchElectricityStatus,
 } = useElectricityStatus()
+
+const { theme } = useTheme()
 
 const { data: mediaPosts } = await useFetch<Array<{
     id: string
