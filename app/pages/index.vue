@@ -36,11 +36,15 @@
                 <h3 class="text-2xl font-bold mb-8 text-accent-primary">
                     Create whatever you want
                 </h3>
-                <p class="text-xl text-label-secondary">
+                <p class="text-xl text-label-secondary mb-4">
                     NU31 — це простір для творчих людей, інноваторів та
                     ентузіастів технологій. Ми створюємо середовище, де можна
                     експериментувати, навчатися та реалізовувати найсміливіші
                     ідеї.
+                </p>
+                <p class="text-sm text-label-tertiary">
+                    HACKER SPACE NU31 — registered nonprofit organization
+                    (громадська організація) in Ukraine, EDRPOU 46237412.
                 </p>
             </div>
 
@@ -174,12 +178,32 @@
                         <h3 class="text-2xl font-bold mb-4 text-accent-primary">
                             Контакти
                         </h3>
-                        <p class="text-label-secondary mb-2">
-                            📍 Київ, Україна
+                        <p class="text-label-primary font-semibold mb-1">
+                            HACKER SPACE NU31
                         </p>
-                        <p class="text-label-secondary mb-2">
-                            📧 Нижньоюрківська 31
+                        <p class="text-label-secondary mb-2 text-sm">
+                            EDRPOU / ЄДРПОУ: 46237412 · Registered nonprofit organization in Ukraine
                         </p>
+                        <address class="not-italic text-label-secondary mb-2 whitespace-pre-line">📍 {{ legalAddress }}</address>
+                        <p class="text-label-secondary mb-2">
+                            📧
+                            <a href="mailto:root@nu31.space" class="hover:text-accent-primary transition-colors">
+                                root@nu31.space
+                            </a>
+                        </p>
+                        <a
+                            href="https://maps.app.goo.gl/HyjnMv37owj5GYHm8"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-block mt-2 text-label-secondary hover:text-accent-primary transition-colors"
+                        >
+                            🗺️ View on Google Maps
+                        </a>
+                        <div class="mt-4 flex gap-4 text-sm">
+                            <NuxtLink to="/about" class="text-accent-primary hover:underline">About</NuxtLink>
+                            <NuxtLink to="/projects" class="text-accent-primary hover:underline">Projects</NuxtLink>
+                            <NuxtLink to="/contact" class="text-accent-primary hover:underline">Contact</NuxtLink>
+                        </div>
                     </div>
                     <div>
                         <h3 class="text-2xl font-bold mb-4 text-accent-primary">
@@ -253,6 +277,10 @@ const { data: galleryImages } = await useFetch<Array<{
 }>>('/api/gallery')
 
 const isDevMode = import.meta.dev
+
+const legalAddress = `HACKERSPACE NU31
+Nyzhnoiurkivska
+Kyiv; Kyiv 04080`
 
 onMounted(async () => {
     trackEvent('page_view', { page: 'landing' })
