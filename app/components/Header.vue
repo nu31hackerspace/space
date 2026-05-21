@@ -2,12 +2,22 @@
     <div class="container mx-auto px-4 py-4">
         <div class="flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <NuxtLink to="/home" class="text-3xl font-bold text-accent-primary hover:opacity-80 transition-opacity">
-                    NU31
+                <NuxtLink to="/home" class="flex flex-col hover:opacity-80 transition-opacity">
+                    <span class="text-3xl font-bold text-accent-primary leading-none">NU31</span>
+                    <span class="text-[10px] uppercase tracking-wider text-label-secondary mt-1">HACKER SPACE NU31</span>
                 </NuxtLink>
                 <MainBadge v-if="!isLoading && status" :variant="badgeVariant" :label="badgeLabel" />
             </div>
             <nav class="flex items-center space-x-6">
+                <NuxtLink to="/about" class="text-label-primary hover:text-accent-primary transition-colors font-medium">
+                    About
+                </NuxtLink>
+                <NuxtLink to="/projects" class="text-label-primary hover:text-accent-primary transition-colors font-medium">
+                    Projects
+                </NuxtLink>
+                <NuxtLink to="/contact" class="text-label-primary hover:text-accent-primary transition-colors font-medium">
+                    Contact
+                </NuxtLink>
                 <NuxtLink to="/blog" class="text-label-primary hover:text-accent-primary transition-colors font-medium">
                     Блог
                 </NuxtLink>
