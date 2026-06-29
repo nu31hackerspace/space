@@ -6,7 +6,7 @@ This file provides guidance to AI coding agents working with code in this reposi
 
 The website and backend for **NU31 Hacker Space** (https://nu31.space), a Ukrainian nonprofit. It is a single **Nuxt 4** application that serves both the frontend (Vue 3) and the API (Nitro server). One repo, one deployable. Persistence is **MongoDB** (no migrations — collections and indexes are created on boot). The project's stated philosophy is to keep the code simple enough that many people can contribute. The README is in Ukrainian.
 
-Notable integrations: **Discord** (OAuth login, member sync, a bot, a karma system), **MQTT** (broker management + an electricity/blackout tracker), and **GridFS** image storage.
+Notable integrations: **Discord** (OAuth login, member sync), **MQTT** (broker management + an electricity/blackout tracker), and **GridFS** image storage.
 
 ## Commands
 
