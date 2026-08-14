@@ -74,25 +74,7 @@ async function createIndexes(db: Db, logger: any) {
             { name: 'deviceSlug_timestamp_desc' }
         )
 
-        const blogPosts = db.collection('blogPosts')
-        await blogPosts.createIndex(
-            { slug: 1 },
-            {
-                unique: true,
-                name: 'unique_blog_slug'
-            }
-        )
-        await blogPosts.createIndex(
-            { status: 1, updatedAt: -1 },
-            {
-                name: 'status_updatedAt_idx'
-            }
-        )
 
-        await db.collection('blogPostViews').createIndex(
-            { slug: 1, sessionKey: 1 },
-            { unique: true, name: 'unique_blog_post_view' }
-        )
 
         logger.info('Database indexes created successfully')
     } catch (error) {

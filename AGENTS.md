@@ -76,17 +76,9 @@ docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:lat
 
 MongoDB is reached through `useNitroApp().db` (or `requireDatabase(...)`). Images are stored in **GridFS** via `nitroApp.fileStores`, with one bucket per `FileStoreType` (user avatars, media images, gallery images — see `server/plugins/3_file_store.ts`). Avatars/images are served back through dedicated API routes that stream from GridFS.
 
-### Content / blog system
-
-One MongoDB collection, `blogPosts`, backs two API surfaces:
-- `/api/content/*` — **public read** (published posts only; list, single, tags, view counting via `blogPostViews`).
-- `/api/blog/*` — **authenticated admin CRUD** (create/update/delete, drafts, version history in a `versions` array).
-
-The app mirrors this: `app/pages/blog/` is the public reader, `app/pages/admin/blog/` is the editor. Posts are authored as Markdown; `server/core/content/parse.ts` parses raw Markdown once into a typed `ContentBlock[]` (`shared/types/content.ts`), and `app/components/BlogContentBlocks.vue` dispatches each block to a matching component in `app/components/blog/`. Slugs are generated from titles with **Ukrainian→Latin transliteration** (`shared/utils.ts`); uniqueness is enforced by a unique index (duplicate → 409).
-
 ### Auth
 
-Discord OAuth: the callback exchanges the code for a token (`server/core/discord/auth.ts`), a user record + session is created, and a signed **JWT is set as the `jwt` cookie**. The `4_auth` middleware validates it on every request. On the client, `app/composables/useUser.ts` fetches `/api/user/me`, and `app/middleware/auth.ts` redirects anonymous users away from protected pages. A `dev-login` endpoint exists for local development.
+Discord OAuth: the callback exchanges the code for a token (`server/core/discord/auth.ts`), a user record + session is created, and a signed **JWT is set as the `jwt` cookie**. The `4_auth` middleware validates it on every request. On the client, `app/composables/useUser.ts` fetches `/api/user/me`, and `app/middleware/auth.ts` redirects anonymous users away from protected pages.
 
 ### MQTT & electricity tracker
 

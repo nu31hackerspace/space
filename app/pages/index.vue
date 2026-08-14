@@ -5,14 +5,10 @@
                 <MainBadge v-if="!electricityLoading && electricityStatus" :variant="electricityBadgeVariant"
                     :label="electricityBadgeLabel" class="w-full sm:w-auto mb-4 sm:mb-0" />
             </div>
-            <NuxtLink to="/blog" class="text-label-primary hover:text-accent-primary transition-colors font-medium">
-                Блог
-            </NuxtLink>
+
             <div class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row">
                 <MainButton buttonStyle="primary" size="M" icon="ic:baseline-discord" label="Вхід для резидентів"
                     :link="data?.redirectUri" class="w-full sm:w-auto" />
-                <MainButton v-if="isDevMode" buttonStyle="secondary" size="M" label="Dev Login"
-                    class="w-full sm:w-auto" @click="loginAsDev" />
                 <ThemeSwitch />
             </div>
         </div>
@@ -105,6 +101,39 @@
                 </div>
             </div>
 
+            <div class="mb-20">
+                <h2 class="text-3xl font-bold mb-8 text-center text-accent-primary">
+                    Наші події
+                </h2>
+                <ClientOnly>
+                    <gancio-events baseurl="https://events.nu31.space" show_recurrent="true" maxlength="10" sidebar="false" :theme="theme" />
+                </ClientOnly>
+            </div>
+
+            <div class="text-center mb-20 bg-fill-secondary p-8 rounded-xl border border-separator-primary max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-6 text-accent-primary">
+                    Підтримайте нас
+                </h2>
+                <p class="text-xl text-label-secondary mb-8">
+                    Ваша підтримка допомагає нам розвивати хакерспейс та створювати нові можливості для спільноти
+                </p>
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                    <div class="bg-white p-3 rounded-2xl shadow-sm border border-separator-primary">
+                        <img src="/img/monobank_qr.png" alt="Monobank QR Code" class="w-40 h-40 rounded-xl" />
+                    </div>
+                    <div class="flex flex-col gap-4 w-full sm:w-auto">
+                        <MainButton buttonStyle="primary" size="L" link="https://send.monobank.ua/jar/99aDNpRkWL"
+                            icon="mdi:bank" class="w-full justify-center">
+                            Підтримати на Monobank
+                        </MainButton>
+                        <MainButton buttonStyle="secondary" size="L" link="https://www.patreon.com/cw/NU31"
+                            icon="mdi:patreon" class="w-full justify-center">
+                            Підтримати на Patreon
+                        </MainButton>
+                    </div>
+                </div>
+            </div>
+
             <div class="text-center mb-20">
                 <h2 class="text-3xl font-bold mb-6 text-accent-primary">
                     Приєднуйся до нас
@@ -118,15 +147,6 @@
                 </MainButton>
             </div>
 
-            <div class="mb-20">
-                <h2 class="text-3xl font-bold mb-8 text-center text-accent-primary">
-                    Наші події
-                </h2>
-                <ClientOnly>
-                    <gancio-events baseurl="https://events.nu31.space" show_recurrent="true" maxlength="10" sidebar="false" :theme="theme" />
-                </ClientOnly>
-            </div>
-
             <div v-if="mediaPosts && mediaPosts.length > 0" class="mb-20">
                 <h2 class="text-3xl font-bold mb-8 text-center text-accent-primary">
                     Медіа про нас
@@ -135,21 +155,6 @@
                     <MediaPostCard v-for="post in mediaPosts" :key="post.id" :title="post.title"
                         :source-url="post.sourceUrl"
                         :image-url="post.imageFilename ? `/api/media/image/${post.imageFilename}` : undefined" />
-                </div>
-            </div>
-
-            <div class="text-center mb-20 bg-fill-secondary p-8 rounded-xl border border-separator-primary max-w-4xl mx-auto">
-                <h2 class="text-3xl font-bold mb-6 text-accent-primary">
-                    Підтримайте нас
-                </h2>
-                <p class="text-xl text-label-secondary mb-8">
-                    Ваша підтримка допомагає нам розвивати хакерспейс та створювати нові можливості для спільноти
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <MainButton buttonStyle="primary" size="M" link="https://www.patreon.com/cw/NU31"
-                        icon="mdi:patreon">
-                        Підтримати на Patreon
-                    </MainButton>
                 </div>
             </div>
 
@@ -172,56 +177,31 @@
                 </div>
             </div>
 
-            <div class="border-t border-separator-primary pt-16">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4 text-accent-primary">
-                            Контакти
-                        </h3>
-                        <p class="text-label-primary font-semibold mb-1">
-                            HACKER SPACE NU31
-                        </p>
-                        <p class="text-label-secondary mb-2 text-sm">
-                            EDRPOU / ЄДРПОУ: 46237412 · Registered nonprofit organization in Ukraine
-                        </p>
-                        <address class="not-italic text-label-secondary mb-2 whitespace-pre-line">📍 {{ legalAddress }}</address>
-                        <p class="text-label-secondary mb-2">
-                            📧
-                            <a href="mailto:root@nu31.space" class="hover:text-accent-primary transition-colors">
-                                root@nu31.space
-                            </a>
-                        </p>
-                        <a
-                            href="https://maps.app.goo.gl/HyjnMv37owj5GYHm8"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="inline-block mt-2 text-label-secondary hover:text-accent-primary transition-colors"
-                        >
-                            🗺️ View on Google Maps
-                        </a>
-                        <div class="mt-4 flex gap-4 text-sm">
-                            <NuxtLink to="/about" class="text-accent-primary hover:underline">About</NuxtLink>
-                            <NuxtLink to="/projects" class="text-accent-primary hover:underline">Projects</NuxtLink>
-                            <NuxtLink to="/contact" class="text-accent-primary hover:underline">Contact</NuxtLink>
-                        </div>
+            <div class="text-center mb-20 bg-fill-secondary p-8 rounded-xl border border-separator-primary max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-6 text-accent-primary">
+                    Підтримайте нас
+                </h2>
+                <p class="text-xl text-label-secondary mb-8">
+                    Ваша підтримка допомагає нам розвивати хакерспейс та створювати нові можливості для спільноти
+                </p>
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                    <div class="bg-white p-3 rounded-2xl shadow-sm border border-separator-primary">
+                        <img src="/img/monobank_qr.png" alt="Monobank QR Code" class="w-40 h-40 rounded-xl" />
                     </div>
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4 text-accent-primary">
-                            Соціальні мережі
-                        </h3>
-                        <div class="flex">
-                            <MainButton buttonStyle="ghost" size="L" link="https://github.com/nu31hackerspace"
-                                icon="mdi:github"></MainButton>
-                            <MainButton buttonStyle="ghost" size="L" link="https://www.instagram.com/nu31hackerspace/"
-                                icon="mdi:instagram"></MainButton>
-                            <MainButton buttonStyle="ghost" size="L" link="https://discord.gg/X93qAG2jH6"
-                                icon="ic:baseline-discord"></MainButton>
-                            <MainButton buttonStyle="ghost" size="L" link="https://www.patreon.com/cw/NU31"
-                                icon="mdi:patreon"></MainButton>
-                        </div>
+                    <div class="flex flex-col gap-4 w-full sm:w-auto">
+                        <MainButton buttonStyle="primary" size="L" link="https://send.monobank.ua/jar/99aDNpRkWL"
+                            icon="mdi:bank" class="w-full justify-center">
+                            Підтримати на Monobank
+                        </MainButton>
+                        <MainButton buttonStyle="secondary" size="L" link="https://www.patreon.com/cw/NU31"
+                            icon="mdi:patreon" class="w-full justify-center">
+                            Підтримати на Patreon
+                        </MainButton>
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 </template>
@@ -276,7 +256,6 @@ const { data: galleryImages } = await useFetch<Array<{
     createdAt: string
 }>>('/api/gallery')
 
-const isDevMode = import.meta.dev
 
 const legalAddress = `HACKERSPACE NU31
 Nyzhnoiurkivska
@@ -295,17 +274,4 @@ onMounted(async () => {
     fetchElectricityStatus()
 })
 
-async function loginAsDev() {
-    const response = await $fetch<{ success: boolean; redirectTo: string }>('/api/auth/dev-login', {
-        method: 'POST',
-        body: {
-            redirectTo: '/home',
-        },
-        credentials: 'include',
-    })
-
-    if (response.success) {
-        window.location.href = response.redirectTo
-    }
-}
 </script>

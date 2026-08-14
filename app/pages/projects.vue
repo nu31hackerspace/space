@@ -85,10 +85,7 @@
                 shared space and tools: custom electronics, robotics
                 experiments, retro-computing restoration, CNC and 3D-printing
                 work, embedded firmware research, and software for the
-                community. Members write about ongoing work on the
-                <NuxtLink to="/blog" class="text-accent-primary hover:underline">
-                    blog
-                </NuxtLink>.
+                community. Members often document their ongoing work within the community.
             </p>
         </section>
 

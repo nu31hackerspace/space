@@ -18,9 +18,7 @@
                 <NuxtLink to="/contact" class="text-label-primary hover:text-accent-primary transition-colors font-medium">
                     Contact
                 </NuxtLink>
-                <NuxtLink to="/blog" class="text-label-primary hover:text-accent-primary transition-colors font-medium">
-                    Блог
-                </NuxtLink>
+
             </nav>
             <div class="flex items-center space-x-4">
                 <NuxtLink v-if="isLoggedIn && avatarUrl" to="/profile"

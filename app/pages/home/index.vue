@@ -49,12 +49,7 @@ const cards = [
         title: 'Подивитися електроенергію',
         description: 'Переглянути електроенергію всіх учасників спільноти',
     },
-    {
-        route: '/admin/blog',
-        icon: 'mdi:note-edit',
-        title: 'Blog Admin',
-        description: 'Create and edit blog articles',
-    },
+
     {
         route: '/admin/media',
         icon: 'mdi:newspaper-variant',
