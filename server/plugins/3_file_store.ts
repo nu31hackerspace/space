@@ -7,6 +7,7 @@ export enum FileStoreType {
     UserAvatar = "user_avatar",
     MediaPostImage = "media_post_image",
     LandingGalleryImage = "landing_gallery_image",
+    MerchProductImage = "merch_product_image",
     Other = "other"
 }
 

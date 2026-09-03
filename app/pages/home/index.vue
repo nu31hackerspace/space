@@ -68,6 +68,12 @@ const cards = [
         title: 'MQTT',
         description: 'Керування MQTT',
     },
+    {
+        route: '/admin/merch',
+        icon: 'mdi:tshirt-crew',
+        title: 'Мерч',
+        description: 'Додавання товарів та список замовлень',
+    },
 ]
 
 onMounted(() => {

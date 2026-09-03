@@ -12,6 +12,11 @@ export default defineNuxtConfig({
         discordClientSecret: '',
         discordBotToken: '',
         jwtSecret: 'test-jwt-secret',
+        monobankToken: '',
+        novaPoshtaApiKey: '',
+        resendToken: '',
+        resendFrom: 'merch@nu31.space',
+        orderChannelId: '',
         mqttPass: 'admin',
         public: {
             baseUrl: 'http://localhost:3000',
