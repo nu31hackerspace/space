@@ -48,23 +48,27 @@ npm run dev
 Проект підтримує розробку через [Dev Containers](https://containers.dev/). Щоб не засмічувати основну систему, ви можете створити окрему віртуальну машину (VM) для Docker за допомогою Colima з виділеною IP-адресою:
 
 1. Створіть та запустіть окрему VM в Colima з виділеною мережевою адресою (потрібен встановлений `colima`):
-   ```bash
-   colima start nu31space --network-address --cpu 4 --memory 8
-   ```
+
+    ```bash
+    colima start nu31space --network-address --cpu 4 --memory 8
+    ```
 
 2. Colima автоматично налаштує новий Docker context (`colima-nu31space`). Перевірити IP-адресу вашої нової VM можна командою:
-   ```bash
-   colima list
-   ```
+
+    ```bash
+    colima list
+    ```
 
 3. Відкрийте проект у VS Code (або іншому редакторі з підтримкою Dev Containers) і виберіть опцію **"Reopen in Container"** (або "Відкрити в контейнері").
 
 Dev Container автоматично запустить:
+
 - Node.js середовище для роботи з Nuxt
 - **MongoDB** базу даних
 - **Compass Web** (веб-інтерфейс для бази даних) доступний за адресою `http://localhost:8081` (або по IP віртуальної машини: `http://<COLIMA_IP>:8081`)
 
 Після підключення до контейнера:
+
 1. Залежності (`npm install`) будуть встановлені автоматично.
 2. Запустіть сервер: `npm run dev`
 3. Сайт буде доступний на `http://localhost:3000` (порт буде автоматично прокинутий на вашу хост-машину).

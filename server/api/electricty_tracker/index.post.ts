@@ -1,4 +1,10 @@
-import { createError, defineEventHandler, readBody, useNitroApp, useRuntimeConfig } from '#imports'
+import {
+    createError,
+    defineEventHandler,
+    readBody,
+    useNitroApp,
+    useRuntimeConfig,
+} from '#imports'
 import type { CreateElectricityTrackerRequest } from '~~/shared/types/create_electricity_tracker'
 import { createSlugFromName } from '~~/shared/utils'
 import jwt from 'jsonwebtoken'
@@ -19,7 +25,10 @@ export default defineEventHandler(async (event) => {
     const slug = createSlugFromName(name)
     const db = useNitroApp().db
 
-    const trackerJwtToken = jwt.sign({ trackerSlug: slug }, useRuntimeConfig().jwtSecret)
+    const trackerJwtToken = jwt.sign(
+        { trackerSlug: slug },
+        useRuntimeConfig().jwtSecret
+    )
 
     const doc = {
         name: name.trim(),
@@ -35,7 +44,6 @@ export default defineEventHandler(async (event) => {
             name: name.trim(),
             slug: slug,
             trackerJwtToken: trackerJwtToken,
-        }
+        },
     }
 })
-

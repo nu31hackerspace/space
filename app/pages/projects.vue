@@ -12,7 +12,9 @@
                 Open-source projects
             </h2>
 
-            <article class="bg-fill-secondary p-8 rounded-xl border border-separator-primary mb-6">
+            <article
+                class="bg-fill-secondary p-8 rounded-xl border border-separator-primary mb-6"
+            >
                 <h3 class="text-xl font-bold mb-2 text-label-primary">
                     Prismo — IoT smart-locker system
                 </h3>
@@ -35,7 +37,9 @@
                 </a>
             </article>
 
-            <article class="bg-fill-secondary p-8 rounded-xl border border-separator-primary">
+            <article
+                class="bg-fill-secondary p-8 rounded-xl border border-separator-primary"
+            >
                 <h3 class="text-xl font-bold mb-2 text-label-primary">
                     nu31.space — community platform
                 </h3>
@@ -55,13 +59,16 @@
             <p class="text-label-primary mb-4">
                 We host regular events open to the broader Kyiv community:
                 technical workshops, lectures, hands-on project nights, and
-                informal meetups. Topics span electronics, embedded systems,
-                3D printing, software development, and adjacent creative
+                informal meetups. Topics span electronics, embedded systems, 3D
+                printing, software development, and adjacent creative
                 disciplines.
             </p>
             <p class="text-label-secondary">
                 Upcoming events are published live on the
-                <NuxtLink to="/" class="text-accent-primary hover:underline">
+                <NuxtLink
+                    to="/"
+                    class="text-accent-primary hover:underline"
+                >
                     homepage
                 </NuxtLink>
                 and on our public events calendar at
@@ -72,7 +79,8 @@
                     class="text-accent-primary hover:underline"
                 >
                     events.nu31.space
-                </a>.
+                </a>
+                .
             </p>
         </section>
 
@@ -81,11 +89,11 @@
                 Member projects
             </h2>
             <p class="text-label-primary">
-                NU31 supports a range of member-led projects that use the
-                shared space and tools: custom electronics, robotics
-                experiments, retro-computing restoration, CNC and 3D-printing
-                work, embedded firmware research, and software for the
-                community. Members often document their ongoing work within the community.
+                NU31 supports a range of member-led projects that use the shared
+                space and tools: custom electronics, robotics experiments,
+                retro-computing restoration, CNC and 3D-printing work, embedded
+                firmware research, and software for the community. Members often
+                document their ongoing work within the community.
             </p>
         </section>
 
@@ -94,12 +102,12 @@
                 Shared infrastructure
             </h2>
             <p class="text-label-primary">
-                The hackerspace operates shared infrastructure for its
-                members and the public, including workshop tools, electronics
-                benches, networking and server resources for hosting
-                community services, and the physical meeting space in Kyiv.
-                All of it is maintained on a nonprofit basis under the legal
-                entity HACKER SPACE NU31 (EDRPOU 46237412).
+                The hackerspace operates shared infrastructure for its members
+                and the public, including workshop tools, electronics benches,
+                networking and server resources for hosting community services,
+                and the physical meeting space in Kyiv. All of it is maintained
+                on a nonprofit basis under the legal entity HACKER SPACE NU31
+                (EDRPOU 46237412).
             </p>
         </section>
     </div>

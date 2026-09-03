@@ -1,31 +1,67 @@
 <template>
     <div class="container mx-auto px-4 py-8 max-w-5xl">
-        <h1 class="text-2xl font-bold text-accent-primary mb-6">Media Posts Admin</h1>
+        <h1 class="text-2xl font-bold text-accent-primary mb-6">
+            Media Posts Admin
+        </h1>
 
         <div class="grid grid-cols-1 gap-8">
-            <div class="bg-fill-secondary border border-separator-primary rounded-xl p-4">
-                <h2 class="text-lg font-semibold text-accent-primary mb-4">Add new media post</h2>
-                <form class="flex flex-col gap-3" @submit.prevent="createPost">
-                    <input v-model="createForm.url" type="url"
+            <div
+                class="bg-fill-secondary border border-separator-primary rounded-xl p-4"
+            >
+                <h2 class="text-lg font-semibold text-accent-primary mb-4">
+                    Add new media post
+                </h2>
+                <form
+                    class="flex flex-col gap-3"
+                    @submit.prevent="createPost"
+                >
+                    <input
+                        v-model="createForm.url"
+                        type="url"
                         placeholder="URL to media post (e.g., article, YouTube video, etc.)"
                         class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary"
-                        required />
-                    <MainButton button-style="primary" size="M" :label="creating ? 'Creating…' : 'Create'" />
+                        required
+                    />
+                    <MainButton
+                        button-style="primary"
+                        size="M"
+                        :label="creating ? 'Creating…' : 'Create'"
+                    />
                 </form>
-                <p v-if="createError" class="text-red-500 mt-2">{{ createError }}</p>
-                <p v-if="createOk" class="text-green-600 mt-2">Created successfully</p>
+                <p
+                    v-if="createError"
+                    class="text-red-500 mt-2"
+                >
+                    {{ createError }}
+                </p>
+                <p
+                    v-if="createOk"
+                    class="text-green-600 mt-2"
+                >
+                    Created successfully
+                </p>
             </div>
         </div>
 
-        <div class="mt-10 bg-fill-secondary border border-separator-primary rounded-xl p-4">
+        <div
+            class="mt-10 bg-fill-secondary border border-separator-primary rounded-xl p-4"
+        >
             <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-accent-primary">Media Posts</h2>
+                <h2 class="text-lg font-semibold text-accent-primary">
+                    Media Posts
+                </h2>
             </div>
             <div v-if="listPending">Loading…</div>
-            <div v-else-if="items.length === 0" class="text-label-secondary text-center py-8">
+            <div
+                v-else-if="items.length === 0"
+                class="text-label-secondary text-center py-8"
+            >
                 No media posts yet. Add one above to get started.
             </div>
-            <div v-else class="space-y-2">
+            <div
+                v-else
+                class="space-y-2"
+            >
                 <div
                     v-for="item in items"
                     :key="item.id"
@@ -59,7 +95,8 @@
                                 {{ item.sourceUrl }}
                             </a>
                             <div class="text-xs text-label-secondary">
-                                Created {{ new Date(item.createdAt).toLocaleString() }}
+                                Created
+                                {{ new Date(item.createdAt).toLocaleString() }}
                             </div>
                         </div>
                     </div>
@@ -67,7 +104,9 @@
                         <MainButton
                             button-style="ghost"
                             size="S"
-                            :label="deleting === item.id ? 'Deleting…' : 'Delete'"
+                            :label="
+                                deleting === item.id ? 'Deleting…' : 'Delete'
+                            "
                             @click="deleting !== item.id && deletePost(item.id)"
                         />
                     </div>
@@ -105,7 +144,8 @@ async function createPost() {
             createOk.value = false
         }, 3000)
     } catch (e: any) {
-        createError.value = e?.statusMessage || e?.message || 'Failed to create media post'
+        createError.value =
+            e?.statusMessage || e?.message || 'Failed to create media post'
     } finally {
         creating.value = false
     }

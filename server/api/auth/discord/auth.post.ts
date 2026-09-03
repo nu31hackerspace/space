@@ -1,14 +1,30 @@
-import { defineEventHandler, getCookie, readBody, setCookie, useNitroApp, useRuntimeConfig } from '#imports'
+import {
+    defineEventHandler,
+    getCookie,
+    readBody,
+    setCookie,
+    useNitroApp,
+    useRuntimeConfig,
+} from '#imports'
 import { discordAuth } from '~~/server/core/discord/auth'
-import { AuthTechnicalInfo, createOrUpdateUser, setUserAvatar, User } from '~~/server/core/user/init'
-import { COUNTRY_HEADER_NAME, TRACKING_COOKIE_NAME } from '~~/server/tracking/const'
+import type { AuthTechnicalInfo, User } from '~~/server/core/user/init'
+import { createOrUpdateUser, setUserAvatar } from '~~/server/core/user/init'
+import {
+    COUNTRY_HEADER_NAME,
+    TRACKING_COOKIE_NAME,
+} from '~~/server/tracking/const'
 import jwt from 'jsonwebtoken'
 import { FileStoreType } from '~~/server/plugins/3_file_store'
 import { discordAvatarUrl } from '~~/server/core/discord/utils'
-import { checkIsUserInGuild, getUserByAuthToken, UserInGuildStatus } from '~~/server/core/discord/data/repository'
+import {
+    checkIsUserInGuild,
+    getUserByAuthToken,
+    UserInGuildStatus,
+} from '~~/server/core/discord/data/repository'
 import { ERROR_USER_NOT_IN_GUILD_CODE } from '~~/shared/types/errors'
 import type { AuthResponse } from '~~/shared/types/auth_response'
-import { addNewDiscordMembers, DiscordMember } from '~~/server/core/discord/members'
+import type { DiscordMember } from '~~/server/core/discord/members'
+import { addNewDiscordMembers } from '~~/server/core/discord/members'
 
 export default defineEventHandler(async (event): Promise<AuthResponse> => {
     const { code } = await readBody(event)
@@ -17,23 +33,31 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
     useNitroApp().logger.info('Discord auth code', { code: code })
     const accessToken = await discordAuth(code)
 
-    useNitroApp().logger.info('Discord access token getting successful', { accessToken: accessToken })
+    useNitroApp().logger.info('Discord access token getting successful', {
+        accessToken: accessToken,
+    })
 
     const userBody: any = await getUserByAuthToken(accessToken)
-    useNitroApp().logger.info('Discord user getting successful', { user: userBody })
+    useNitroApp().logger.info('Discord user getting successful', {
+        user: userBody,
+    })
 
     const discordUserId = userBody.id
-    useNitroApp().logger.info('Discord user ID', { discordUserId: discordUserId })
+    useNitroApp().logger.info('Discord user ID', {
+        discordUserId: discordUserId,
+    })
 
     const userInGuildStatus = await checkIsUserInGuild(discordUserId)
     if (userInGuildStatus !== UserInGuildStatus.InGuildWithRole) {
-        const step1Complete = userInGuildStatus === UserInGuildStatus.InGuildNoRole
+        const step1Complete =
+            userInGuildStatus === UserInGuildStatus.InGuildNoRole
         const step2Complete = false
 
         return {
             success: false,
             errorCode: ERROR_USER_NOT_IN_GUILD_CODE,
-            errorMessage: 'User is not in the guild or does not have required role',
+            errorMessage:
+                'User is not in the guild or does not have required role',
             stepStatus: {
                 step1Complete,
                 step2Complete,
@@ -47,7 +71,11 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
 
     const sessionKey = getCookie(event, TRACKING_COOKIE_NAME) as string
 
-    const jwtToken = jwt.sign({ sessionKey: sessionKey, userId: userId }, useRuntimeConfig().jwtSecret, { expiresIn: '1y' })
+    const jwtToken = jwt.sign(
+        { sessionKey: sessionKey, userId: userId },
+        useRuntimeConfig().jwtSecret,
+        { expiresIn: '1y' }
+    )
 
     const user: User = {
         id: userId,
@@ -64,7 +92,9 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
 
     await createOrUpdateUser(user, authTechnicalInfo)
 
-    const fileStore = useNitroApp().fileStores.getFileStore(FileStoreType.UserAvatar)
+    const fileStore = useNitroApp().fileStores.getFileStore(
+        FileStoreType.UserAvatar
+    )
     const avatarUrl = discordAvatarUrl(discordUserId, user.avatarId)
 
     if (avatarUrl) {

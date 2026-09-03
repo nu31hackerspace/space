@@ -21,7 +21,9 @@ export function requireDatabase(nitroApp: NitroAppWithOptionalDb): Db {
     return nitroApp.db
 }
 
-export async function pingDatabase(nitroApp: NitroAppWithOptionalDb): Promise<boolean> {
+export async function pingDatabase(
+    nitroApp: NitroAppWithOptionalDb
+): Promise<boolean> {
     if (!nitroApp.db) {
         return false
     }
@@ -47,7 +49,7 @@ export async function waitForDatabase(
             return false
         }
 
-        await new Promise(resolve => setTimeout(resolve, checkIntervalMs))
+        await new Promise((resolve) => setTimeout(resolve, checkIntervalMs))
     }
 
     return true

@@ -15,6 +15,7 @@
 Бойовий токен видається на https://web.monobank.ua/ (розділ "Мерчант" у особистому кабінеті).
 
 Збережи токен в env-змінну, щоб не тримати його в коді:
+
 ```bash
 export MONOBANK_TOKEN="uSe5P..."
 ```
@@ -48,10 +49,11 @@ curl -X POST https://api.monobank.ua/api/merchant/invoice/create \
 | `destination` | Призначення платежу — буде показано на сторінці оплати |
 
 **Відповідь:**
+
 ```json
 {
-  "invoiceId": "p2_9ZgpZVsl3",
-  "pageUrl": "https://pay.mbnk.biz/p2_9ZgpZVsl3"
+    "invoiceId": "p2_9ZgpZVsl3",
+    "pageUrl": "https://pay.mbnk.biz/p2_9ZgpZVsl3"
 }
 ```
 
@@ -71,6 +73,7 @@ curl -X POST https://api.monobank.ua/api/merchant/invoice/create \
 ```
 
 Або редирект з бекенду:
+
 ```
 HTTP/1.1 302 Found
 Location: https://pay.mbnk.biz/p2_9ZgpZVsl3
@@ -88,15 +91,16 @@ curl "https://api.monobank.ua/api/merchant/invoice/status?invoiceId=p2_9ZgpZVsl3
 ```
 
 **Відповідь:**
+
 ```json
 {
-  "invoiceId": "p2_9ZgpZVsl3",
-  "status": "success",
-  "amount": 4200,
-  "ccy": 980,
-  "finalAmount": 4200,
-  "createdDate": "2023-01-01T00:00:00Z",
-  "modifiedDate": "2023-01-01T00:01:00Z"
+    "invoiceId": "p2_9ZgpZVsl3",
+    "status": "success",
+    "amount": 4200,
+    "ccy": 980,
+    "finalAmount": 4200,
+    "createdDate": "2023-01-01T00:00:00Z",
+    "modifiedDate": "2023-01-01T00:01:00Z"
 }
 ```
 
@@ -128,17 +132,19 @@ curl "https://api.monobank.ua/api/merchant/invoice/status?invoiceId=p2_9ZgpZVsl3
 ### Як верифікувати підпис
 
 1. **Отримай публічний ключ** (один раз, потім кешуй):
+
 ```bash
 curl "https://api.monobank.ua/api/merchant/pubkey" \
   -H "X-Token: YOUR_TOKEN"
 ```
+
 Відповідь: `{"key": "LS0tLS1CRUd..."}` — base64-encoded ECDSA public key.
 
 2. **Перевір підпис:**
-   - Декодуй `key` з base64 → отримаєш PEM-формат ECDSA public key
-   - Декодуй заголовок `X-Sign` з base64 → отримаєш байти підпису
-   - Порахуй SHA-256 хеш тіла запиту (raw body bytes)
-   - Перевір ECDSA підпис: `verify(publicKey, sha256(body), signature)`
+    - Декодуй `key` з base64 → отримаєш PEM-формат ECDSA public key
+    - Декодуй заголовок `X-Sign` з base64 → отримаєш байти підпису
+    - Порахуй SHA-256 хеш тіла запиту (raw body bytes)
+    - Перевір ECDSA підпис: `verify(publicKey, sha256(body), signature)`
 
 3. **Якщо верифікація не пройшла** — запитай ключ заново (він міг оновитися)
 
@@ -150,6 +156,7 @@ curl "https://api.monobank.ua/api/merchant/pubkey" \
 ## 6. Тестування
 
 З тестовим токеном (отриманим на https://api.monobank.ua/):
+
 - Invoices створюються в sandbox, гроші не списуються
 - Можна проходити повний флоу: створення → оплата → webhook
 - Для webhook'ів потрібен публічний URL — використовуй [ngrok](https://ngrok.com/) або подібний тунель
@@ -173,11 +180,11 @@ ngrok http 3000
 
 Повні робочі сервери на 6 мовах — кожен в одному файлі з 3 ендпоінтами (створити платіж, перевірити статус, прийняти webhook):
 
-| Мова | Файл | Запуск |
-|------|------|--------|
-| Python | [examples/python/server.py](examples/python/server.py) | `pip install flask requests ecdsa && export MONOBANK_TOKEN="..." && python server.py` |
-| Node.js | [examples/nodejs/server.js](examples/nodejs/server.js) | `npm install express && export MONOBANK_TOKEN="..." && node server.js` |
-| Go | [examples/go/main.go](examples/go/main.go) | `export MONOBANK_TOKEN="..." && go run main.go` |
-| PHP | [examples/php/server.php](examples/php/server.php) | `export MONOBANK_TOKEN="..." && php -S localhost:3000 server.php` |
-| C# | [examples/csharp/Program.cs](examples/csharp/Program.cs) | `export MONOBANK_TOKEN="..." && dotnet run` |
-| Java | [examples/java/MonobankServer.java](examples/java/MonobankServer.java) | `javac MonobankServer.java && export MONOBANK_TOKEN="..." && java MonobankServer` |
+| Мова    | Файл                                                                   | Запуск                                                                                |
+| ------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Python  | [examples/python/server.py](examples/python/server.py)                 | `pip install flask requests ecdsa && export MONOBANK_TOKEN="..." && python server.py` |
+| Node.js | [examples/nodejs/server.js](examples/nodejs/server.js)                 | `npm install express && export MONOBANK_TOKEN="..." && node server.js`                |
+| Go      | [examples/go/main.go](examples/go/main.go)                             | `export MONOBANK_TOKEN="..." && go run main.go`                                       |
+| PHP     | [examples/php/server.php](examples/php/server.php)                     | `export MONOBANK_TOKEN="..." && php -S localhost:3000 server.php`                     |
+| C#      | [examples/csharp/Program.cs](examples/csharp/Program.cs)               | `export MONOBANK_TOKEN="..." && dotnet run`                                           |
+| Java    | [examples/java/MonobankServer.java](examples/java/MonobankServer.java) | `javac MonobankServer.java && export MONOBANK_TOKEN="..." && java MonobankServer`     |

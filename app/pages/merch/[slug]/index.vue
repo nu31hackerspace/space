@@ -115,7 +115,11 @@
                             button-style="primary"
                             size="L"
                             label="Купити"
-                            @click="checkoutOpen = true"
+                            @click="
+                                navigateTo(
+                                    `/merch/${route.params.slug}/checkout`
+                                )
+                            "
                         />
                     </div>
 
@@ -125,17 +129,11 @@
                 </div>
             </article>
         </div>
-
-        <MerchCheckout
-            v-if="checkoutOpen && product"
-            :product="product"
-            @close="checkoutOpen = false"
-        />
     </div>
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useFetch, useRoute } from '#imports'
+import { definePageMeta, useFetch, useRoute, navigateTo } from '#imports'
 import { computed, ref } from 'vue'
 import type { MerchProduct } from '~~/shared/types/merch'
 import { formatPrice } from '~~/shared/merch'
@@ -153,7 +151,6 @@ const images = computed(() => product.value?.imageFilenames || [])
 
 const currentIndex = ref(0)
 const currentImage = computed(() => images.value[currentIndex.value] || '')
-const checkoutOpen = ref(false)
 
 // Wrapping both ways so the arrows never dead-end on the first or last photo.
 function next() {

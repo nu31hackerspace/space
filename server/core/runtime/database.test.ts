@@ -29,10 +29,14 @@ describe('runtime database helpers', () => {
     it('waits for an already ready database', async () => {
         const db = { command: async () => ({ ok: 1 }) }
 
-        await expect(waitForDatabase({ db }, { maxWaitTimeMs: 1, checkIntervalMs: 1 })).resolves.toBe(true)
+        await expect(
+            waitForDatabase({ db }, { maxWaitTimeMs: 1, checkIntervalMs: 1 })
+        ).resolves.toBe(true)
     })
 
     it('returns false when database does not become ready in time', async () => {
-        await expect(waitForDatabase({}, { maxWaitTimeMs: 5, checkIntervalMs: 1 })).resolves.toBe(false)
+        await expect(
+            waitForDatabase({}, { maxWaitTimeMs: 5, checkIntervalMs: 1 })
+        ).resolves.toBe(false)
     })
 })

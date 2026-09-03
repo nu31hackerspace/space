@@ -1,7 +1,10 @@
-import { defineNitroPlugin, useNitroApp, useRuntimeConfig } from "#imports";
-import type { NitroApp } from "nitropack/types";
-import { DiscordMember, syncDiscordMembers } from "../core/discord/members";
-import { getDiscordGuildMembers, isBotAuthenticated } from "../core/discord/data/repository";
+import { defineNitroPlugin, useNitroApp, useRuntimeConfig } from '#imports'
+import type { NitroApp } from 'nitropack/types'
+import { DiscordMember, syncDiscordMembers } from '../core/discord/members'
+import {
+    getDiscordGuildMembers,
+    isBotAuthenticated,
+} from '../core/discord/data/repository'
 
 export default defineNitroPlugin(async (nitroApp: NitroApp) => {
     nitroApp.logger.info('Discord members sync plugin initialized...')
@@ -9,7 +12,9 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
     const discordGuildId = useRuntimeConfig().public.discordGuildId
 
     if (!discordBotToken || !discordGuildId) {
-        nitroApp.logger.error('Discord bot token or guild id is not configured!')
+        nitroApp.logger.error(
+            'Discord bot token or guild id is not configured!'
+        )
         return
     }
 
@@ -27,5 +32,7 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
 async function fetchDiscordMembers(nitroApp: NitroApp) {
     const discordMembers = await getDiscordGuildMembers()
     await syncDiscordMembers(discordMembers)
-    nitroApp.logger.info(`Successfully synced ${discordMembers.length} Discord guild members`)
+    nitroApp.logger.info(
+        `Successfully synced ${discordMembers.length} Discord guild members`
+    )
 }

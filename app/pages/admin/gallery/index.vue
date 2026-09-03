@@ -1,50 +1,117 @@
 <template>
     <div class="container mx-auto px-4 py-8 max-w-5xl">
-        <h1 class="text-2xl font-bold text-accent-primary mb-6">Gallery Admin</h1>
+        <h1 class="text-2xl font-bold text-accent-primary mb-6">
+            Gallery Admin
+        </h1>
 
         <div class="grid grid-cols-1 gap-8">
-            <div class="bg-fill-secondary border border-separator-primary rounded-xl p-4">
-                <h2 class="text-lg font-semibold text-accent-primary mb-4">Upload new image</h2>
-                <form class="flex flex-col gap-3" @submit.prevent="uploadImage" enctype="multipart/form-data">
-                    <input ref="fileInput" type="file" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-                        @change="handleFileSelect"
+            <div
+                class="bg-fill-secondary border border-separator-primary rounded-xl p-4"
+            >
+                <h2 class="text-lg font-semibold text-accent-primary mb-4">
+                    Upload new image
+                </h2>
+                <form
+                    class="flex flex-col gap-3"
+                    enctype="multipart/form-data"
+                    @submit.prevent="uploadImage"
+                >
+                    <input
+                        ref="fileInput"
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
                         class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary"
-                        required />
-                    <div v-if="previewUrl" class="w-full">
-                        <img :src="previewUrl" alt="Preview"
-                            class="max-w-full max-h-64 rounded border border-separator-primary" />
+                        required
+                        @change="handleFileSelect"
+                    />
+                    <div
+                        v-if="previewUrl"
+                        class="w-full"
+                    >
+                        <img
+                            :src="previewUrl"
+                            alt="Preview"
+                            class="max-w-full max-h-64 rounded border border-separator-primary"
+                        />
                     </div>
-                    <input v-model="altText" type="text" placeholder="Alt text (optional)"
-                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary" />
-                    <MainButton button-style="primary" size="M" :label="uploading ? 'Uploading…' : 'Upload'" />
+                    <input
+                        v-model="altText"
+                        type="text"
+                        placeholder="Alt text (optional)"
+                        class="w-full p-2 rounded bg-transparent border border-separator-primary text-label-primary"
+                    />
+                    <MainButton
+                        button-style="primary"
+                        size="M"
+                        :label="uploading ? 'Uploading…' : 'Upload'"
+                    />
                 </form>
-                <p v-if="uploadError" class="text-red-500 mt-2">{{ uploadError }}</p>
-                <p v-if="uploadOk" class="text-green-600 mt-2">Uploaded successfully</p>
+                <p
+                    v-if="uploadError"
+                    class="text-red-500 mt-2"
+                >
+                    {{ uploadError }}
+                </p>
+                <p
+                    v-if="uploadOk"
+                    class="text-green-600 mt-2"
+                >
+                    Uploaded successfully
+                </p>
             </div>
         </div>
 
-        <div class="mt-10 bg-fill-secondary border border-separator-primary rounded-xl p-4">
+        <div
+            class="mt-10 bg-fill-secondary border border-separator-primary rounded-xl p-4"
+        >
             <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-accent-primary">Gallery Images</h2>
+                <h2 class="text-lg font-semibold text-accent-primary">
+                    Gallery Images
+                </h2>
             </div>
             <div v-if="listPending">Loading…</div>
-            <div v-else-if="items.length === 0" class="text-label-secondary text-center py-8">
+            <div
+                v-else-if="items.length === 0"
+                class="text-label-secondary text-center py-8"
+            >
                 No gallery images yet. Upload one above to get started.
             </div>
-            <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <div v-for="item in items" :key="item.id" class="relative group">
-                    <div class="aspect-square rounded overflow-hidden bg-fill-tertiary border border-separator-primary">
-                        <img :src="`/api/gallery/image/${item.imageFilename}`" :alt="item.altText || 'Gallery image'"
-                            class="w-full h-full object-cover" />
+            <div
+                v-else
+                class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+            >
+                <div
+                    v-for="item in items"
+                    :key="item.id"
+                    class="relative group"
+                >
+                    <div
+                        class="aspect-square rounded overflow-hidden bg-fill-tertiary border border-separator-primary"
+                    >
+                        <img
+                            :src="`/api/gallery/image/${item.imageFilename}`"
+                            :alt="item.altText || 'Gallery image'"
+                            class="w-full h-full object-cover"
+                        />
                     </div>
-                    <div class="mt-2 text-xs text-label-secondary truncate" v-if="item.altText">
+                    <div
+                        v-if="item.altText"
+                        class="mt-2 text-xs text-label-secondary truncate"
+                    >
                         {{ item.altText }}
                     </div>
                     <div class="mt-1 text-xs text-label-secondary">
                         {{ new Date(item.createdAt).toLocaleDateString() }}
                     </div>
-                    <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <MainButton button-style="ghost" size="S" label="Delete" @click="deleteImage(item.id)" />
+                    <div
+                        class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                        <MainButton
+                            button-style="ghost"
+                            size="S"
+                            label="Delete"
+                            @click="deleteImage(item.id)"
+                        />
                     </div>
                 </div>
             </div>
@@ -100,7 +167,7 @@ async function uploadImage() {
         const response = await fetch('/api/gallery', {
             method: 'POST',
             body: formData,
-            credentials: 'include'
+            credentials: 'include',
         })
 
         if (!response.ok) {
@@ -158,7 +225,7 @@ async function deleteImage(id: string) {
     try {
         const response = await fetch(`/api/gallery/${id}`, {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
         })
 
         if (!response.ok) {

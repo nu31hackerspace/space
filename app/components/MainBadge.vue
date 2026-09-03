@@ -1,9 +1,12 @@
 <template>
-    <span :class="[
-        'inline-flex items-center justify-center rounded-lg',
-        'px-3 py-1 text-sm font-semibold',
-        variantClasses[variant],
-    ]" :style="variantStyles[variant]">
+    <span
+        :class="[
+            'inline-flex items-center justify-center rounded-lg',
+            'px-3 py-1 text-sm font-semibold',
+            variantClasses[variant],
+        ]"
+        :style="variantStyles[variant]"
+    >
         {{ label }}
         <slot />
     </span>

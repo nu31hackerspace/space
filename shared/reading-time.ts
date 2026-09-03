@@ -25,6 +25,9 @@ function countWords(text: string): number {
 
 // Returns estimated reading time in minutes (minimum 1).
 export function readingTime(blocks: ContentBlock[]): number {
-    const totalWords = blocks.reduce((sum, block) => sum + countWords(extractText(block)), 0)
+    const totalWords = blocks.reduce(
+        (sum, block) => sum + countWords(extractText(block)),
+        0
+    )
     return Math.max(Math.ceil(totalWords / WORDS_PER_MINUTE), 1)
 }

@@ -1,5 +1,5 @@
-import { useNitroApp, useRuntimeConfig } from "#imports"
-import { discordRedirectUri } from "./utils"
+import { useNitroApp, useRuntimeConfig } from '#imports'
+import { discordRedirectUri } from './utils'
 
 export async function discordAuth(code: string) {
     const runtimeConfig = useRuntimeConfig()
@@ -7,9 +7,9 @@ export async function discordAuth(code: string) {
     const redirectUri = discordRedirectUri()
 
     const request = {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': redirectUri,
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: redirectUri,
     }
 
     const headers = {
@@ -20,9 +20,11 @@ export async function discordAuth(code: string) {
         method: 'POST',
         headers: {
             ...headers,
-            'Authorization': 'Basic ' + Buffer.from(
-                `${runtimeConfig.public.discordClientId}:${runtimeConfig.discordClientSecret}`
-            ).toString('base64')
+            Authorization:
+                'Basic ' +
+                Buffer.from(
+                    `${runtimeConfig.public.discordClientId}:${runtimeConfig.discordClientSecret}`
+                ).toString('base64'),
         },
         body: new URLSearchParams(request).toString(),
     })

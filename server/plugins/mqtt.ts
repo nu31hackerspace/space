@@ -1,6 +1,10 @@
 import { defineNitroPlugin, useRuntimeConfig } from '#imports'
 import mqtt from 'mqtt'
-import { setMqttClient, activeTopics, handleDynSecResponse } from '../utils/mqttStore'
+import {
+    setMqttClient,
+    activeTopics,
+    handleDynSecResponse,
+} from '../utils/mqttStore'
 
 export default defineNitroPlugin((nitroApp) => {
     const config = useRuntimeConfig()
@@ -35,7 +39,11 @@ export default defineNitroPlugin((nitroApp) => {
         })
 
         client.subscribe('$CONTROL/dynamic-security/v1/response', (err) => {
-            if (err) console.error('MQTT: Failed to subscribe to DynSec response', err)
+            if (err)
+                console.error(
+                    'MQTT: Failed to subscribe to DynSec response',
+                    err
+                )
         })
     })
 
@@ -53,13 +61,16 @@ export default defineNitroPlugin((nitroApp) => {
         if (topic.startsWith('$CONTROL/')) return
 
         const payloadStr = payload.toString()
-        const preview = payloadStr.length > 50 ? payloadStr.slice(0, 50) + '...' : payloadStr
+        const preview =
+            payloadStr.length > 50
+                ? payloadStr.slice(0, 50) + '...'
+                : payloadStr
 
         const stats = activeTopics.get(topic) || {
             topic,
             messageCount: 0,
             lastMessageAt: new Date(),
-            lastPayloadPreview: ''
+            lastPayloadPreview: '',
         }
 
         stats.messageCount++
@@ -69,8 +80,10 @@ export default defineNitroPlugin((nitroApp) => {
         activeTopics.set(topic, stats)
 
         if (activeTopics.size > 5000) {
-            const oldest = Array.from(activeTopics.entries())
-                .sort((a, b) => a[1].lastMessageAt.getTime() - b[1].lastMessageAt.getTime())[0]
+            const oldest = Array.from(activeTopics.entries()).sort(
+                (a, b) =>
+                    a[1].lastMessageAt.getTime() - b[1].lastMessageAt.getTime()
+            )[0]
             if (oldest) {
                 activeTopics.delete(oldest[0])
             }

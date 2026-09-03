@@ -27,9 +27,9 @@ export default defineEventHandler(async (event) => {
             {
                 $group: {
                     _id: '$deviceSlug',
-                    lastAlive: { $first: '$timestamp' }
-                }
-            }
+                    lastAlive: { $first: '$timestamp' },
+                },
+            },
         ])
         .toArray()
 
@@ -38,13 +38,14 @@ export default defineEventHandler(async (event) => {
         lastAliveMap[doc._id] = doc.lastAlive
     }
 
-
     return {
-        trackers: trackers.map((t: any): ElectricityTracker => ({
-            name: t.name,
-            slug: t.slug,
-            createdAt: t.createdAt,
-            lastAlive: lastAliveMap[t.slug],
-        }))
+        trackers: trackers.map(
+            (t: any): ElectricityTracker => ({
+                name: t.name,
+                slug: t.slug,
+                createdAt: t.createdAt,
+                lastAlive: lastAliveMap[t.slug],
+            })
+        ),
     }
 })

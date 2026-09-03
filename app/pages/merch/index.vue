@@ -78,24 +78,20 @@
                             button-style="primary"
                             size="M"
                             label="Купити"
-                            @click="checkoutProduct = product"
+                            @click="
+                                navigateTo(`/merch/${product.slug}/checkout`)
+                            "
                         />
                     </div>
                 </article>
             </div>
         </div>
-
-        <MerchCheckout
-            v-if="checkoutProduct"
-            :product="checkoutProduct"
-            @close="checkoutProduct = null"
-        />
     </div>
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useFetch } from '#imports'
-import { computed, ref } from 'vue'
+import { definePageMeta, useFetch, navigateTo } from '#imports'
+import { computed } from 'vue'
 import type { MerchProduct } from '~~/shared/types/merch'
 import { formatPrice } from '~~/shared/merch'
 
@@ -108,8 +104,4 @@ const {
 } = await useFetch<MerchProduct[]>('/api/merch/products')
 
 const products = computed(() => data.value || [])
-
-// Buying straight from the grid is the common path; the detail page is for
-// when someone wants the full gallery and the description first.
-const checkoutProduct = ref<MerchProduct | null>(null)
 </script>

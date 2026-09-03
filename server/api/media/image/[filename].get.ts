@@ -1,4 +1,9 @@
-import { createError, defineEventHandler, getRouterParam, useNitroApp } from '#imports'
+import {
+    createError,
+    defineEventHandler,
+    getRouterParam,
+    useNitroApp,
+} from '#imports'
 import { FileStoreType } from '~~/server/plugins/3_file_store'
 
 export default defineEventHandler(async (event) => {
@@ -12,7 +17,9 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
-        const fileStore = useNitroApp().fileStores.getFileStore(FileStoreType.MediaPostImage)
+        const fileStore = useNitroApp().fileStores.getFileStore(
+            FileStoreType.MediaPostImage
+        )
         const imageFile = await fileStore.openDownloadStreamByName(filename)
 
         // Determine content type from filename
@@ -36,4 +43,3 @@ export default defineEventHandler(async (event) => {
         })
     }
 })
-

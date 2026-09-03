@@ -21,15 +21,16 @@ The key can be cached. Request a new key only when verification with the current
 
 ```json
 {
-  "key": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0UxRnBVZzczYmhGdmp2SzlrMlhJeTZtQkU1MQpib2F0RU1qU053Z1l5ZW55blpZQWh3Z3dyTGhNY0FpT25SYzNXWGNyMGRrY2NvVnFXcVBhWVQ5T3hRPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg=="
+    "key": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFK0UxRnBVZzczYmhGdmp2SzlrMlhJeTZtQkU1MQpib2F0RU1qU053Z1l5ZW55blpZQWh3Z3dyTGhNY0FpT25SYzNXWGNyMGRrY2NvVnFXcVBhWVQ5T3hRPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg=="
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| key | string | yes | Base64-encoded x.509 ECDSA public key |
+| Field | Type   | Required | Description                           |
+| ----- | ------ | -------- | ------------------------------------- |
+| key   | string | yes      | Base64-encoded x.509 ECDSA public key |
 
 ### Errors
+
 400, 403, 405, 429, 500 — see common errors in SKILL.md
 
 ---

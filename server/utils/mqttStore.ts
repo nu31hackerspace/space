@@ -1,4 +1,4 @@
-import { type MqttClient } from 'mqtt'
+import type { MqttClient } from 'mqtt'
 
 export interface MqttTopicStats {
     topic: string
@@ -16,7 +16,9 @@ export function setMqttClient(client: MqttClient | null) {
 }
 
 export function getActiveTopics() {
-    return Array.from(activeTopics.values()).sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime())
+    return Array.from(activeTopics.values()).sort(
+        (a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime()
+    )
 }
 
 type DynSecCommand = { command: string; [key: string]: any }
@@ -45,12 +47,15 @@ function processNextDynSec() {
     const req = dynSecQueue[0]
 
     try {
-        mqttClient.publish('$CONTROL/dynamic-security/v1', JSON.stringify({ commands: req.commands }))
+        mqttClient.publish(
+            '$CONTROL/dynamic-security/v1',
+            JSON.stringify({ commands: req.commands })
+        )
 
         setTimeout(() => {
             if (dynSecQueue[0] === req) {
                 dynSecQueue.shift()
-                req.reject(new Error("DynSec request timed out"))
+                req.reject(new Error('DynSec request timed out'))
                 isProcessingDynSec = false
                 processNextDynSec()
             }
@@ -76,7 +81,7 @@ export function executeDynSecCommands(commands: DynSecCommand[]): Promise<any> {
                 isProcessingDynSec = false
                 reject(err)
                 processNextDynSec()
-            }
+            },
         })
         processNextDynSec()
     })

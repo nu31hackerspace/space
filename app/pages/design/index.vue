@@ -10,16 +10,31 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Buttons Card -->
-                <NuxtLink to="/design/buttons" class="block group h-full">
+                <NuxtLink
+                    to="/design/buttons"
+                    class="block group h-full"
+                >
                     <div
-                        class="p-6 bg-fill-secondary rounded-xl border border-separator-primary hover:border-accent-primary transition-colors h-full flex flex-col">
+                        class="p-6 bg-fill-secondary rounded-xl border border-separator-primary hover:border-accent-primary transition-colors h-full flex flex-col"
+                    >
                         <h2
-                            class="text-2xl font-semibold mb-4 text-accent-primary group-hover:opacity-80 transition-opacity">
+                            class="text-2xl font-semibold mb-4 text-accent-primary group-hover:opacity-80 transition-opacity"
+                        >
                             Buttons
                         </h2>
-                        <div class="flex flex-wrap gap-2 mb-6 pointer-events-none">
-                            <MainButton buttonStyle="primary" size="S" label="Primary" />
-                            <MainButton buttonStyle="secondary" size="S" label="Secondary" />
+                        <div
+                            class="flex flex-wrap gap-2 mb-6 pointer-events-none"
+                        >
+                            <MainButton
+                                button-style="primary"
+                                size="S"
+                                label="Primary"
+                            />
+                            <MainButton
+                                button-style="secondary"
+                                size="S"
+                                label="Secondary"
+                            />
                         </div>
                         <p class="text-accent-primary opacity-70 mt-auto">
                             Button styles, sizes, and states.
@@ -28,16 +43,29 @@
                 </NuxtLink>
 
                 <!-- Badges Card -->
-                <NuxtLink to="/design/badges" class="block group h-full">
+                <NuxtLink
+                    to="/design/badges"
+                    class="block group h-full"
+                >
                     <div
-                        class="p-6 bg-fill-secondary rounded-xl border border-separator-primary hover:border-accent-primary transition-colors h-full flex flex-col">
+                        class="p-6 bg-fill-secondary rounded-xl border border-separator-primary hover:border-accent-primary transition-colors h-full flex flex-col"
+                    >
                         <h2
-                            class="text-2xl font-semibold mb-4 text-accent-primary group-hover:opacity-80 transition-opacity">
+                            class="text-2xl font-semibold mb-4 text-accent-primary group-hover:opacity-80 transition-opacity"
+                        >
                             Badges
                         </h2>
-                        <div class="flex flex-wrap gap-2 mb-6 pointer-events-none">
-                            <MainBadge variant="info" label="Info" />
-                            <MainBadge variant="success" label="Success" />
+                        <div
+                            class="flex flex-wrap gap-2 mb-6 pointer-events-none"
+                        >
+                            <MainBadge
+                                variant="info"
+                                label="Info"
+                            />
+                            <MainBadge
+                                variant="success"
+                                label="Success"
+                            />
                         </div>
                         <p class="text-accent-primary opacity-70 mt-auto">
                             Status indicators and labels.

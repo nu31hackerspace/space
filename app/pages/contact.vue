@@ -6,18 +6,27 @@
             EDRPOU 46237412.
         </p>
 
-        <section class="mb-12 bg-fill-secondary p-8 rounded-xl border border-separator-primary">
+        <section
+            class="mb-12 bg-fill-secondary p-8 rounded-xl border border-separator-primary"
+        >
             <h2 class="text-2xl font-bold mb-4 text-accent-primary">
                 Registered address
             </h2>
-            <address class="not-italic text-lg text-label-primary whitespace-pre-line mb-4">{{ legalAddress }}</address>
+            <address
+                class="not-italic text-lg text-label-primary whitespace-pre-line mb-4"
+            >
+                {{ legalAddress }}
+            </address>
             <a
                 :href="mapsUrl"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="inline-flex items-center gap-2 text-accent-primary hover:underline"
             >
-                <Icon icon="mdi:map-marker" class="w-5 h-5" />
+                <Icon
+                    icon="mdi:map-marker"
+                    class="w-5 h-5"
+                />
                 View on Google Maps
             </a>
         </section>
@@ -108,9 +117,13 @@
             <p class="text-label-primary">
                 Founding documents, the statute, and the official EDR extract
                 are available on the
-                <NuxtLink to="/legal-docs" class="text-accent-primary hover:underline">
+                <NuxtLink
+                    to="/legal-docs"
+                    class="text-accent-primary hover:underline"
+                >
                     legal documents page
-                </NuxtLink>.
+                </NuxtLink>
+                .
             </p>
         </section>
     </div>

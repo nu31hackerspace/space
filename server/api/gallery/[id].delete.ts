@@ -1,4 +1,9 @@
-import { createError, defineEventHandler, getRouterParam, useNitroApp } from '#imports'
+import {
+    createError,
+    defineEventHandler,
+    getRouterParam,
+    useNitroApp,
+} from '#imports'
 import { ObjectId } from 'mongodb'
 import { FileStoreType } from '~~/server/plugins/3_file_store'
 
@@ -19,31 +24,46 @@ export default defineEventHandler(async (event) => {
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
-        throw createError({ statusCode: 400, statusMessage: 'Invalid ID format' })
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Invalid ID format',
+        })
     }
 
     try {
         // Find the image
-        const image = await db.collection('galleryImages').findOne({ _id: new ObjectId(id) })
+        const image = await db
+            .collection('galleryImages')
+            .findOne({ _id: new ObjectId(id) })
 
         if (!image) {
-            throw createError({ statusCode: 404, statusMessage: 'Gallery image not found' })
+            throw createError({
+                statusCode: 404,
+                statusMessage: 'Gallery image not found',
+            })
         }
 
         // Delete image from GridFS if it exists
         if (image.imageFilename) {
             try {
-                const fileStore = useNitroApp().fileStores.getFileStore(FileStoreType.LandingGalleryImage)
+                const fileStore = useNitroApp().fileStores.getFileStore(
+                    FileStoreType.LandingGalleryImage
+                )
                 await fileStore.deleteFileByName(image.imageFilename)
                 logger.info(`Deleted image file: ${image.imageFilename}`)
             } catch (error) {
-                logger.warn(`Failed to delete image file: ${image.imageFilename}`, error)
+                logger.warn(
+                    `Failed to delete image file: ${image.imageFilename}`,
+                    error
+                )
                 // Continue with image deletion even if file deletion fails
             }
         }
 
         // Delete image from MongoDB
-        await db.collection('galleryImages').deleteOne({ _id: new ObjectId(id) })
+        await db
+            .collection('galleryImages')
+            .deleteOne({ _id: new ObjectId(id) })
 
         logger.info(`Gallery image deleted: ${id}`)
 
@@ -55,8 +75,7 @@ export default defineEventHandler(async (event) => {
         }
         throw createError({
             statusCode: 500,
-            statusMessage: error.message || 'Failed to delete gallery image'
+            statusMessage: error.message || 'Failed to delete gallery image',
         })
     }
 })
-

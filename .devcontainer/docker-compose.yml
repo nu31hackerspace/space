@@ -1,36 +1,36 @@
 version: '3.8'
 
 services:
-  app:
-    image: mcr.microsoft.com/devcontainers/javascript-node:22
-    volumes:
-      - ..:/workspace:cached
-    command: /bin/sh -c "while sleep 1000; do :; done"
-    environment:
-      - NUXT_MONGO_URI=mongodb://mongo:27017/nu31space
-    depends_on:
-      - mongo
-    # Ports will be forwarded by devcontainers natively, but we can expose them here too.
-    ports:
-      - 3000:3000
+    app:
+        image: mcr.microsoft.com/devcontainers/javascript-node:22
+        volumes:
+            - ..:/workspace:cached
+        command: /bin/sh -c "while sleep 1000; do :; done"
+        environment:
+            - NUXT_MONGO_URI=mongodb://mongo:27017/nu31space
+        depends_on:
+            - mongo
+        # Ports will be forwarded by devcontainers natively, but we can expose them here too.
+        ports:
+            - 3000:3000
 
-  mongo:
-    image: mongodb/mongodb-community-server:latest
-    restart: unless-stopped
-    volumes:
-      - mongodb_data:/data/db
-    ports:
-      - 27017:27017
+    mongo:
+        image: mongodb/mongodb-community-server:latest
+        restart: unless-stopped
+        volumes:
+            - mongodb_data:/data/db
+        ports:
+            - 27017:27017
 
-  compass-web:
-    image: haohanyang/compass-web
-    restart: unless-stopped
-    environment:
-      CW_MONGO_URI: mongodb://mongo:27017
-    depends_on:
-      - mongo
-    ports:
-      - 8081:8080
+    compass-web:
+        image: haohanyang/compass-web
+        restart: unless-stopped
+        environment:
+            CW_MONGO_URI: mongodb://mongo:27017
+        depends_on:
+            - mongo
+        ports:
+            - 8081:8080
 
 volumes:
-  mongodb_data:
+    mongodb_data:

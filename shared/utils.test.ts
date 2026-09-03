@@ -6,18 +6,24 @@ describe('Slug Utils', () => {
         describe('determinism', () => {
             it('produces the same slug for the same title every time', () => {
                 const title = 'Hello World'
-                expect(generateSlugFromTitle(title)).toBe(generateSlugFromTitle(title))
+                expect(generateSlugFromTitle(title)).toBe(
+                    generateSlugFromTitle(title)
+                )
             })
 
             it('produces the same slug for ukrainian title every time', () => {
                 const title = 'Що таке хакерспейс?'
-                expect(generateSlugFromTitle(title)).toBe(generateSlugFromTitle(title))
+                expect(generateSlugFromTitle(title)).toBe(
+                    generateSlugFromTitle(title)
+                )
             })
 
             it('does not use Math.random — slug contains no unpredictable segment', () => {
                 // If random is used, repeated calls would differ. We call 20 times to be sure.
                 const title = 'Stability Check'
-                const results = Array.from({ length: 20 }, () => generateSlugFromTitle(title))
+                const results = Array.from({ length: 20 }, () =>
+                    generateSlugFromTitle(title)
+                )
                 const unique = new Set(results)
                 expect(unique.size).toBe(1)
             })
@@ -41,7 +47,9 @@ describe('Slug Utils', () => {
             })
 
             it('strips special characters', () => {
-                expect(generateSlugFromTitle('Hello @ World!')).toBe('hello-world')
+                expect(generateSlugFromTitle('Hello @ World!')).toBe(
+                    'hello-world'
+                )
             })
 
             it('returns a non-empty slug for empty title', () => {

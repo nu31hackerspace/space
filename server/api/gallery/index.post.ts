@@ -1,8 +1,19 @@
-import { createError, defineEventHandler, readMultipartFormData, useNitroApp } from '#imports'
+import {
+    createError,
+    defineEventHandler,
+    readMultipartFormData,
+    useNitroApp,
+} from '#imports'
 import { FileStoreType } from '~~/server/plugins/3_file_store'
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
-const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+const ALLOWED_MIME_TYPES = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+]
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
 
 function getFileExtension(filename: string): string {
@@ -34,10 +45,17 @@ export default defineEventHandler(async (event) => {
         const formData = await readMultipartFormData(event)
 
         if (!formData || formData.length === 0) {
-            throw createError({ statusCode: 400, statusMessage: 'No file uploaded' })
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'No file uploaded',
+            })
         }
 
-        let imageFile: { filename: string; data: Buffer; type?: string } | null = null
+        let imageFile: {
+            filename: string
+            data: Buffer
+            type?: string
+        } | null = null
         let altText = ''
 
         // Parse form data
@@ -46,7 +64,7 @@ export default defineEventHandler(async (event) => {
                 imageFile = {
                     filename: field.filename || 'image',
                     data: field.data,
-                    type: field.type
+                    type: field.type,
                 }
             } else if (field.name === 'altText' && field.data) {
                 altText = field.data.toString('utf-8').trim()
@@ -54,16 +72,26 @@ export default defineEventHandler(async (event) => {
         }
 
         if (!imageFile) {
-            throw createError({ statusCode: 400, statusMessage: 'Image file is required' })
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'Image file is required',
+            })
         }
 
         // Validate file
         if (imageFile.data.length > MAX_FILE_SIZE) {
-            throw createError({ statusCode: 400, statusMessage: `File size exceeds maximum of ${MAX_FILE_SIZE / 1024 / 1024}MB` })
+            throw createError({
+                statusCode: 400,
+                statusMessage: `File size exceeds maximum of ${MAX_FILE_SIZE / 1024 / 1024}MB`,
+            })
         }
 
         if (!isValidImageFile(imageFile.filename, imageFile.type)) {
-            throw createError({ statusCode: 400, statusMessage: 'Invalid file type. Only jpg, jpeg, png, gif, and webp are allowed' })
+            throw createError({
+                statusCode: 400,
+                statusMessage:
+                    'Invalid file type. Only jpg, jpeg, png, gif, and webp are allowed',
+            })
         }
 
         // Generate unique filename
@@ -71,7 +99,9 @@ export default defineEventHandler(async (event) => {
         const imageFilename = `gallery-${Date.now()}-${Math.random().toString(36).slice(2, 9)}${ext}`
 
         // Save image to GridFS
-        const fileStore = useNitroApp().fileStores.getFileStore(FileStoreType.LandingGalleryImage)
+        const fileStore = useNitroApp().fileStores.getFileStore(
+            FileStoreType.LandingGalleryImage
+        )
         logger.info(`Saving gallery image to GridFS: ${imageFilename}`)
         await fileStore.saveFileFromBuffer(imageFile.data, imageFilename)
 
@@ -82,7 +112,7 @@ export default defineEventHandler(async (event) => {
             altText: altText || undefined,
             createdAt: now,
             updatedAt: now,
-            createdBy: user.userId
+            createdBy: user.userId,
         })
 
         logger.info(`Gallery image created with ID: ${result.insertedId}`)
@@ -91,7 +121,7 @@ export default defineEventHandler(async (event) => {
             id: result.insertedId.toString(),
             imageFilename: imageFilename,
             altText: altText,
-            createdAt: now
+            createdAt: now,
         }
     } catch (error: any) {
         logger.error('Failed to create gallery image:', error)
@@ -100,8 +130,7 @@ export default defineEventHandler(async (event) => {
         }
         throw createError({
             statusCode: 500,
-            statusMessage: error.message || 'Failed to upload gallery image'
+            statusMessage: error.message || 'Failed to upload gallery image',
         })
     }
 })
-

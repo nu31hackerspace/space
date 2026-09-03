@@ -31,7 +31,7 @@ Direct card payment, synchronous payment, and token-based payment operations.
 | webHookUrl | string | no | Callback URL for status changes |
 | paymentType | string | no | Enum: `debit`, `hold` |
 | saveCardData | object | no | Card tokenization data |
-| saveCardData.saveCard | boolean | yes* | Save card flag |
+| saveCardData.saveCard | boolean | yes\* | Save card flag |
 | saveCardData.walletId | string | no | Wallet ID |
 | initiationKind | string | no | Enum: `merchant` (merchant-initiated, e.g. recurring), `client` (client-initiated, client is present) |
 
@@ -39,29 +39,30 @@ Direct card payment, synchronous payment, and token-based payment operations.
 
 ```json
 {
-  "invoiceId": "2210012MPLYwJjVUzchj",
-  "status": "success",
-  "amount": 4200,
-  "ccy": 980,
-  "createdDate": "2023-01-01T00:00:00Z",
-  "modifiedDate": "2023-01-01T00:01:00Z",
-  "failureReason": null,
-  "tdsUrl": null
+    "invoiceId": "2210012MPLYwJjVUzchj",
+    "status": "success",
+    "amount": 4200,
+    "ccy": 980,
+    "createdDate": "2023-01-01T00:00:00Z",
+    "modifiedDate": "2023-01-01T00:01:00Z",
+    "failureReason": null,
+    "tdsUrl": null
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| invoiceId | string | yes | Invoice ID |
-| status | string | yes | Enum: `processing`, `success`, `failure` |
-| amount | integer | yes | Amount in minor units |
-| ccy | integer | yes | ISO 4217 currency code |
-| createdDate | string | yes | Creation datetime |
-| modifiedDate | string | yes | Last modification datetime |
-| failureReason | string | no | Failure reason |
-| tdsUrl | string | no | 3DS URL (if 3DS verification needed) |
+| Field         | Type    | Required | Description                              |
+| ------------- | ------- | -------- | ---------------------------------------- |
+| invoiceId     | string  | yes      | Invoice ID                               |
+| status        | string  | yes      | Enum: `processing`, `success`, `failure` |
+| amount        | integer | yes      | Amount in minor units                    |
+| ccy           | integer | yes      | ISO 4217 currency code                   |
+| createdDate   | string  | yes      | Creation datetime                        |
+| modifiedDate  | string  | yes      | Last modification datetime               |
+| failureReason | string  | no       | Failure reason                           |
+| tdsUrl        | string  | no       | 3DS URL (if 3DS verification needed)     |
 
 ### Errors
+
 400, 403, 405, 429, 500 — see common errors in SKILL.md
 
 ---
@@ -116,6 +117,7 @@ Direct card payment, synchronous payment, and token-based payment operations.
 Returns the same schema as `GET /api/merchant/invoice/status` (InvoiceStatusResponse). See [invoice.md](invoice.md) for full field list.
 
 ### Errors
+
 400, 403, 404, 405, 429, 500 — see common errors in SKILL.md
 
 ---
@@ -149,27 +151,28 @@ Returns the same schema as `GET /api/merchant/invoice/status` (InvoiceStatusResp
 
 ```json
 {
-  "invoiceId": "2210012MPLYwJjVUzchj",
-  "status": "success",
-  "amount": 4200,
-  "ccy": 980,
-  "createdDate": "2023-01-01T00:00:00Z",
-  "modifiedDate": "2023-01-01T00:01:00Z",
-  "failureReason": null,
-  "tdsUrl": null
+    "invoiceId": "2210012MPLYwJjVUzchj",
+    "status": "success",
+    "amount": 4200,
+    "ccy": 980,
+    "createdDate": "2023-01-01T00:00:00Z",
+    "modifiedDate": "2023-01-01T00:01:00Z",
+    "failureReason": null,
+    "tdsUrl": null
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| invoiceId | string | yes | Invoice ID |
-| status | string | yes | Enum: `processing`, `success`, `failure` |
-| amount | integer | yes | Amount in minor units |
-| ccy | integer | yes | ISO 4217 currency code |
-| createdDate | string | yes | Creation datetime |
-| modifiedDate | string | yes | Last modification datetime |
-| failureReason | string | no | Failure reason |
-| tdsUrl | string | no | 3DS URL (redirect user here if present) |
+| Field         | Type    | Required | Description                              |
+| ------------- | ------- | -------- | ---------------------------------------- |
+| invoiceId     | string  | yes      | Invoice ID                               |
+| status        | string  | yes      | Enum: `processing`, `success`, `failure` |
+| amount        | integer | yes      | Amount in minor units                    |
+| ccy           | integer | yes      | ISO 4217 currency code                   |
+| createdDate   | string  | yes      | Creation datetime                        |
+| modifiedDate  | string  | yes      | Last modification datetime               |
+| failureReason | string  | no       | Failure reason                           |
+| tdsUrl        | string  | no       | 3DS URL (redirect user here if present)  |
 
 ### Errors
+
 400, 403, 405, 429, 500 — see common errors in SKILL.md

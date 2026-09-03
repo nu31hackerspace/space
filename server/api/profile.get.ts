@@ -7,10 +7,9 @@ export default defineEventHandler(async (event) => {
     }
 
     const db = useNitroApp().db
-    const record = await db.collection('users').findOne(
-        { id: user.userId },
-        { projection: { _id: 0, username: 1 } }
-    )
+    const record = await db
+        .collection('users')
+        .findOne({ id: user.userId }, { projection: { _id: 0, username: 1 } })
 
     return { username: record?.username || '' }
 })

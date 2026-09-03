@@ -2,7 +2,7 @@ import type { TrackRequest } from '~~/shared/types/track_body'
 
 export async function trackEvent(
     action: string,
-    data: Record<string, string> = {},
+    data: Record<string, string> = {}
 ): Promise<void> {
     try {
         const trackRequest: TrackRequest = {
@@ -12,7 +12,7 @@ export async function trackEvent(
 
         await $fetch('/api/track', {
             method: 'POST',
-            body: trackRequest
+            body: trackRequest,
         })
     } catch (error) {
         console.warn('Failed to track event:', error)

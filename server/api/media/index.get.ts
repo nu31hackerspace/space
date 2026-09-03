@@ -10,14 +10,13 @@ export default defineEventHandler(async (event) => {
         .toArray()
 
     // Convert _id to string id
-    const postsWithId = posts.map(post => ({
+    const postsWithId = posts.map((post) => ({
         id: post._id.toString(),
         title: post.title,
         sourceUrl: post.sourceUrl,
         imageFilename: post.imageFilename,
-        createdAt: post.createdAt
+        createdAt: post.createdAt,
     }))
 
     return postsWithId
 })
-

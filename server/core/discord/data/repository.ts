@@ -1,14 +1,14 @@
-import { createError, useNitroApp, useRuntimeConfig } from "#imports"
-import { DiscordMember } from "../members"
+import { createError, useNitroApp, useRuntimeConfig } from '#imports'
+import type { DiscordMember } from '../members'
 
-const logger = (() => useNitroApp().logger)
+const logger = () => useNitroApp().logger
 
 export async function isBotAuthenticated(): Promise<boolean> {
     const discordBotToken = useRuntimeConfig().discordBotToken
 
     const botInfoResponse = await fetch('https://discord.com/api/users/@me', {
         headers: {
-            'Authorization': `Bot ${discordBotToken}`,
+            Authorization: `Bot ${discordBotToken}`,
         },
     })
 
@@ -19,20 +19,26 @@ export async function isBotAuthenticated(): Promise<boolean> {
     }
 
     const botInfo = await botInfoResponse.json()
-    logger().info(`Bot authenticated as: ${botInfo.username}#${botInfo.discriminator} (ID: ${botInfo.id})`)
+    logger().info(
+        `Bot authenticated as: ${botInfo.username}#${botInfo.discriminator} (ID: ${botInfo.id})`
+    )
     return true
 }
 
 export async function getDiscordGuildMembers(): Promise<DiscordMember[]> {
     const discordBotToken = useRuntimeConfig().discordBotToken
     const discordGuildId = useRuntimeConfig().public.discordGuildId
-    const discordGuildMemberRoleId = useRuntimeConfig().public.discordGuildMemberRoleId
+    const discordGuildMemberRoleId =
+        useRuntimeConfig().public.discordGuildMemberRoleId
 
-    const discordResponce = await fetch(`https://discord.com/api/guilds/${discordGuildId}/members?limit=1000`, {
-        headers: {
-            'Authorization': `Bot ${discordBotToken}`,
-        },
-    })
+    const discordResponce = await fetch(
+        `https://discord.com/api/guilds/${discordGuildId}/members?limit=1000`,
+        {
+            headers: {
+                Authorization: `Bot ${discordBotToken}`,
+            },
+        }
+    )
 
     if (!discordResponce.ok) {
         const errorBody = await discordResponce.json()
@@ -40,7 +46,7 @@ export async function getDiscordGuildMembers(): Promise<DiscordMember[]> {
             status: discordResponce.status,
             statusText: discordResponce.statusText,
             error: errorBody,
-            hint: 'Make sure the bot is added to the guild and has SERVER MEMBERS INTENT enabled in Discord Developer Portal'
+            hint: 'Make sure the bot is added to the guild and has SERVER MEMBERS INTENT enabled in Discord Developer Portal',
         })
         throw new Error('Failed to fetch Discord guild members')
     }
@@ -48,9 +54,10 @@ export async function getDiscordGuildMembers(): Promise<DiscordMember[]> {
     const members = await discordResponce.json()
 
     const discordMembers: DiscordMember[] = members
-        .filter((member: any) =>
-            member.roles.includes(discordGuildMemberRoleId) &&
-            !member.user.bot
+        .filter(
+            (member: any) =>
+                member.roles.includes(discordGuildMemberRoleId) &&
+                !member.user.bot
         )
         .map((member: any) => ({
             discordId: member.user.id,
@@ -61,18 +68,23 @@ export async function getDiscordGuildMembers(): Promise<DiscordMember[]> {
     return discordMembers
 }
 
-export async function getUserByAuthToken(authToken: string): Promise<DiscordMember | null> {
-    const discordResponce = await fetch('https://discord.com/api/v10/users/@me', {
-        headers: {
-            'Authorization': `Bearer ${authToken}`,
-        },
-    })
+export async function getUserByAuthToken(
+    authToken: string
+): Promise<DiscordMember | null> {
+    const discordResponce = await fetch(
+        'https://discord.com/api/v10/users/@me',
+        {
+            headers: {
+                Authorization: `Bearer ${authToken}`,
+            },
+        }
+    )
 
     if (!discordResponce.ok) {
         useNitroApp().logger.error('Discord user getting failed', {
             error: discordResponce.statusText,
             body: await discordResponce.json(),
-            hint: 'Make sure the bot is added to the guild and has SERVER MEMBERS INTENT enabled in Discord Developer Portal'
+            hint: 'Make sure the bot is added to the guild and has SERVER MEMBERS INTENT enabled in Discord Developer Portal',
         })
         throw createError({
             statusCode: discordResponce.status,
@@ -81,26 +93,34 @@ export async function getUserByAuthToken(authToken: string): Promise<DiscordMemb
     }
 
     const userBody = await discordResponce.json()
-    useNitroApp().logger.info('Discord user by auth token getting successful', { user: userBody })
+    useNitroApp().logger.info('Discord user by auth token getting successful', {
+        user: userBody,
+    })
     return userBody
 }
 
 export enum UserInGuildStatus {
     NotInGuild = 'NotInGuild',
     InGuildNoRole = 'InGuildNoRole',
-    InGuildWithRole = 'InGuildWithRole'
+    InGuildWithRole = 'InGuildWithRole',
 }
 
-export async function checkIsUserInGuild(discordUserId: string): Promise<UserInGuildStatus> {
+export async function checkIsUserInGuild(
+    discordUserId: string
+): Promise<UserInGuildStatus> {
     const discordBotToken = useRuntimeConfig().discordBotToken
     const discordGuildId = useRuntimeConfig().public.discordGuildId
-    const discordGuildMemberRoleId = useRuntimeConfig().public.discordGuildMemberRoleId
+    const discordGuildMemberRoleId =
+        useRuntimeConfig().public.discordGuildMemberRoleId
 
-    const discordResponce = await fetch(`https://discord.com/api/guilds/${discordGuildId}/members/${discordUserId}`, {
-        headers: {
-            'Authorization': `Bot ${discordBotToken}`,
-        },
-    })
+    const discordResponce = await fetch(
+        `https://discord.com/api/guilds/${discordGuildId}/members/${discordUserId}`,
+        {
+            headers: {
+                Authorization: `Bot ${discordBotToken}`,
+            },
+        }
+    )
 
     if (!discordResponce.ok) {
         return UserInGuildStatus.NotInGuild
@@ -108,7 +128,9 @@ export async function checkIsUserInGuild(discordUserId: string): Promise<UserInG
 
     const discordResponceBody = await discordResponce.json()
 
-    const isUserInGuild = discordResponceBody.roles.includes(discordGuildMemberRoleId)
+    const isUserInGuild = discordResponceBody.roles.includes(
+        discordGuildMemberRoleId
+    )
     if (!isUserInGuild) {
         return UserInGuildStatus.InGuildNoRole
     }

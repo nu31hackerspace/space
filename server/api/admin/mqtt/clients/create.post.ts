@@ -7,24 +7,33 @@ export default defineEventHandler(async (event) => {
     }
 
     if (!mqttClient) {
-        throw createError({ statusCode: 503, message: 'MQTT client not connected' })
+        throw createError({
+            statusCode: 503,
+            message: 'MQTT client not connected',
+        })
     }
 
     const body = await readBody(event)
     const { username, password, topic } = body
 
     if (!username || !password || !topic) {
-        throw createError({ statusCode: 400, message: 'Missing required fields: username, password, topic' })
+        throw createError({
+            statusCode: 400,
+            message: 'Missing required fields: username, password, topic',
+        })
     }
 
     // Check if user already exists
     try {
         const checkRes = await executeDynSecCommands([
-            { command: 'getClient', username }
+            { command: 'getClient', username },
         ])
         const error = checkRes.responses[0]?.error
         if (!error && checkRes.responses[0]?.data?.client) {
-            throw createError({ statusCode: 409, message: 'Client already exists' })
+            throw createError({
+                statusCode: 409,
+                message: 'Client already exists',
+            })
         }
     } catch (e: any) {
         if (e.statusCode === 409) throw e
@@ -36,14 +45,26 @@ export default defineEventHandler(async (event) => {
     const commands = [
         { command: 'createClient', username, password },
         { command: 'createRole', rolename },
-        { command: 'addRoleACL', rolename, acltype: 'publishClientSend', topic, allow: true },
-        { command: 'addRoleACL', rolename, acltype: 'subscribePattern', topic, allow: true },
-        { command: 'addClientRole', username, rolename }
+        {
+            command: 'addRoleACL',
+            rolename,
+            acltype: 'publishClientSend',
+            topic,
+            allow: true,
+        },
+        {
+            command: 'addRoleACL',
+            rolename,
+            acltype: 'subscribePattern',
+            topic,
+            allow: true,
+        },
+        { command: 'addClientRole', username, rolename },
     ]
 
     try {
         const res = await executeDynSecCommands(commands)
-        
+
         // Check for any errors in the responses array
         const errors = res.responses.filter((r: any) => r.error)
         if (errors.length > 0) {
@@ -56,7 +77,7 @@ export default defineEventHandler(async (event) => {
         console.error('Failed to create MQTT client:', e)
         throw createError({
             statusCode: 500,
-            message: e.message || 'Failed to create MQTT client'
+            message: e.message || 'Failed to create MQTT client',
         })
     }
 })

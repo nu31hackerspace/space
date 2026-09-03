@@ -1,5 +1,5 @@
 import { defineEventHandler, useNitroApp, useRuntimeConfig } from '#imports'
-import { UserSession } from '~~/server/core/user/user'
+import type { UserSession } from '~~/server/core/user/user'
 import { mqttClient } from '../../utils/mqttStore'
 
 export default defineEventHandler(async (event) => {

@@ -50,7 +50,15 @@ export interface QuoteBlock extends ContentBlockBase {
     content: string
 }
 
-export type ContentBlock = HeaderBlock | TextBlock | ImageBlock | LinkBlock | TagsBlock | CodeBlock | ListBlock | QuoteBlock
+export type ContentBlock =
+    | HeaderBlock
+    | TextBlock
+    | ImageBlock
+    | LinkBlock
+    | TagsBlock
+    | CodeBlock
+    | ListBlock
+    | QuoteBlock
 
 // Tag cloud: each item carries the tag name and how many published posts use it.
 // Used by the admin tag picker and the public blog sidebar.

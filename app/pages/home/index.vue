@@ -3,15 +3,25 @@
         <div class="container mx-auto px-4 py-8">
             <div class="max-w-4xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <NuxtLink v-for="card in cards" :key="card.route" :to="card.route"
-                        class="group bg-fill-secondary p-6 rounded-xl border border-separator-primary hover:border-accent-primary transition-all duration-200 cursor-pointer">
+                    <NuxtLink
+                        v-for="card in cards"
+                        :key="card.route"
+                        :to="card.route"
+                        class="group bg-fill-secondary p-6 rounded-xl border border-separator-primary hover:border-accent-primary transition-all duration-200 cursor-pointer"
+                    >
                         <div class="flex flex-col gap-4">
                             <div
-                                class="w-12 h-12 rounded-lg bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary/20 transition-all duration-200">
-                                <Icon :icon="card.icon" class="text-2xl text-accent-primary" />
+                                class="w-12 h-12 rounded-lg bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary/20 transition-all duration-200"
+                            >
+                                <Icon
+                                    :icon="card.icon"
+                                    class="text-2xl text-accent-primary"
+                                />
                             </div>
                             <div>
-                                <h2 class="text-xl font-bold text-label-primary mb-2">
+                                <h2
+                                    class="text-xl font-bold text-label-primary mb-2"
+                                >
                                     {{ card.title }}
                                 </h2>
                                 <p class="text-sm text-label-secondary">

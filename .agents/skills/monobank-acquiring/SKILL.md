@@ -19,8 +19,8 @@ Any integration MUST implement these steps as the baseline:
 2. **Accept webhook** — `POST webHookUrl` ([webhook.md](webhook.md)) — receive payment status updates, verify ECDSA signature
 3. **Check status** — `GET /api/merchant/invoice/status` ([invoice.md](invoice.md)) — poll as fallback when webhook is missed or for reconciliation
 4. **Handle terminal statuses:**
-   - `success` — payment completed, fulfill the order (deliver goods/services, update order status in DB, notify the customer)
-   - `failure` — payment failed, show error to user, allow retry or cancel the order
+    - `success` — payment completed, fulfill the order (deliver goods/services, update order status in DB, notify the customer)
+    - `failure` — payment failed, show error to user, allow retry or cancel the order
 
 Webhook is the primary mechanism for learning about status changes. Status polling is a fallback. Both must handle `success` and `failure` as terminal states. Status `expired` does NOT trigger a webhook — handle it via polling or invoice validity timeout.
 
@@ -34,14 +34,14 @@ Ready-to-run single-file servers with 3 endpoints (create payment, check status,
 
 All examples read `X-Token` from `MONOBANK_TOKEN` env variable — run `export MONOBANK_TOKEN="..."` before starting.
 
-| Language | File | Framework | Run |
-|----------|------|-----------|-----|
-| Python | [server.py](examples/python/server.py) | Flask | `pip install flask requests ecdsa && python server.py` |
-| Node.js | [server.js](examples/nodejs/server.js) | Express | `npm install express && node server.js` |
-| Go | [main.go](examples/go/main.go) | net/http | `go run main.go` |
-| PHP | [server.php](examples/php/server.php) | Built-in | `php -S localhost:3000 server.php` |
-| C# | [Program.cs](examples/csharp/Program.cs) | ASP.NET Minimal | `dotnet run` |
-| Java | [MonobankServer.java](examples/java/MonobankServer.java) | JDK HttpServer | `javac MonobankServer.java && java MonobankServer` |
+| Language | File                                                     | Framework       | Run                                                    |
+| -------- | -------------------------------------------------------- | --------------- | ------------------------------------------------------ |
+| Python   | [server.py](examples/python/server.py)                   | Flask           | `pip install flask requests ecdsa && python server.py` |
+| Node.js  | [server.js](examples/nodejs/server.js)                   | Express         | `npm install express && node server.js`                |
+| Go       | [main.go](examples/go/main.go)                           | net/http        | `go run main.go`                                       |
+| PHP      | [server.php](examples/php/server.php)                    | Built-in        | `php -S localhost:3000 server.php`                     |
+| C#       | [Program.cs](examples/csharp/Program.cs)                 | ASP.NET Minimal | `dotnet run`                                           |
+| Java     | [MonobankServer.java](examples/java/MonobankServer.java) | JDK HttpServer  | `javac MonobankServer.java && java MonobankServer`     |
 
 Each example includes: invoice creation, status check, ECDSA webhook signature verification, and a test form at `http://localhost:3000`.
 
@@ -62,6 +62,7 @@ X-Token: <token>
 Token is obtained from the merchant dashboard at https://web.monobank.ua/ or a test token from https://api.monobank.ua/
 
 Optional CMS headers (for CMS plugin developers):
+
 - `X-Cms` — CMS name
 - `X-Cms-Version` — CMS version
 
@@ -69,72 +70,79 @@ Optional CMS headers (for CMS plugin developers):
 
 The API is organized into these sections (see separate files for details):
 
-| Section | File | Description |
-|---------|------|-------------|
-| Invoice | [invoice.md](invoice.md) | Create, check status, cancel, invalidate, finalize invoices |
-| Payment | [payment.md](payment.md) | Direct card payment, sync payment, token payment |
-| QR | [qr.md](qr.md) | QR cashier management |
-| Wallet | [wallet.md](wallet.md) | Card tokenization and management |
-| Merchant | [merchant.md](merchant.md) | Merchant data, submerchants, employees |
-| Statement | [statement.md](statement.md) | Transaction history/reporting |
-| Fiscal | [fiscal.md](fiscal.md) | Fiscal checks and receipts |
-| Webhook | [webhook.md](webhook.md) | Webhook signature verification |
+| Section   | File                         | Description                                                 |
+| --------- | ---------------------------- | ----------------------------------------------------------- |
+| Invoice   | [invoice.md](invoice.md)     | Create, check status, cancel, invalidate, finalize invoices |
+| Payment   | [payment.md](payment.md)     | Direct card payment, sync payment, token payment            |
+| QR        | [qr.md](qr.md)               | QR cashier management                                       |
+| Wallet    | [wallet.md](wallet.md)       | Card tokenization and management                            |
+| Merchant  | [merchant.md](merchant.md)   | Merchant data, submerchants, employees                      |
+| Statement | [statement.md](statement.md) | Transaction history/reporting                               |
+| Fiscal    | [fiscal.md](fiscal.md)       | Fiscal checks and receipts                                  |
+| Webhook   | [webhook.md](webhook.md)     | Webhook signature verification                              |
 
 ## Common Error Responses
 
 All endpoints return these standard error responses:
 
 ### 400 Bad Request
+
 ```json
 {
-  "errCode": "BAD_REQUEST",
-  "errText": "description of the error"
+    "errCode": "BAD_REQUEST",
+    "errText": "description of the error"
 }
 ```
 
 ### 403 Forbidden
+
 ```json
 {
-  "errCode": "FORBIDDEN",
-  "errText": "forbidden"
+    "errCode": "FORBIDDEN",
+    "errText": "forbidden"
 }
 ```
 
 ### 404 Not Found
+
 ```json
 {
-  "errCode": "NOT_FOUND",
-  "errText": "invalid 'qrId'"
+    "errCode": "NOT_FOUND",
+    "errText": "invalid 'qrId'"
 }
 ```
 
 ### 405 Method Not Allowed
+
 ```json
 {
-  "errCode": "METHOD_NOT_ALLOWED",
-  "errText": "Method not allowed"
+    "errCode": "METHOD_NOT_ALLOWED",
+    "errText": "Method not allowed"
 }
 ```
 
 ### 429 Too Many Requests
+
 ```json
 {
-  "errCode": "TMR",
-  "errText": "too many requests"
+    "errCode": "TMR",
+    "errText": "too many requests"
 }
 ```
 
 ### 500 Internal Server Error
+
 ```json
 {
-  "errCode": "INTERNAL_ERROR",
-  "errText": "internal server error"
+    "errCode": "INTERNAL_ERROR",
+    "errText": "internal server error"
 }
 ```
 
 ## Common Types
 
 ### MerchantPaymInfoItem
+
 Used in invoice creation and payment endpoints:
 
 ```
@@ -148,6 +156,7 @@ merchantPaymInfo: object
 ```
 
 ### BasketOrderItem
+
 ```
 name: string        *REQUIRED* — Product name
 qty: number         *REQUIRED* — Quantity
@@ -165,6 +174,7 @@ discounts: []DiscountItem      — Item-level discounts/surcharges
 ```
 
 ### DiscountItem
+
 ```
 type: string   *REQUIRED* [enum: DISCOUNT | EXTRA_CHARGE]
 mode: string   *REQUIRED* [enum: PERCENT | VALUE]
@@ -172,7 +182,9 @@ value: number  *REQUIRED* — Discount/surcharge value
 ```
 
 ### FiscalizationItem
+
 Used in cancel and finalize endpoints:
+
 ```
 name: string     *REQUIRED* — Product name
 qty: number      *REQUIRED* — Quantity
@@ -186,6 +198,7 @@ uktzed: string              — UKT ZED code
 ```
 
 ### CancelListItem
+
 ```
 status: string       *REQUIRED* [enum: processing | success | failure]
 createdDate: string  *REQUIRED* — Creation datetime
@@ -203,23 +216,23 @@ Amounts are always in minor currency units (kopecks for UAH). Currency codes fol
 
 ## Invoice Statuses
 
-| Status | Description |
-|--------|-------------|
-| `created` | Invoice created, awaiting payment |
-| `processing` | Payment is being processed |
-| `hold` | Amount held on card |
-| `success` | Payment successful |
-| `failure` | Payment failed |
-| `reversed` | Payment reversed |
-| `expired` | Invoice expired |
+| Status       | Description                       |
+| ------------ | --------------------------------- |
+| `created`    | Invoice created, awaiting payment |
+| `processing` | Payment is being processed        |
+| `hold`       | Amount held on card               |
+| `success`    | Payment successful                |
+| `failure`    | Payment failed                    |
+| `reversed`   | Payment reversed                  |
+| `expired`    | Invoice expired                   |
 
 ## Payment Methods
 
-| Method | Description |
-|--------|-------------|
-| `pan` | Card number entry |
-| `apple` | Apple Pay |
-| `google` | Google Pay |
-| `monobank` | monobank app |
-| `wallet` | Token-based |
-| `direct` | Direct card payment |
+| Method     | Description         |
+| ---------- | ------------------- |
+| `pan`      | Card number entry   |
+| `apple`    | Apple Pay           |
+| `google`   | Google Pay          |
+| `monobank` | monobank app        |
+| `wallet`   | Token-based         |
+| `direct`   | Direct card payment |

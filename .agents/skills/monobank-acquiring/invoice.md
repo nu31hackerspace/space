@@ -39,17 +39,18 @@ Core invoice operations for internet acquiring, QR, in-app, and split payments.
 
 ```json
 {
-  "invoiceId": "p2_9ZgpZVsl3",
-  "pageUrl": "https://pay.mbnk.biz/p2_9ZgpZVsl3"
+    "invoiceId": "p2_9ZgpZVsl3",
+    "pageUrl": "https://pay.mbnk.biz/p2_9ZgpZVsl3"
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| invoiceId | string | yes | Unique invoice ID |
-| pageUrl | string | yes | Payment page URL |
+| Field     | Type   | Required | Description       |
+| --------- | ------ | -------- | ----------------- |
+| invoiceId | string | yes      | Unique invoice ID |
+| pageUrl   | string | yes      | Payment page URL  |
 
 ### Errors
+
 400, 403, 404, 405, 429, 500 — see common errors in SKILL.md
 
 ---
@@ -74,69 +75,70 @@ Core invoice operations for internet acquiring, QR, in-app, and split payments.
 
 ```json
 {
-  "invoiceId": "p2_9ZgpZVsl3",
-  "status": "success",
-  "amount": 4200,
-  "ccy": 980,
-  "finalAmount": 4200,
-  "createdDate": "2023-01-01T00:00:00Z",
-  "modifiedDate": "2023-01-01T00:01:00Z",
-  "reference": "84d0070ee4e44667b31371d8f8813947",
-  "destination": "Покупка щастя",
-  "paymentInfo": {
-    "maskedPan": "444403******1902",
-    "approvalCode": "662476",
-    "rrn": "060189181768",
-    "tranId": "13194036",
-    "terminal": "MI001088",
-    "bank": "Універсал Банк",
-    "paymentSystem": "visa",
-    "paymentMethod": "pan",
-    "country": "804",
-    "fee": 0,
-    "agentFee": 0
-  },
-  "cancelList": [],
-  "tipsInfo": null,
-  "walletData": null
+    "invoiceId": "p2_9ZgpZVsl3",
+    "status": "success",
+    "amount": 4200,
+    "ccy": 980,
+    "finalAmount": 4200,
+    "createdDate": "2023-01-01T00:00:00Z",
+    "modifiedDate": "2023-01-01T00:01:00Z",
+    "reference": "84d0070ee4e44667b31371d8f8813947",
+    "destination": "Покупка щастя",
+    "paymentInfo": {
+        "maskedPan": "444403******1902",
+        "approvalCode": "662476",
+        "rrn": "060189181768",
+        "tranId": "13194036",
+        "terminal": "MI001088",
+        "bank": "Універсал Банк",
+        "paymentSystem": "visa",
+        "paymentMethod": "pan",
+        "country": "804",
+        "fee": 0,
+        "agentFee": 0
+    },
+    "cancelList": [],
+    "tipsInfo": null,
+    "walletData": null
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| invoiceId | string | yes | Invoice ID |
-| status | string | yes | Enum: `created`, `processing`, `hold`, `success`, `failure`, `reversed`, `expired` |
-| amount | integer | yes | Amount in minor units |
-| ccy | integer | yes | ISO 4217 currency code |
-| finalAmount | integer | no | Final amount after refunds |
-| createdDate | string | no | Financial operation datetime |
-| modifiedDate | string | no | Last modification datetime |
-| reference | string | no | Merchant-defined reference |
-| destination | string | no | Payment purpose |
-| errCode | string | no | Error code if payment failed (see Errors section in docs) |
-| failureReason | string | no | Failure reason description |
-| paymentInfo | object | no | Payment details (present for processing/success/failure/reversed) |
-| paymentInfo.maskedPan | string | yes | Masked card number |
-| paymentInfo.approvalCode | string | no | Authorization code |
-| paymentInfo.rrn | string | no | Transaction ID in payment system |
-| paymentInfo.tranId | string | no | Transaction ID |
-| paymentInfo.terminal | string | yes | Payment terminal ID |
-| paymentInfo.bank | string | no | Card issuing bank name |
-| paymentInfo.paymentSystem | string | yes | Enum: `visa`, `mastercard` |
-| paymentInfo.paymentMethod | string | yes | Enum: `pan`, `apple`, `google`, `monobank`, `wallet`, `direct` |
-| paymentInfo.country | string | no | Bank country (ISO 3166-1 numeric) |
-| paymentInfo.fee | integer | no | Acquiring fee in minor units |
-| paymentInfo.agentFee | integer | no | Agent fee in minor units |
-| cancelList | []CancelListItem | no | Accepted cancel requests (see SKILL.md) |
-| tipsInfo | object | no | Tips data (present if tipsEmployeeId was set) |
-| tipsInfo.employeeId | string | yes | Employee ID |
-| tipsInfo.amount | integer | no | Tips amount in minor units (absent if no successful tip payment) |
-| walletData | object | no | Card tokenization data |
-| walletData.cardToken | string | yes | Card token |
-| walletData.walletId | string | yes | Wallet ID |
-| walletData.status | string | yes | Enum: `new`, `created`, `failed` |
+| Field                     | Type             | Required | Description                                                                        |
+| ------------------------- | ---------------- | -------- | ---------------------------------------------------------------------------------- |
+| invoiceId                 | string           | yes      | Invoice ID                                                                         |
+| status                    | string           | yes      | Enum: `created`, `processing`, `hold`, `success`, `failure`, `reversed`, `expired` |
+| amount                    | integer          | yes      | Amount in minor units                                                              |
+| ccy                       | integer          | yes      | ISO 4217 currency code                                                             |
+| finalAmount               | integer          | no       | Final amount after refunds                                                         |
+| createdDate               | string           | no       | Financial operation datetime                                                       |
+| modifiedDate              | string           | no       | Last modification datetime                                                         |
+| reference                 | string           | no       | Merchant-defined reference                                                         |
+| destination               | string           | no       | Payment purpose                                                                    |
+| errCode                   | string           | no       | Error code if payment failed (see Errors section in docs)                          |
+| failureReason             | string           | no       | Failure reason description                                                         |
+| paymentInfo               | object           | no       | Payment details (present for processing/success/failure/reversed)                  |
+| paymentInfo.maskedPan     | string           | yes      | Masked card number                                                                 |
+| paymentInfo.approvalCode  | string           | no       | Authorization code                                                                 |
+| paymentInfo.rrn           | string           | no       | Transaction ID in payment system                                                   |
+| paymentInfo.tranId        | string           | no       | Transaction ID                                                                     |
+| paymentInfo.terminal      | string           | yes      | Payment terminal ID                                                                |
+| paymentInfo.bank          | string           | no       | Card issuing bank name                                                             |
+| paymentInfo.paymentSystem | string           | yes      | Enum: `visa`, `mastercard`                                                         |
+| paymentInfo.paymentMethod | string           | yes      | Enum: `pan`, `apple`, `google`, `monobank`, `wallet`, `direct`                     |
+| paymentInfo.country       | string           | no       | Bank country (ISO 3166-1 numeric)                                                  |
+| paymentInfo.fee           | integer          | no       | Acquiring fee in minor units                                                       |
+| paymentInfo.agentFee      | integer          | no       | Agent fee in minor units                                                           |
+| cancelList                | []CancelListItem | no       | Accepted cancel requests (see SKILL.md)                                            |
+| tipsInfo                  | object           | no       | Tips data (present if tipsEmployeeId was set)                                      |
+| tipsInfo.employeeId       | string           | yes      | Employee ID                                                                        |
+| tipsInfo.amount           | integer          | no       | Tips amount in minor units (absent if no successful tip payment)                   |
+| walletData                | object           | no       | Card tokenization data                                                             |
+| walletData.cardToken      | string           | yes      | Card token                                                                         |
+| walletData.walletId       | string           | yes      | Wallet ID                                                                          |
+| walletData.status         | string           | yes      | Enum: `new`, `created`, `failed`                                                   |
 
 ### Errors
+
 400, 403, 404, 405, 429, 500 — see common errors in SKILL.md
 
 ---
@@ -164,19 +166,20 @@ Core invoice operations for internet acquiring, QR, in-app, and split payments.
 
 ```json
 {
-  "status": "processing",
-  "createdDate": "2023-01-01T00:00:00Z",
-  "modifiedDate": "2023-01-01T00:00:00Z"
+    "status": "processing",
+    "createdDate": "2023-01-01T00:00:00Z",
+    "modifiedDate": "2023-01-01T00:00:00Z"
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| status | string | yes | Enum: `processing`, `success`, `failure` |
-| createdDate | string | yes | Creation datetime |
-| modifiedDate | string | yes | Last modification datetime |
+| Field        | Type   | Required | Description                              |
+| ------------ | ------ | -------- | ---------------------------------------- |
+| status       | string | yes      | Enum: `processing`, `success`, `failure` |
+| createdDate  | string | yes      | Creation datetime                        |
+| modifiedDate | string | yes      | Last modification datetime               |
 
 ### Errors
+
 400, 403, 404, 405, 429, 500 — see common errors in SKILL.md
 
 ---
@@ -202,6 +205,7 @@ Core invoice operations for internet acquiring, QR, in-app, and split payments.
 Empty response (invoice deactivated).
 
 ### Errors
+
 400, 403, 404, 405, 429, 500 — see common errors in SKILL.md
 
 ---
@@ -228,13 +232,14 @@ Empty response (invoice deactivated).
 
 ```json
 {
-  "status": "success"
+    "status": "success"
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| status | string | yes | Enum: `success` |
+| Field  | Type   | Required | Description     |
+| ------ | ------ | -------- | --------------- |
+| status | string | yes      | Enum: `success` |
 
 ### Errors
+
 400, 403, 404, 405, 429, 500 — see common errors in SKILL.md

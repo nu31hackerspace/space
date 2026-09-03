@@ -18,4 +18,3 @@ export interface AuthFailureResponse {
         step2Complete: boolean // User has required role
     }
 }
-

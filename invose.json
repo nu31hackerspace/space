@@ -1,11 +1,11 @@
 {
-  "amount": 50000,
-  "ccy": 980,
-  "redirectUrl": "https://example.com/your/website/result/page",
-  "successUrl": "https://example.com/your/website/success/page",
-  "failUrl": "https://example.com/your/website/fail/page",
-  "webHookUrl": "https://example.com/mono/acquiring/webhook/maybesomegibberishuniquestringbutnotnecessarily",
-  "validity": 3600,
-  "paymentType": null,
-  "withAppUrl": false
+    "amount": 5000,
+    "ccy": 980,
+    "redirectUrl": "https://example.com/your/website/result/page",
+    "successUrl": "https://example.com/your/website/success/page",
+    "failUrl": "https://example.com/your/website/fail/page",
+    "webHookUrl": "https://example.com/mono/acquiring/webhook/maybesomegibberishuniquestringbutnotnecessarily",
+    "validity": 3600,
+    "paymentType": null,
+    "withAppUrl": false
 }

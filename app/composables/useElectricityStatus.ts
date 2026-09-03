@@ -55,4 +55,3 @@ export const useElectricityStatus = () => {
         fetchStatus,
     }
 }
-

@@ -1,19 +1,22 @@
-import { useNitroApp } from "#imports"
+import { useNitroApp } from '#imports'
 
 export type User = {
     id: string
     name: string
-    username: string,
+    username: string
     avatarId: string
 }
 
 export type AuthTechnicalInfo = {
-    userAgent: string,
-    country: string,
-    sessionKey: string,
+    userAgent: string
+    country: string
+    sessionKey: string
 }
 
-export async function createOrUpdateUser(user: User, authTechnicalInfo: AuthTechnicalInfo) {
+export async function createOrUpdateUser(
+    user: User,
+    authTechnicalInfo: AuthTechnicalInfo
+) {
     const db = useNitroApp().db
 
     await db.collection('users').updateOne(
@@ -21,7 +24,7 @@ export async function createOrUpdateUser(user: User, authTechnicalInfo: AuthTech
         {
             $set: {
                 ...user,
-                updateAt: new Date()
+                updateAt: new Date(),
             },
             $setOnInsert: {
                 createAt: new Date(),
@@ -33,8 +36,8 @@ export async function createOrUpdateUser(user: User, authTechnicalInfo: AuthTech
                     country: authTechnicalInfo.country,
                     createAt: new Date(),
                     expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-                } as any
-            }
+                } as any,
+            },
         },
         { upsert: true }
     )
@@ -42,10 +45,7 @@ export async function createOrUpdateUser(user: User, authTechnicalInfo: AuthTech
     await db.collection('tracking').updateMany(
         {
             sessionKey: authTechnicalInfo.sessionKey,
-            $or: [
-                { userId: null },
-                { userId: { $exists: false } }
-            ]
+            $or: [{ userId: null }, { userId: { $exists: false } }],
         },
         { $set: { userId: user.id } }
     )
@@ -53,5 +53,10 @@ export async function createOrUpdateUser(user: User, authTechnicalInfo: AuthTech
 
 export async function setUserAvatar(user: User, avatarFilename: string) {
     const db = useNitroApp().db
-    await db.collection('users').updateOne({ id: user.id }, { $set: { avatarFilename: avatarFilename } })
+    await db
+        .collection('users')
+        .updateOne(
+            { id: user.id },
+            { $set: { avatarFilename: avatarFilename } }
+        )
 }

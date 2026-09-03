@@ -8,10 +8,14 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 // JWT verification returns unknown runtime data, so auth middleware narrows it
 // before trusting user/session identifiers from the token.
-export function isJwtSessionPayload(value: unknown): value is JwtSessionPayload {
-    return isRecord(value)
-        && typeof value.userId === 'string'
-        && typeof value.sessionKey === 'string'
+export function isJwtSessionPayload(
+    value: unknown
+): value is JwtSessionPayload {
+    return (
+        isRecord(value) &&
+        typeof value.userId === 'string' &&
+        typeof value.sessionKey === 'string'
+    )
 }
 
 function isSessionRecord(value: unknown): value is { sessionKey: string } {
@@ -25,5 +29,8 @@ export function hasUserSession(user: unknown, sessionKey: string): boolean {
         return false
     }
 
-    return user.sessions.some(session => isSessionRecord(session) && session.sessionKey === sessionKey)
+    return user.sessions.some(
+        (session) =>
+            isSessionRecord(session) && session.sessionKey === sessionKey
+    )
 }

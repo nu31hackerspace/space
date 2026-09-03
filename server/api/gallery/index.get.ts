@@ -10,13 +10,12 @@ export default defineEventHandler(async (event) => {
         .toArray()
 
     // Convert _id to string id
-    const imagesWithId = images.map(image => ({
+    const imagesWithId = images.map((image) => ({
         id: image._id.toString(),
         imageFilename: image.imageFilename,
         altText: image.altText || '',
-        createdAt: image.createdAt
+        createdAt: image.createdAt,
     }))
 
     return imagesWithId
 })
-

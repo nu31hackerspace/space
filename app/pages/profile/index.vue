@@ -40,7 +40,7 @@
                             </div>
                             <div>
                                 <MainButton
-                                    buttonStyle="secondary"
+                                    button-style="secondary"
                                     size="M"
                                     icon="mdi:logout"
                                     @click="handleLogout"

@@ -29,9 +29,9 @@
                                     </h3>
                                     <MainButton
                                         :size="size.name"
-                                        :buttonStyle="style.name"
-                                        @click="handleClick"
+                                        :button-style="style.name"
                                         label="Button"
+                                        @click="handleClick"
                                     ></MainButton>
                                 </div>
                                 <div class="text-center">
@@ -42,10 +42,10 @@
                                     </h3>
                                     <MainButton
                                         :size="size.name"
-                                        :buttonStyle="style.name"
-                                        @click="handleClick"
+                                        :button-style="style.name"
                                         label="Button"
                                         icon="mdi:heart"
+                                        @click="handleClick"
                                     ></MainButton>
                                 </div>
                                 <div class="text-center">
@@ -56,9 +56,9 @@
                                     </h3>
                                     <MainButton
                                         :size="size.name"
-                                        :buttonStyle="style.name"
-                                        @click="handleClick"
+                                        :button-style="style.name"
                                         icon="mdi:star"
+                                        @click="handleClick"
                                     ></MainButton>
                                 </div>
                             </div>
@@ -77,46 +77,46 @@
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                 >
                     <MainButton
-                        buttonStyle="primary"
+                        button-style="primary"
                         size="M"
-                        @click="handleClick"
                         label="Download"
                         icon="mdi:download"
+                        @click="handleClick"
                     />
                     <MainButton
-                        buttonStyle="secondary"
+                        button-style="secondary"
                         size="M"
-                        @click="handleClick"
                         label="Settings"
                         icon="mdi:cog"
+                        @click="handleClick"
                     />
                     <MainButton
-                        buttonStyle="ghost"
+                        button-style="ghost"
                         size="M"
-                        @click="handleClick"
                         label="Share"
                         icon="mdi:share"
+                        @click="handleClick"
                     />
                     <MainButton
-                        buttonStyle="primary"
+                        button-style="primary"
                         size="S"
-                        @click="handleClick"
                         label="Like"
                         icon="mdi:thumb-up"
+                        @click="handleClick"
                     />
                     <MainButton
-                        buttonStyle="secondary"
+                        button-style="secondary"
                         size="S"
-                        @click="handleClick"
                         label="Edit"
                         icon="mdi:pencil"
+                        @click="handleClick"
                     />
                     <MainButton
-                        buttonStyle="ghost"
+                        button-style="ghost"
                         size="S"
-                        @click="handleClick"
                         label="Delete"
                         icon="mdi:delete"
+                        @click="handleClick"
                     />
                 </div>
             </div>
@@ -125,8 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { trackEvent } from '~~/app/utils/track'
 
 onMounted(() => {

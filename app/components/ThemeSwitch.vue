@@ -1,8 +1,8 @@
 <template>
     <MainButton
-        @click="toggleTheme"
         icon="gg:dark-mode"
         size="M"
+        @click="toggleTheme"
     />
 </template>
 

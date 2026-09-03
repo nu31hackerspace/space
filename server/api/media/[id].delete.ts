@@ -1,4 +1,9 @@
-import { createError, defineEventHandler, getRouterParam, useNitroApp } from '#imports'
+import {
+    createError,
+    defineEventHandler,
+    getRouterParam,
+    useNitroApp,
+} from '#imports'
 import { ObjectId } from 'mongodb'
 import { FileStoreType } from '~~/server/plugins/3_file_store'
 
@@ -19,25 +24,38 @@ export default defineEventHandler(async (event) => {
 
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
-        throw createError({ statusCode: 400, statusMessage: 'Invalid ID format' })
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Invalid ID format',
+        })
     }
 
     try {
         // Find the post
-        const post = await db.collection('mediaPosts').findOne({ _id: new ObjectId(id) })
+        const post = await db
+            .collection('mediaPosts')
+            .findOne({ _id: new ObjectId(id) })
 
         if (!post) {
-            throw createError({ statusCode: 404, statusMessage: 'Media post not found' })
+            throw createError({
+                statusCode: 404,
+                statusMessage: 'Media post not found',
+            })
         }
 
         // Delete image from GridFS if it exists
         if (post.imageFilename) {
             try {
-                const fileStore = useNitroApp().fileStores.getFileStore(FileStoreType.MediaPostImage)
+                const fileStore = useNitroApp().fileStores.getFileStore(
+                    FileStoreType.MediaPostImage
+                )
                 await fileStore.deleteFileByName(post.imageFilename)
                 logger.info(`Deleted image file: ${post.imageFilename}`)
             } catch (error) {
-                logger.warn(`Failed to delete image file: ${post.imageFilename}`, error)
+                logger.warn(
+                    `Failed to delete image file: ${post.imageFilename}`,
+                    error
+                )
                 // Continue with post deletion even if image deletion fails
             }
         }
@@ -55,8 +73,7 @@ export default defineEventHandler(async (event) => {
         }
         throw createError({
             statusCode: 500,
-            statusMessage: error.message || 'Failed to delete media post'
+            statusMessage: error.message || 'Failed to delete media post',
         })
     }
 })
-

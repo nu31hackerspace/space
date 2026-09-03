@@ -1,4 +1,9 @@
-import { defineEventHandler, getRouterParam, createError, useNitroApp } from '#imports'
+import {
+    defineEventHandler,
+    getRouterParam,
+    createError,
+    useNitroApp,
+} from '#imports'
 
 type Status = 'online' | 'offline'
 
@@ -10,9 +15,14 @@ export default defineEventHandler(async (event) => {
 
     const db = useNitroApp().db
 
-    const tracker = await db.collection('electricity_trackers').findOne({ slug })
+    const tracker = await db
+        .collection('electricity_trackers')
+        .findOne({ slug })
     if (!tracker) {
-        throw createError({ statusCode: 404, statusMessage: 'Tracker not found' })
+        throw createError({
+            statusCode: 404,
+            statusMessage: 'Tracker not found',
+        })
     }
 
     const now = new Date()
@@ -31,7 +41,9 @@ export default defineEventHandler(async (event) => {
         .sort({ timestamp: 1 })
         .toArray()
 
-    const timestamps: Date[] = pingsInWindow.map((d: any) => d.timestamp as Date)
+    const timestamps: Date[] = pingsInWindow.map(
+        (d: any) => d.timestamp as Date
+    )
     const lastPingDoc = await db
         .collection('electricity_tracker_alive')
         .find({ deviceSlug: slug })
@@ -39,9 +51,14 @@ export default defineEventHandler(async (event) => {
         .limit(1)
         .toArray()
 
-    const lastAliveAt: Date | undefined = lastPingDoc.length ? (lastPingDoc[0].timestamp as Date) : undefined
+    const lastAliveAt: Date | undefined = lastPingDoc.length
+        ? (lastPingDoc[0].timestamp as Date)
+        : undefined
     const current: { status: Status; lastAliveAt?: Date; since?: Date } = {
-        status: lastAliveAt && now.getTime() - lastAliveAt.getTime() <= TEN_MIN_MS ? 'online' : 'offline',
+        status:
+            lastAliveAt && now.getTime() - lastAliveAt.getTime() <= TEN_MIN_MS
+                ? 'online'
+                : 'offline',
         lastAliveAt,
         since: undefined,
     }
@@ -56,9 +73,15 @@ export default defineEventHandler(async (event) => {
 
     if (firstInWindow) {
         const pre = preWindowPing[0]?.timestamp as Date | undefined
-        const gapToStart = pre ? firstInWindow.getTime() - pre.getTime() : Infinity
+        const gapToStart = pre
+            ? firstInWindow.getTime() - pre.getTime()
+            : Infinity
         // If there was a ping shortly before the first in-window ping, consider the device online at week start
-        if (pre && (weekStart.getTime() - pre.getTime() <= TEN_MIN_MS || gapToStart <= TEN_MIN_MS)) {
+        if (
+            pre &&
+            (weekStart.getTime() - pre.getTime() <= TEN_MIN_MS ||
+                gapToStart <= TEN_MIN_MS)
+        ) {
             currentState = 'online'
         } else {
             currentState = 'offline'
@@ -78,7 +101,11 @@ export default defineEventHandler(async (event) => {
     for (const ping of timestamps) {
         if (!prevPing) {
             if (currentState === 'offline') {
-                history.push({ status: 'offline', start: currentStart, end: ping })
+                history.push({
+                    status: 'offline',
+                    start: currentStart,
+                    end: ping,
+                })
                 currentState = 'online'
                 currentStart = ping
             } else {
@@ -90,7 +117,11 @@ export default defineEventHandler(async (event) => {
         const gap = ping.getTime() - prevPing.getTime()
         if (gap > TEN_MIN_MS) {
             if (currentState === 'online') {
-                history.push({ status: 'online', start: currentStart, end: prevPing })
+                history.push({
+                    status: 'online',
+                    start: currentStart,
+                    end: prevPing,
+                })
                 currentState = 'offline'
                 currentStart = prevPing
             }
@@ -127,5 +158,3 @@ export default defineEventHandler(async (event) => {
         history: history,
     }
 })
-
-

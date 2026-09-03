@@ -24,21 +24,22 @@ QR cashier management endpoints.
 
 ```json
 {
-  "shortQrId": "OBJE",
-  "amount": 4200,
-  "ccy": 980,
-  "invoiceId": "4EwIUTA12JIZ"
+    "shortQrId": "OBJE",
+    "amount": 4200,
+    "ccy": 980,
+    "invoiceId": "4EwIUTA12JIZ"
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| shortQrId | string | yes | Short QR cashier ID. Example: `OBJE` |
-| amount | integer | no | Amount in minor units (present if amount is set). Example: `4200` |
-| ccy | integer | no | ISO 4217 currency code. Example: `980` |
-| invoiceId | string | no | Invoice ID (present only when amount is set). Example: `4EwIUTA12JIZ` |
+| Field     | Type    | Required | Description                                                           |
+| --------- | ------- | -------- | --------------------------------------------------------------------- |
+| shortQrId | string  | yes      | Short QR cashier ID. Example: `OBJE`                                  |
+| amount    | integer | no       | Amount in minor units (present if amount is set). Example: `4200`     |
+| ccy       | integer | no       | ISO 4217 currency code. Example: `980`                                |
+| invoiceId | string  | no       | Invoice ID (present only when amount is set). Example: `4EwIUTA12JIZ` |
 
 ### Errors
+
 400, 403, 404, 405, 429, 500 — see common errors in SKILL.md
 
 ---
@@ -58,26 +59,27 @@ QR cashier management endpoints.
 
 ```json
 {
-  "list": [
-    {
-      "qrId": "XJ_DiM4rTd5V",
-      "shortQrId": "OBJE",
-      "amountType": "merchant",
-      "pageUrl": "https://pay.mbnk.biz/XJ_DiM4rTd5V"
-    }
-  ]
+    "list": [
+        {
+            "qrId": "XJ_DiM4rTd5V",
+            "shortQrId": "OBJE",
+            "amountType": "merchant",
+            "pageUrl": "https://pay.mbnk.biz/XJ_DiM4rTd5V"
+        }
+    ]
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| list | []QrListItem | yes | List of QR cashiers |
-| list[].qrId | string | yes | QR cashier ID. Example: `XJ_DiM4rTd5V` |
-| list[].shortQrId | string | yes | Short QR cashier ID. Example: `OBJE` |
-| list[].amountType | string | yes | Enum: `merchant` (merchant sets amount), `client` (client sets amount), `fix` (fixed amount) |
-| list[].pageUrl | string | yes | Payment page URL. Example: `https://pay.mbnk.biz/XJ_DiM4rTd5V` |
+| Field             | Type         | Required | Description                                                                                  |
+| ----------------- | ------------ | -------- | -------------------------------------------------------------------------------------------- |
+| list              | []QrListItem | yes      | List of QR cashiers                                                                          |
+| list[].qrId       | string       | yes      | QR cashier ID. Example: `XJ_DiM4rTd5V`                                                       |
+| list[].shortQrId  | string       | yes      | Short QR cashier ID. Example: `OBJE`                                                         |
+| list[].amountType | string       | yes      | Enum: `merchant` (merchant sets amount), `client` (client sets amount), `fix` (fixed amount) |
+| list[].pageUrl    | string       | yes      | Payment page URL. Example: `https://pay.mbnk.biz/XJ_DiM4rTd5V`                               |
 
 ### Errors
+
 400, 403, 405, 429, 500 — see common errors in SKILL.md
 
 ---
@@ -103,4 +105,5 @@ QR cashier management endpoints.
 Empty response (amount removed).
 
 ### Errors
+
 400, 403, 404, 405, 429, 500 — see common errors in SKILL.md

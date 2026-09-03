@@ -44,8 +44,8 @@ docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:lat
 ## Critical conventions
 
 - **Nuxt auto-import is OFF** (`imports.autoImport: false` in `nuxt.config.ts`). This is the most important thing to know here. Unlike a default Nuxt project, nothing is magically in scope — **import everything explicitly**:
-  - Nuxt/Nitro/h3 helpers (`defineEventHandler`, `useRuntimeConfig`, `useNitroApp`, `getQuery`, `createError`, `defineNitroPlugin`, `defineNuxtRouteMiddleware`, `navigateTo`, `useFetch`, …) → from `#imports`
-  - Vue APIs (`ref`, `computed`, …) → from `vue`
+    - Nuxt/Nitro/h3 helpers (`defineEventHandler`, `useRuntimeConfig`, `useNitroApp`, `getQuery`, `createError`, `defineNitroPlugin`, `defineNuxtRouteMiddleware`, `navigateTo`, `useFetch`, …) → from `#imports`
+    - Vue APIs (`ref`, `computed`, …) → from `vue`
 - **Path aliases:** `~~/` = project root (e.g. `~~/server/...`, `~~/shared/...`), `~/` = the `app/` directory. Vitest maps only `~~` (see `vitest.config.ts`), so unit-tested code should import shared logic via `~~/` or relative paths.
 - **Configuration is `runtimeConfig` + env overrides.** Defaults live in `nuxt.config.ts`. In production they are overridden by `NUXT_*` env vars following Nuxt's convention (`mongoUri` ← `NUXT_MONGO_URI`, `public.baseUrl` ← `NUXT_PUBLIC_BASE_URL`, etc. — see `docker-stack.yml` for the full mapping). Secrets (Mongo URI, Discord, JWT, MQTT) are never in the repo.
 - **Formatting:** Prettier — no semicolons, single quotes, 4-space indent, `printWidth` 80. Prettier owns all formatting (including Vue templates, e.g. one attribute per line via `singleAttributePerLine`); ESLint (`eslint.config.js`, flat config) defers formatting to Prettier and focuses on code-quality rules. Run `npm run format` to fix style.
@@ -54,11 +54,11 @@ docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:lat
 
 ### Three layers
 
-| Dir       | Role |
-|-----------|------|
+| Dir       | Role                                                                                                          |
+| --------- | ------------------------------------------------------------------------------------------------------------- |
 | `app/`    | Nuxt frontend — `pages/` (file-based routes), `components/`, `composables/`, `layouts/`, client `middleware/` |
-| `server/` | Nitro backend — `api/` (HTTP handlers), `core/` (business logic), `middleware/`, `plugins/`, `routes/` |
-| `shared/` | Code/types used by both sides — `shared/types/` and pure utilities |
+| `server/` | Nitro backend — `api/` (HTTP handlers), `core/` (business logic), `middleware/`, `plugins/`, `routes/`        |
+| `shared/` | Code/types used by both sides — `shared/types/` and pure utilities                                            |
 
 ### `server/core/` vs `server/api/` — the central pattern
 

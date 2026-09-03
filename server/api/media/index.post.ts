@@ -1,4 +1,9 @@
-import { createError, defineEventHandler, readBody, useNitroApp } from '#imports'
+import {
+    createError,
+    defineEventHandler,
+    readBody,
+    useNitroApp,
+} from '#imports'
 import { extractMetadataFromUrl } from '~~/server/core/media/parse'
 import { FileStoreType } from '~~/server/plugins/3_file_store'
 
@@ -19,7 +24,10 @@ export default defineEventHandler(async (event) => {
     try {
         new URL(url)
     } catch {
-        throw createError({ statusCode: 400, statusMessage: 'Invalid URL format' })
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Invalid URL format',
+        })
     }
 
     const logger = useNitroApp().logger
@@ -34,7 +42,9 @@ export default defineEventHandler(async (event) => {
         const imageFilename = `media-post-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.jpg`
 
         // Download and save image to GridFS
-        const fileStore = useNitroApp().fileStores.getFileStore(FileStoreType.MediaPostImage)
+        const fileStore = useNitroApp().fileStores.getFileStore(
+            FileStoreType.MediaPostImage
+        )
         logger.info(`Saving image from ${metadata.imageUrl} to GridFS`)
         await fileStore.saveFileByUrl(metadata.imageUrl, imageFilename)
 
@@ -46,7 +56,7 @@ export default defineEventHandler(async (event) => {
             imageFilename: imageFilename,
             createdAt: now,
             updatedAt: now,
-            createdBy: user.userId
+            createdBy: user.userId,
         })
 
         logger.info(`Media post created with ID: ${result.insertedId}`)
@@ -56,7 +66,7 @@ export default defineEventHandler(async (event) => {
             title: metadata.title,
             sourceUrl: url,
             imageFilename: imageFilename,
-            createdAt: now
+            createdAt: now,
         }
     } catch (error: any) {
         logger.error('Failed to create media post:', error)
@@ -65,8 +75,7 @@ export default defineEventHandler(async (event) => {
         }
         throw createError({
             statusCode: 500,
-            statusMessage: error.message || 'Failed to create media post'
+            statusMessage: error.message || 'Failed to create media post',
         })
     }
 })
-

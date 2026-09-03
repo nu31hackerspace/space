@@ -8,14 +8,10 @@ export default defineEventHandler(async (event) => {
     const redirectUri = new URL('https://discord.com/oauth2/authorize')
     redirectUri.searchParams.set('client_id', discordClientId)
     redirectUri.searchParams.set('response_type', 'code')
-    redirectUri.searchParams.set(
-        'redirect_uri',
-        discordRedirectUri()
-    )
+    redirectUri.searchParams.set('redirect_uri', discordRedirectUri())
     redirectUri.searchParams.set('scope', 'identify')
 
     return {
         redirectUri: redirectUri.toString(),
     }
 })
-

@@ -15,9 +15,12 @@ export const useUser = () => {
     const fetchUser = async () => {
         isLoading.value = true
         try {
-            const response = await $fetch<{ user: User | null }>('/api/user/me', {
-                credentials: 'include'
-            })
+            const response = await $fetch<{ user: User | null }>(
+                '/api/user/me',
+                {
+                    credentials: 'include',
+                }
+            )
             if (response.user) {
                 user.value = response.user
             } else {
@@ -44,13 +47,14 @@ export const useUser = () => {
         try {
             await $fetch('/api/auth/logout', {
                 method: 'POST',
-                credentials: 'include'
+                credentials: 'include',
             })
             user.value = null
             window.location.href = '/'
         } catch (error) {
             console.error('Failed to logout:', error)
-            document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+            document.cookie =
+                'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
             user.value = null
             window.location.href = '/'
         }
@@ -65,4 +69,3 @@ export const useUser = () => {
         logout,
     }
 }
-

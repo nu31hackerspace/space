@@ -1,5 +1,5 @@
 import { defineEventHandler, useNitroApp } from '#imports'
-import { UserSession } from '~~/server/core/user/user'
+import type { UserSession } from '~~/server/core/user/user'
 
 export default defineEventHandler(async (event) => {
     const userSession = event.context.user as UserSession | undefined
@@ -11,7 +11,9 @@ export default defineEventHandler(async (event) => {
     }
 
     const db = useNitroApp().db
-    const user = await db.collection('users').findOne({ id: userSession.userId })
+    const user = await db
+        .collection('users')
+        .findOne({ id: userSession.userId })
 
     if (!user) {
         return {
@@ -27,4 +29,3 @@ export default defineEventHandler(async (event) => {
         },
     }
 })
-

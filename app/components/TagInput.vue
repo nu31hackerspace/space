@@ -1,5 +1,8 @@
 <template>
-    <div class="relative" ref="wrapper">
+    <div
+        ref="wrapper"
+        class="relative"
+    >
         <div
             class="flex flex-wrap items-center gap-1.5 p-2 rounded border border-separator-primary cursor-text min-h-[2.5rem]"
             @click="focusInput"
@@ -14,7 +17,9 @@
                     type="button"
                     class="text-label-tertiary hover:text-accent-primary leading-none"
                     @click.stop="removeTag(index)"
-                >×</button>
+                >
+                    ×
+                </button>
             </span>
             <input
                 ref="inputEl"
@@ -27,8 +32,13 @@
             />
         </div>
 
-        <div v-if="open && visibleSuggestions.length" class="flex mt-1">
-            <div class="max-h-48 overflow-y-auto bg-fill-secondary border border-separator-primary rounded-lg">
+        <div
+            v-if="open && visibleSuggestions.length"
+            class="flex mt-1"
+        >
+            <div
+                class="max-h-48 overflow-y-auto bg-fill-secondary border border-separator-primary rounded-lg"
+            >
                 <button
                     v-for="tag in visibleSuggestions"
                     :key="tag"
@@ -60,7 +70,7 @@ const inputValue = ref('')
 const open = ref(false)
 
 const visibleSuggestions = computed(() =>
-    props.suggestions.filter(s => !props.modelValue.includes(s))
+    props.suggestions.filter((s) => !props.modelValue.includes(s))
 )
 
 function focusInput() {
@@ -84,7 +94,11 @@ function onKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter' || e.key === ',') {
         e.preventDefault()
         addTag(inputValue.value)
-    } else if (e.key === 'Backspace' && inputValue.value === '' && props.modelValue.length > 0) {
+    } else if (
+        e.key === 'Backspace' &&
+        inputValue.value === '' &&
+        props.modelValue.length > 0
+    ) {
         removeTag(props.modelValue.length - 1)
     } else if (e.key === 'Escape') {
         open.value = false
@@ -92,6 +106,8 @@ function onKeydown(e: KeyboardEvent) {
 }
 
 function onBlur() {
-    setTimeout(() => { open.value = false }, 150)
+    setTimeout(() => {
+        open.value = false
+    }, 150)
 }
 </script>

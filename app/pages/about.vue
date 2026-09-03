@@ -7,23 +7,33 @@
             Хакерспейс у Києві / Hackerspace in Kyiv, Ukraine
         </p>
 
-        <section class="mb-12 bg-fill-secondary p-8 rounded-xl border border-separator-primary">
+        <section
+            class="mb-12 bg-fill-secondary p-8 rounded-xl border border-separator-primary"
+        >
             <h2 class="text-2xl font-bold mb-4 text-accent-primary">
                 Legal information
             </h2>
-            <dl class="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-x-6 gap-y-3 text-label-primary">
+            <dl
+                class="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-x-6 gap-y-3 text-label-primary"
+            >
                 <dt class="font-semibold text-label-secondary">Legal name</dt>
                 <dd>HACKER SPACE NU31</dd>
 
-                <dt class="font-semibold text-label-secondary">EDRPOU / ЄДРПОУ</dt>
+                <dt class="font-semibold text-label-secondary">
+                    EDRPOU / ЄДРПОУ
+                </dt>
                 <dd>46237412</dd>
 
                 <dt class="font-semibold text-label-secondary">Country</dt>
                 <dd>Ukraine</dd>
 
-                <dt class="font-semibold text-label-secondary">Registered address</dt>
+                <dt class="font-semibold text-label-secondary">
+                    Registered address
+                </dt>
                 <dd>
-                    <span class="whitespace-pre-line block">{{ legalAddress }}</span>
+                    <span class="whitespace-pre-line block">
+                        {{ legalAddress }}
+                    </span>
                     <a
                         :href="mapsUrl"
                         target="_blank"
@@ -34,7 +44,9 @@
                     </a>
                 </dd>
 
-                <dt class="font-semibold text-label-secondary">Contact email</dt>
+                <dt class="font-semibold text-label-secondary">
+                    Contact email
+                </dt>
                 <dd>
                     <a
                         href="mailto:root@nu31.space"
@@ -62,28 +74,30 @@
                 founding protocol, register of founders, governance details,
                 ownership structure, and the official EDR extract (Виписка) —
                 are published on the
-                <NuxtLink to="/legal-docs" class="text-accent-primary hover:underline">
+                <NuxtLink
+                    to="/legal-docs"
+                    class="text-accent-primary hover:underline"
+                >
                     legal documents page
-                </NuxtLink>.
+                </NuxtLink>
+                .
             </p>
         </section>
 
         <section class="mb-12">
-            <h2 class="text-2xl font-bold mb-4 text-accent-primary">
-                Mission
-            </h2>
+            <h2 class="text-2xl font-bold mb-4 text-accent-primary">Mission</h2>
             <p class="text-lg text-label-primary mb-4">
-                NU31 exists to give creators, engineers, makers, and
-                technology enthusiasts in Kyiv a shared physical space and a
-                community in which to learn, build, and collaborate. We host
-                open workshops, lectures, and project nights, maintain
-                shared tools and infrastructure, and support open-source
-                projects developed by our members.
+                NU31 exists to give creators, engineers, makers, and technology
+                enthusiasts in Kyiv a shared physical space and a community in
+                which to learn, build, and collaborate. We host open workshops,
+                lectures, and project nights, maintain shared tools and
+                infrastructure, and support open-source projects developed by
+                our members.
             </p>
             <p class="text-label-primary">
-                We are part of the broader international hackerspace
-                movement: a member-run, openly accessible community space
-                operated for the public benefit rather than for profit.
+                We are part of the broader international hackerspace movement: a
+                member-run, openly accessible community space operated for the
+                public benefit rather than for profit.
             </p>
         </section>
 
@@ -93,17 +107,16 @@
             </h2>
             <ul class="list-disc pl-6 space-y-2 text-label-primary">
                 <li>
-                    Operate a community workshop with shared tools,
-                    electronics benches, and project space.
+                    Operate a community workshop with shared tools, electronics
+                    benches, and project space.
                 </li>
                 <li>
                     Run regular meetups, workshops, and lectures open to the
                     public.
                 </li>
                 <li>
-                    Develop and maintain open-source projects, including
-                    Prismo — an IoT smart-locker system used by the
-                    hackerspace itself.
+                    Develop and maintain open-source projects, including Prismo
+                    — an IoT smart-locker system used by the hackerspace itself.
                 </li>
                 <li>
                     Support members working on personal and group technical
@@ -112,7 +125,10 @@
             </ul>
             <p class="mt-4 text-label-secondary">
                 See the
-                <NuxtLink to="/projects" class="text-accent-primary hover:underline">
+                <NuxtLink
+                    to="/projects"
+                    class="text-accent-primary hover:underline"
+                >
                     Projects page
                 </NuxtLink>
                 for details on current activities.
@@ -124,13 +140,13 @@
                 Founding context
             </h2>
             <p class="text-label-primary">
-                NU31 was founded by a group of Kyiv-based engineers and
-                makers who wanted a permanent, member-run space dedicated to
-                technical creativity and community education. The
-                organization was formally registered as a Ukrainian civic
-                organization (громадська організація) and entered into the
-                Unified State Register under EDRPOU 46237412. The space
-                takes its name from its street address in Kyiv.
+                NU31 was founded by a group of Kyiv-based engineers and makers
+                who wanted a permanent, member-run space dedicated to technical
+                creativity and community education. The organization was
+                formally registered as a Ukrainian civic organization
+                (громадська організація) and entered into the Unified State
+                Register under EDRPOU 46237412. The space takes its name from
+                its street address in Kyiv.
             </p>
         </section>
     </div>

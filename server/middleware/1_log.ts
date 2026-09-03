@@ -6,22 +6,26 @@ export default defineEventHandler((event) => {
     const start = Date.now()
 
     event.node.res.on('finish', () => {
-        pingDatabase(useNitroApp()).then((isReady) => {
-            if (!isReady) {
-                return
-            }
+        pingDatabase(useNitroApp())
+            .then((isReady) => {
+                if (!isReady) {
+                    return
+                }
 
-            const db = requireDatabase(useNitroApp())
-            const duration = Date.now() - start
-            const status = event.node.res.statusCode
+                const db = requireDatabase(useNitroApp())
+                const duration = Date.now() - start
+                const status = event.node.res.statusCode
 
-            db.collection('http-logs').insertOne({
-                method,
-                url,
-                status,
-                duration,
-                time: new Date(),
-            }).catch(() => {})
-        }).catch(() => {})
+                db.collection('http-logs')
+                    .insertOne({
+                        method,
+                        url,
+                        status,
+                        duration,
+                        time: new Date(),
+                    })
+                    .catch(() => {})
+            })
+            .catch(() => {})
     })
 })

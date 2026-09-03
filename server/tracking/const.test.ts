@@ -3,7 +3,9 @@ import { isValidTrackingSessionKey } from './const'
 
 describe('tracking session key validation', () => {
     it('accepts UUID-shaped session keys', () => {
-        expect(isValidTrackingSessionKey('123e4567-e89b-12d3-a456-426614174000')).toBe(true)
+        expect(
+            isValidTrackingSessionKey('123e4567-e89b-12d3-a456-426614174000')
+        ).toBe(true)
     })
 
     it('rejects malformed session keys', () => {

@@ -24,24 +24,25 @@ Card tokenization and wallet management operations.
 
 ```json
 {
-  "wallet": [
-    {
-      "cardToken": "67XZtXdR4NpKU3",
-      "maskedPan": "424242******4242",
-      "country": "804"
-    }
-  ]
+    "wallet": [
+        {
+            "cardToken": "67XZtXdR4NpKU3",
+            "maskedPan": "424242******4242",
+            "country": "804"
+        }
+    ]
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| wallet | []WalletItem | yes | List of tokenized cards |
-| wallet[].cardToken | string | yes | Card token. Example: `67XZtXdR4NpKU3` |
-| wallet[].maskedPan | string | yes | Masked card number. Example: `424242******4242` |
-| wallet[].country | string | no | Bank country (ISO 3166-1 numeric). Example: `804` |
+| Field              | Type         | Required | Description                                       |
+| ------------------ | ------------ | -------- | ------------------------------------------------- |
+| wallet             | []WalletItem | yes      | List of tokenized cards                           |
+| wallet[].cardToken | string       | yes      | Card token. Example: `67XZtXdR4NpKU3`             |
+| wallet[].maskedPan | string       | yes      | Masked card number. Example: `424242******4242`   |
+| wallet[].country   | string       | no       | Bank country (ISO 3166-1 numeric). Example: `804` |
 
 ### Errors
+
 400, 403, 405, 429, 500 — see common errors in SKILL.md
 
 ---
@@ -67,4 +68,5 @@ Card tokenization and wallet management operations.
 Empty response (card deleted).
 
 ### Errors
+
 400, 403, 405, 429, 500 — see common errors in SKILL.md

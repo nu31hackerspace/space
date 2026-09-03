@@ -1,5 +1,5 @@
 import { defineEventHandler, deleteCookie, useNitroApp } from '#imports'
-import { UserSession } from '~~/server/core/user/user'
+import type { UserSession } from '~~/server/core/user/user'
 
 export default defineEventHandler(async (event) => {
     const userSession = event.context.user as UserSession | undefined
@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     if (!userSession) {
         return {
             success: false,
-            message: 'No active session found'
+            message: 'No active session found',
         }
     }
 
@@ -17,8 +17,8 @@ export default defineEventHandler(async (event) => {
         { id: userSession.userId },
         {
             $pull: {
-                sessions: { sessionKey: userSession.sessionKey }
-            } as any
+                sessions: { sessionKey: userSession.sessionKey },
+            } as any,
         }
     )
 
@@ -26,7 +26,6 @@ export default defineEventHandler(async (event) => {
 
     return {
         success: true,
-        message: 'Logged out successfully'
+        message: 'Logged out successfully',
     }
 })
-

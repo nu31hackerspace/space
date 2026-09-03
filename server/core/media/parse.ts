@@ -5,11 +5,15 @@ export interface MediaMetadata {
     imageUrl: string
 }
 
-export async function extractMetadataFromUrl(url: string): Promise<MediaMetadata> {
+export async function extractMetadataFromUrl(
+    url: string
+): Promise<MediaMetadata> {
     const logger = useNitroApp().logger
 
     // Handle YouTube URLs
-    const youtubeMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)
+    const youtubeMatch = url.match(
+        /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+    )
     if (youtubeMatch) {
         const videoId = youtubeMatch[1]
         const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
@@ -22,7 +26,7 @@ export async function extractMetadataFromUrl(url: string): Promise<MediaMetadata
                 const oembedData = await oembedResponse.json()
                 return {
                     title: oembedData.title || 'YouTube Video',
-                    imageUrl: thumbnailUrl
+                    imageUrl: thumbnailUrl,
                 }
             }
         } catch (error) {
@@ -31,7 +35,7 @@ export async function extractMetadataFromUrl(url: string): Promise<MediaMetadata
 
         return {
             title: 'YouTube Video',
-            imageUrl: thumbnailUrl
+            imageUrl: thumbnailUrl,
         }
     }
 
@@ -40,25 +44,30 @@ export async function extractMetadataFromUrl(url: string): Promise<MediaMetadata
     try {
         const response = await fetch(url, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
+                'User-Agent':
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            },
         })
 
         if (!response.ok) {
-            throw new Error(`Failed to fetch URL: ${response.status} ${response.statusText}`)
+            throw new Error(
+                `Failed to fetch URL: ${response.status} ${response.statusText}`
+            )
         }
 
         html = await response.text()
     } catch (error) {
         logger.error('Failed to fetch HTML from URL:', error)
-        throw new Error(`Failed to fetch URL: ${error instanceof Error ? error.message : 'Unknown error'}`)
+        throw new Error(
+            `Failed to fetch URL: ${error instanceof Error ? error.message : 'Unknown error'}`
+        )
     }
 
     // Extract title
-    let title = extractTitle(html, url)
+    const title = extractTitle(html, url)
 
     // Extract image
-    let imageUrl = extractImageUrl(html, url)
+    const imageUrl = extractImageUrl(html, url)
 
     if (!imageUrl) {
         throw new Error('No image found on the page')
@@ -71,12 +80,16 @@ function extractTitle(html: string, baseUrl: string): string {
     let title = ''
 
     // Try Open Graph title
-    const ogTitleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i)
+    const ogTitleMatch = html.match(
+        /<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i
+    )
     if (ogTitleMatch) {
         title = ogTitleMatch[1].trim()
     } else {
         // Try Twitter Card title
-        const twitterTitleMatch = html.match(/<meta\s+name=["']twitter:title["']\s+content=["']([^"']+)["']/i)
+        const twitterTitleMatch = html.match(
+            /<meta\s+name=["']twitter:title["']\s+content=["']([^"']+)["']/i
+        )
         if (twitterTitleMatch) {
             title = twitterTitleMatch[1].trim()
         } else {
@@ -140,13 +153,17 @@ function decodeHtmlEntities(text: string): string {
 
 function extractImageUrl(html: string, baseUrl: string): string | null {
     // Try Open Graph image
-    const ogImageMatch = html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i)
+    const ogImageMatch = html.match(
+        /<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i
+    )
     if (ogImageMatch) {
         return resolveUrl(ogImageMatch[1], baseUrl)
     }
 
     // Try Twitter Card image
-    const twitterImageMatch = html.match(/<meta\s+name=["']twitter:image["']\s+content=["']([^"']+)["']/i)
+    const twitterImageMatch = html.match(
+        /<meta\s+name=["']twitter:image["']\s+content=["']([^"']+)["']/i
+    )
     if (twitterImageMatch) {
         return resolveUrl(twitterImageMatch[1], baseUrl)
     }
@@ -204,4 +221,3 @@ function resolveUrl(url: string, baseUrl: string): string {
         return url
     }
 }
-

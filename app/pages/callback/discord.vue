@@ -93,7 +93,7 @@
                                     <MainButton
                                         v-if="!step1Complete"
                                         class="w-full md:w-auto"
-                                        buttonStyle="primary"
+                                        button-style="primary"
                                         size="M"
                                         link="https://discord.gg/X93qAG2jH6"
                                         icon="ic:baseline-discord"
@@ -158,7 +158,7 @@
                     <div class="space-y-4 pt-8">
                         <MainButton
                             class="justify-center w-full md:w-auto"
-                            buttonStyle="primary"
+                            button-style="primary"
                             size="L"
                             :link="redirectUriData?.redirectUri"
                         >
@@ -168,7 +168,7 @@
                         <div class="pt-4">
                             <MainButton
                                 class="justify-center w-full md:w-auto"
-                                buttonStyle="secondary"
+                                button-style="secondary"
                                 size="M"
                                 link="/"
                             >
@@ -205,8 +205,8 @@
                             Виникла непередбачувана помилка під час авторизації.
                         </p>
                         <p
-                            class="text-lg text-label-secondary"
                             v-if="errorMessage"
+                            class="text-lg text-label-secondary"
                         >
                             {{ errorMessage }}
                         </p>
@@ -215,7 +215,7 @@
                     <div class="flex flex-col gap-4">
                         <MainButton
                             class="w-full md:w-auto"
-                            buttonStyle="primary"
+                            button-style="primary"
                             size="L"
                             :link="redirectUriData?.redirectUri"
                         >
@@ -223,7 +223,7 @@
                         </MainButton>
                         <MainButton
                             class="w-full md:w-auto"
-                            buttonStyle="secondary"
+                            button-style="secondary"
                             size="M"
                             link="/"
                         >

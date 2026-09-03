@@ -1,7 +1,7 @@
 import { createError, defineEventHandler } from '#imports'
 import { COUNTRY_HEADER_NAME } from '~~/server/tracking/const'
 
-const blockedCountries = ["RU", "BY"]
+const blockedCountries = ['RU', 'BY']
 
 export default defineEventHandler((event) => {
     const country = event.node.req.headers[COUNTRY_HEADER_NAME] as string
@@ -9,7 +9,7 @@ export default defineEventHandler((event) => {
     if (blockedCountries.includes(country)) {
         throw createError({
             statusCode: 403,
-            statusMessage: 'Forbidden'
+            statusMessage: 'Forbidden',
         })
     }
 })

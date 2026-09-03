@@ -1,4 +1,4 @@
-import { useNitroApp } from "#imports"
+import { useNitroApp } from '#imports'
 
 export type TrackDBRecord = {
     action: string
