@@ -48,35 +48,10 @@ definePageMeta({
 
 const cards = [
     {
-        route: '/design',
-        icon: 'mdi:palette',
-        title: 'Подивитися на дизайн систему',
-        description: 'Вивчити компоненти та стилі дизайн системи',
-    },
-    {
-        route: '/electricity',
-        icon: 'mdi:lightning-bolt',
-        title: 'Подивитися електроенергію',
-        description: 'Переглянути електроенергію всіх учасників спільноти',
-    },
-
-    {
         route: '/admin/media',
         icon: 'mdi:newspaper-variant',
         title: 'Медіа про нас',
         description: 'Керування медіа постами для головної сторінки',
-    },
-    {
-        route: '/admin/gallery',
-        icon: 'mdi:image-multiple',
-        title: 'Галерея',
-        description: 'Керування зображеннями галереї',
-    },
-    {
-        route: '/admin/mqtt',
-        icon: 'mdi:access-point-network',
-        title: 'MQTT',
-        description: 'Керування MQTT',
     },
     {
         route: '/admin/merch',

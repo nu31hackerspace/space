@@ -62,21 +62,6 @@ async function createIndexes(db: Db, logger: any) {
             }
         )
 
-        await db.collection('electricity_trackers').createIndex(
-            { slug: 1 },
-            {
-                unique: true,
-                name: 'unique_electricity_tracker_slug',
-            }
-        )
-
-        await db
-            .collection('electricity_tracker_alive')
-            .createIndex(
-                { deviceSlug: 1, timestamp: -1 },
-                { name: 'deviceSlug_timestamp_desc' }
-            )
-
         // The order reference is the public handle on an order — it is what the
         // result page looks up and what the payment status writes through, so
         // a duplicate would let one payment settle two orders.

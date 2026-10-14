@@ -17,11 +17,6 @@
                         HACKER SPACE NU31
                     </span>
                 </NuxtLink>
-                <MainBadge
-                    v-if="!isLoading && status"
-                    :variant="badgeVariant"
-                    :label="badgeLabel"
-                />
             </div>
             <nav class="flex items-center space-x-6">
                 <NuxtLink
@@ -73,14 +68,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useUser } from '~/composables/useUser'
-import { useElectricityStatus } from '~/composables/useElectricityStatus'
 
 const { user, isLoggedIn, avatarUrl } = useUser()
-const { status, isLoading, badgeVariant, badgeLabel, fetchStatus } =
-    useElectricityStatus()
 
 onMounted(() => {
     useUser().fetchUser()
-    fetchStatus()
 })
 </script>

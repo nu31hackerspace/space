@@ -14,7 +14,6 @@ env:
         DISCORD_GUILD_MEMBER_ROLE_ID
         DISCORD_GUILD_ID
         JWT_SECRET
-        SPACE_ELECTRICITY_TRACKER_SLUG
         MQTT_USER
         MQTT_PASS
         MQTT_HOST
@@ -33,7 +32,6 @@ env:
     DISCORD_GUILD_MEMBER_ROLE_ID: ${{ vars.DISCORD_GUILD_MEMBER_ROLE_ID }}
     DISCORD_GUILD_ID: ${{ vars.DISCORD_GUILD_ID }}
     JWT_SECRET: ${{ secrets.JWT_SECRET }}
-    SPACE_ELECTRICITY_TRACKER_SLUG: ${{ vars.SPACE_ELECTRICITY_TRACKER_SLUG }}
 
     # Docker image configuration
     IMAGE_NAME: nu31hackerspace/space

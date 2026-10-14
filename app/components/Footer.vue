@@ -77,6 +77,14 @@
                                 Контакти / Contact
                             </NuxtLink>
                         </li>
+                        <li>
+                            <NuxtLink
+                                to="/design"
+                                class="text-sm text-label-secondary hover:text-accent-primary transition-colors"
+                            >
+                                Дизайн система / Design system
+                            </NuxtLink>
+                        </li>
                     </ul>
                 </div>
 

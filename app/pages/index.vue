@@ -3,14 +3,7 @@
         <div
             class="container mx-auto px-4 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
         >
-            <div class="w-full sm:w-auto">
-                <MainBadge
-                    v-if="!electricityLoading && electricityStatus"
-                    :variant="electricityBadgeVariant"
-                    :label="electricityBadgeLabel"
-                    class="w-full sm:w-auto mb-4 sm:mb-0"
-                />
-            </div>
+            <div class="w-full sm:w-auto"></div>
 
             <div
                 class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row"
@@ -336,10 +329,7 @@
                 </div>
             </div>
 
-            <div
-                v-if="galleryImages && galleryImages.length > 0"
-                class="mb-20"
-            >
+            <div class="mb-20">
                 <h2
                     class="text-3xl font-bold mb-8 text-center text-accent-primary"
                 >
@@ -354,8 +344,8 @@
                         "
                     >
                         <div
-                            v-for="image in galleryImages"
-                            :key="image.id"
+                            v-for="src in galleryImages"
+                            :key="src"
                             class="flex-shrink-0"
                             style="scroll-snap-align: start"
                         >
@@ -363,8 +353,8 @@
                                 class="w-64 h-64 md:w-80 md:h-80 rounded-xl overflow-hidden bg-fill-tertiary border border-separator-primary"
                             >
                                 <img
-                                    :src="`/api/gallery/image/${image.imageFilename}`"
-                                    :alt="image.altText || 'Gallery image'"
+                                    :src="src"
+                                    alt="Gallery image"
                                     class="w-full h-full object-cover"
                                     loading="lazy"
                                 />
@@ -427,7 +417,6 @@ import { definePageMeta, navigateTo, useHead, useFetch } from '#imports'
 import { onMounted } from 'vue'
 import { trackEvent } from '~~/app/utils/track'
 import { useUser } from '~/composables/useUser'
-import { useElectricityStatus } from '~/composables/useElectricityStatus'
 import { useTheme } from '~/composables/useTheme'
 
 import type { MerchProduct } from '~~/shared/types/merch'
@@ -449,14 +438,6 @@ const { data } = await useFetch<{ redirectUri: string }>(
     '/api/auth/discord/redirect'
 )
 
-const {
-    status: electricityStatus,
-    isLoading: electricityLoading,
-    badgeVariant: electricityBadgeVariant,
-    badgeLabel: electricityBadgeLabel,
-    fetchStatus: fetchElectricityStatus,
-} = useElectricityStatus()
-
 const { theme } = useTheme()
 
 const { data: mediaPosts } = await useFetch<
@@ -469,14 +450,11 @@ const { data: mediaPosts } = await useFetch<
     }>
 >('/api/media')
 
-const { data: galleryImages } = await useFetch<
-    Array<{
-        id: string
-        imageFilename: string
-        altText: string
-        createdAt: string
-    }>
->('/api/gallery')
+// Static photos served from public/img/gallery, shown in this order.
+const galleryImages = Array.from(
+    { length: 27 },
+    (_, i) => `/img/gallery/${String(i + 1).padStart(2, '0')}.jpg`
+)
 
 const { data: merchProducts } = await useFetch<MerchProduct[]>(
     '/api/merch/products'
@@ -495,7 +473,5 @@ onMounted(async () => {
         console.log('isLoggedIn', isLoggedIn)
         navigateTo('/home')
     }
-
-    fetchElectricityStatus()
 })
 </script>

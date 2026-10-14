@@ -6,7 +6,7 @@ This file provides guidance to AI coding agents working with code in this reposi
 
 The website and backend for **NU31 Hacker Space** (https://nu31.space), a Ukrainian nonprofit. It is a single **Nuxt 4** application that serves both the frontend (Vue 3) and the API (Nitro server). One repo, one deployable. Persistence is **MongoDB** (no migrations — collections and indexes are created on boot). The project's stated philosophy is to keep the code simple enough that many people can contribute. The README is in Ukrainian.
 
-Notable integrations: **Discord** (OAuth login, member sync), **MQTT** (broker management + an electricity/blackout tracker), and **GridFS** image storage.
+Notable integrations: **Discord** (OAuth login, member sync), **MQTT** (broker connection and Dynamic Security user/ACL management), and **GridFS** image storage.
 
 ## Commands
 
@@ -74,15 +74,15 @@ docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:lat
 
 ### Data access
 
-MongoDB is reached through `useNitroApp().db` (or `requireDatabase(...)`). Images are stored in **GridFS** via `nitroApp.fileStores`, with one bucket per `FileStoreType` (user avatars, media images, gallery images — see `server/plugins/3_file_store.ts`). Avatars/images are served back through dedicated API routes that stream from GridFS.
+MongoDB is reached through `useNitroApp().db` (or `requireDatabase(...)`). Images are stored in **GridFS** via `nitroApp.fileStores`, with one bucket per `FileStoreType` (user avatars, media images, merch product images — see `server/plugins/3_file_store.ts`). Avatars/images are served back through dedicated API routes that stream from GridFS.
 
 ### Auth
 
 Discord OAuth: the callback exchanges the code for a token (`server/core/discord/auth.ts`), a user record + session is created, and a signed **JWT is set as the `jwt` cookie**. The `4_auth` middleware validates it on every request. On the client, `app/composables/useUser.ts` fetches `/api/user/me`, and `app/middleware/auth.ts` redirects anonymous users away from protected pages.
 
-### MQTT & electricity tracker
+### MQTT
 
-`server/plugins/mqtt.ts` opens one broker connection, subscribes to `#` to track active topics in-memory (`server/utils/mqttStore.ts`), and implements a queued **Dynamic Security** (`$CONTROL/dynamic-security`) request/response flow used by the admin UI to manage MQTT users and ACLs. The electricity tracker (`server/api/electricty_tracker/*`, `electricity_trackers` + `electricity_tracker_alive` collections) records device heartbeats to report power/blackout status.
+`server/plugins/mqtt.ts` opens one broker connection, subscribes to `#` to track active topics in-memory (`server/utils/mqttStore.ts`), and implements a queued **Dynamic Security** (`$CONTROL/dynamic-security`) request/response flow used by the admin UI to manage MQTT users and ACLs.
 
 ## Deploy
 

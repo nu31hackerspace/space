@@ -45,8 +45,7 @@
                 </h3>
                 <p class="text-label-primary">
                     The website itself, including resident login via Discord,
-                    member-tracking utilities, an electricity-status indicator
-                    for the physical space, and an events feed, is built and
+                    member-tracking utilities, and an events feed, is built and
                     maintained by NU31 members as an open-source project.
                 </p>
             </article>

@@ -305,7 +305,7 @@ async function createProduct() {
         formData.append('price', form.value.price)
 
         // fetch, not $fetch: FormData needs the browser to set the multipart
-        // boundary itself, matching how the gallery admin uploads.
+        // boundary itself.
         const response = await fetch('/api/merch/products', {
             method: 'POST',
             body: formData,
