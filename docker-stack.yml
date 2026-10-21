@@ -10,22 +10,12 @@ services:
             - NUXT_PUBLIC_GIT_COMMIT_SHA=${GIT_COMMIT_HASH}
             - NUXT_PUBLIC_BASE_URL=https://nu31.space
             - NUXT_MONGO_URI=${MONGO_URI}
-            - NUXT_PUBLIC_DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
-            - NUXT_PUBLIC_DISCORD_GUILD_ID=${DISCORD_GUILD_ID}
-            - NUXT_PUBLIC_DISCORD_GUILD_MEMBER_ROLE_ID=${DISCORD_GUILD_MEMBER_ROLE_ID}
-            - NUXT_DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
-            - NUXT_DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
-            - NUXT_JWT_SECRET=${JWT_SECRET}
-            - NUXT_PUBLIC_MQTT_HOST=${MQTT_HOST}
-            - NUXT_PUBLIC_MQTT_USER=${MQTT_USER}
-            - NUXT_MQTT_PASS=${MQTT_PASS}
         deploy:
             update_config:
                 order: start-first
         networks:
             - infra_reverse-proxy
             - infra_mongo-rs-net
-            - infra_mqtt-net
         healthcheck:
             test:
                 [
@@ -43,6 +33,4 @@ networks:
     infra_reverse-proxy:
         external: true
     infra_mongo-rs-net:
-        external: true
-    infra_mqtt-net:
         external: true

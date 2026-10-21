@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { pingDatabase, requireDatabase, waitForDatabase } from './database'
+import { pingDatabase, requireDatabase } from './database'
 
 describe('runtime database helpers', () => {
     it('throws a 503 error when database is not ready', () => {
@@ -24,19 +24,5 @@ describe('runtime database helpers', () => {
         }
 
         await expect(pingDatabase({ db })).resolves.toBe(true)
-    })
-
-    it('waits for an already ready database', async () => {
-        const db = { command: async () => ({ ok: 1 }) }
-
-        await expect(
-            waitForDatabase({ db }, { maxWaitTimeMs: 1, checkIntervalMs: 1 })
-        ).resolves.toBe(true)
-    })
-
-    it('returns false when database does not become ready in time', async () => {
-        await expect(
-            waitForDatabase({}, { maxWaitTimeMs: 5, checkIntervalMs: 1 })
-        ).resolves.toBe(false)
     })
 })

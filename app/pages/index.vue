@@ -8,14 +8,6 @@
             <div
                 class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row"
             >
-                <MainButton
-                    button-style="primary"
-                    size="M"
-                    icon="ic:baseline-discord"
-                    label="Вхід для резидентів"
-                    :link="data?.redirectUri"
-                    class="w-full sm:w-auto"
-                />
                 <ThemeSwitch />
             </div>
         </div>
@@ -299,10 +291,7 @@
                 </MainButton>
             </div>
 
-            <div
-                v-if="mediaPosts && mediaPosts.length > 0"
-                class="mb-20"
-            >
+            <div class="mb-20">
                 <h2
                     class="text-3xl font-bold mb-8 text-center text-accent-primary"
                 >
@@ -313,14 +302,10 @@
                 >
                     <MediaPostCard
                         v-for="post in mediaPosts"
-                        :key="post.id"
+                        :key="post.sourceUrl"
                         :title="post.title"
                         :source-url="post.sourceUrl"
-                        :image-url="
-                            post.imageFilename
-                                ? `/api/media/image/${post.imageFilename}`
-                                : undefined
-                        "
+                        :image-url="post.imageUrl"
                     />
                 </div>
             </div>
@@ -409,13 +394,13 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, navigateTo, useHead, useFetch } from '#imports'
+import { definePageMeta, useHead } from '#imports'
 import { onMounted } from 'vue'
 import { trackEvent } from '~~/app/utils/track'
-import { useUser } from '~/composables/useUser'
 import { useTheme } from '~/composables/useTheme'
 
 import { MERCH_PRODUCTS as merchProducts, formatPrice } from '~~/shared/merch'
+import { MEDIA_POSTS as mediaPosts } from '~~/shared/media'
 
 useHead({
     script: [
@@ -429,21 +414,7 @@ definePageMeta({
     layout: 'void',
 })
 
-const { data } = await useFetch<{ redirectUri: string }>(
-    '/api/auth/discord/redirect'
-)
-
 const { theme } = useTheme()
-
-const { data: mediaPosts } = await useFetch<
-    Array<{
-        id: string
-        title: string
-        sourceUrl: string
-        imageFilename: string
-        createdAt: string
-    }>
->('/api/media')
 
 // Static photos served from public/img/gallery, shown in this order.
 const galleryImages = Array.from(
@@ -457,12 +428,5 @@ Kyiv; Kyiv 04080`
 
 onMounted(async () => {
     trackEvent('page_view', { page: 'landing' })
-
-    const { isLoggedIn, fetchUser } = useUser()
-    await fetchUser()
-    if (isLoggedIn.value) {
-        console.log('isLoggedIn', isLoggedIn)
-        navigateTo('/home')
-    }
 })
 </script>

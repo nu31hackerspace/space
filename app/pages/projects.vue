@@ -44,9 +44,8 @@
                     nu31.space — community platform
                 </h3>
                 <p class="text-label-primary">
-                    The website itself, including resident login via Discord,
-                    member-tracking utilities, and an events feed, is built and
-                    maintained by NU31 members as an open-source project.
+                    The website itself is built and maintained by NU31 members
+                    as an open-source project.
                 </p>
             </article>
         </section>

@@ -5,11 +5,6 @@ interface NitroAppWithOptionalDb {
     db?: Db
 }
 
-interface WaitOptions {
-    maxWaitTimeMs?: number
-    checkIntervalMs?: number
-}
-
 export function requireDatabase(nitroApp: NitroAppWithOptionalDb): Db {
     if (!nitroApp.db) {
         throw createError({
@@ -34,23 +29,4 @@ export async function pingDatabase(
     } catch {
         return false
     }
-}
-
-export async function waitForDatabase(
-    nitroApp: NitroAppWithOptionalDb,
-    options: WaitOptions = {}
-): Promise<boolean> {
-    const maxWaitTimeMs = options.maxWaitTimeMs ?? 10000
-    const checkIntervalMs = options.checkIntervalMs ?? 50
-    const startTime = Date.now()
-
-    while (!nitroApp.db) {
-        if (Date.now() - startTime > maxWaitTimeMs) {
-            return false
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, checkIntervalMs))
-    }
-
-    return true
 }

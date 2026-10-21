@@ -1,4 +1,5 @@
 import { useNitroApp } from '#imports'
+import { requireDatabase } from '~~/server/core/runtime/database'
 
 export type TrackDBRecord = {
     action: string
@@ -9,6 +10,5 @@ export type TrackDBRecord = {
 }
 
 export function saveTrackRecordInBackground(record: TrackDBRecord) {
-    const nitroApp = useNitroApp()
-    nitroApp.db.collection('tracking').insertOne(record)
+    requireDatabase(useNitroApp()).collection('tracking').insertOne(record)
 }

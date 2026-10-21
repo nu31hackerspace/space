@@ -8,25 +8,10 @@ on:
 env:
     ENV_KEYS: >-
         MONGO_URI
-        DISCORD_CLIENT_ID
-        DISCORD_CLIENT_SECRET
-        DISCORD_BOT_TOKEN
-        DISCORD_GUILD_MEMBER_ROLE_ID
-        DISCORD_GUILD_ID
-        JWT_SECRET
-        MQTT_USER
-        MQTT_PASS
-        MQTT_HOST
 
     # Application environment variables
     GIT_COMMIT_SHA: ${{ github.sha }}
     MONGO_URI: ${{ secrets.MONGO_URI }}
-    DISCORD_CLIENT_ID: ${{ vars.DISCORD_CLIENT_ID }}
-    DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
-    DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-    DISCORD_GUILD_MEMBER_ROLE_ID: ${{ vars.DISCORD_GUILD_MEMBER_ROLE_ID }}
-    DISCORD_GUILD_ID: ${{ vars.DISCORD_GUILD_ID }}
-    JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     # Docker image configuration
     IMAGE_NAME: nu31hackerspace/space
@@ -37,10 +22,6 @@ env:
     DEPLOY_USER: ${{ vars.USERNAME }}
     HOST: ${{ vars.HOST }}
     DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.ROOT_SSH_PRIVATE_KEY }}
-
-    MQTT_USER: ${{ vars.USERNAME }}
-    MQTT_PASS: ${{ secrets.PASSWORD }}
-    MQTT_HOST: ${{ vars.MQTT_HOST }}
 
 jobs:
     build-and-push-image:
