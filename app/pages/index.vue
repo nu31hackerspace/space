@@ -199,7 +199,7 @@
                                 <MainButton
                                     button-style="primary"
                                     size="M"
-                                    label="Купити"
+                                    label="Отримати"
                                     class="w-full justify-center"
                                     :link="`/merch/${product.slug}`"
                                 />
