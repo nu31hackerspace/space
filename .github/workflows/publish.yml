@@ -17,11 +17,6 @@ env:
         MQTT_USER
         MQTT_PASS
         MQTT_HOST
-        MONOBANK_TOKEN
-        NOVA_POSHTA_API_KEY
-        RESEND_TOKEN
-        RESEND_FROM
-        ORDER_CHANNEL_ID
 
     # Application environment variables
     GIT_COMMIT_SHA: ${{ github.sha }}
@@ -46,11 +41,6 @@ env:
     MQTT_USER: ${{ vars.USERNAME }}
     MQTT_PASS: ${{ secrets.PASSWORD }}
     MQTT_HOST: ${{ vars.MQTT_HOST }}
-    MONOBANK_TOKEN: ${{ secrets.MONOBANK_TOKEN }}
-    NOVA_POSHTA_API_KEY: ${{ secrets.NOVA_POSHTA_API_KEY }}
-    RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
-    RESEND_FROM: ${{ vars.RESEND_FROM }}
-    ORDER_CHANNEL_ID: ${{ vars.ORDER_CHANNEL_ID }}
 
 jobs:
     build-and-push-image:

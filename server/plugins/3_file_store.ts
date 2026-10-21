@@ -5,7 +5,6 @@ import { waitForDatabase } from '~~/server/core/runtime/database'
 export enum FileStoreType {
     UserAvatar = 'user_avatar',
     MediaPostImage = 'media_post_image',
-    MerchProductImage = 'merch_product_image',
     Other = 'other',
 }
 

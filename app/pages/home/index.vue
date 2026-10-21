@@ -53,12 +53,6 @@ const cards = [
         title: 'Медіа про нас',
         description: 'Керування медіа постами для головної сторінки',
     },
-    {
-        route: '/admin/merch',
-        icon: 'mdi:tshirt-crew',
-        title: 'Мерч',
-        description: 'Додавання товарів та список замовлень',
-    },
 ]
 
 onMounted(() => {

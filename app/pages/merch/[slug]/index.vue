@@ -8,22 +8,8 @@
                 ← Весь мерч
             </NuxtLink>
 
-            <div
-                v-if="pending"
-                class="text-label-secondary py-12 text-center"
-            >
-                Завантаження…
-            </div>
-
-            <div
-                v-else-if="!product"
-                class="text-label-secondary py-12 text-center"
-            >
-                Такого товару немає.
-            </div>
-
             <article
-                v-else
+                v-if="product"
                 class="mt-6 flex flex-col md:flex-row gap-8"
             >
                 <div class="md:w-1/2 flex flex-col gap-3">
@@ -32,7 +18,7 @@
                     >
                         <img
                             v-if="currentImage"
-                            :src="`/api/merch/products/image/${currentImage}`"
+                            :src="currentImage"
                             :alt="`${product.name} — фото ${currentIndex + 1}`"
                             class="w-full h-full object-cover"
                         />
@@ -67,8 +53,8 @@
                         class="flex gap-2 overflow-x-auto"
                     >
                         <button
-                            v-for="(filename, index) in images"
-                            :key="filename"
+                            v-for="(image, index) in images"
+                            :key="image"
                             type="button"
                             :class="[
                                 'shrink-0 w-16 h-16 rounded-lg overflow-hidden border transition-opacity',
@@ -79,7 +65,7 @@
                             @click="currentIndex = index"
                         >
                             <img
-                                :src="`/api/merch/products/image/${filename}`"
+                                :src="image"
                                 :alt="`${product.name} — мініатюра ${index + 1}`"
                                 loading="lazy"
                                 class="w-full h-full object-cover"
@@ -94,7 +80,7 @@
                     </h1>
 
                     <p class="text-2xl font-bold text-label-primary">
-                        {{ formatPrice(product.priceKopecks) }}
+                        {{ formatPrice(product.priceUah) }}
                     </p>
 
                     <p
@@ -110,22 +96,55 @@
                         label="Немає в наявності"
                     />
 
-                    <div v-else>
+                    <section
+                        v-else
+                        class="flex flex-col gap-4 bg-fill-secondary border border-separator-primary rounded-xl p-5"
+                    >
+                        <h2 class="text-lg font-bold text-label-primary">
+                            Як замовити
+                        </h2>
+
+                        <ol
+                            class="list-decimal pl-5 flex flex-col gap-3 text-label-secondary"
+                        >
+                            <li>
+                                Задонать
+                                <span class="font-bold text-label-primary">
+                                    {{ formatPrice(product.priceUah) }}
+                                </span>
+                                за 1 штуку в банку monobank. Якщо хочеш кілька,
+                                помнож ціну на кількість: за 2 штуки —
+                                {{ formatPrice(product.priceUah * 2) }}.
+                            </li>
+                            <li>
+                                У коментарі до донату напиши
+                                <span class="text-label-primary">
+                                    прізвище та ім'я, номер телефону, місто та
+                                    номер відділення Нової Пошти
+                                </span>
+                                — це потрібно для відправки. Наприклад:
+                                <code
+                                    class="block mt-2 px-3 py-2 rounded bg-fill-tertiary text-label-primary text-sm break-all"
+                                >
+                                    {{ DONATION_COMMENT_EXAMPLE }}
+                                </code>
+                            </li>
+                            <li>
+                                Ми відправимо замовлення Новою Поштою на вказане
+                                відділення.
+                            </li>
+                        </ol>
+
                         <MainButton
                             button-style="primary"
                             size="L"
-                            label="Купити"
-                            @click="
-                                navigateTo(
-                                    `/merch/${route.params.slug}/checkout`
-                                )
-                            "
-                        />
-                    </div>
-
-                    <p class="text-xs text-label-tertiary">
-                        Доставка Новою Поштою, оплата карткою через monobank.
-                    </p>
+                            :link="MERCH_JAR_URL"
+                            icon="mdi:bank"
+                            class="justify-center"
+                        >
+                            Задонатити {{ formatPrice(product.priceUah) }}
+                        </MainButton>
+                    </section>
                 </div>
             </article>
         </div>
@@ -133,21 +152,26 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useFetch, useRoute, navigateTo } from '#imports'
+import { createError, definePageMeta, useRoute } from '#imports'
 import { computed, ref } from 'vue'
-import type { MerchProduct } from '~~/shared/types/merch'
-import { formatPrice } from '~~/shared/merch'
+import {
+    DONATION_COMMENT_EXAMPLE,
+    MERCH_JAR_URL,
+    findMerchProduct,
+    formatPrice,
+} from '~~/shared/merch'
 
 definePageMeta({ layout: 'default' })
 
 const route = useRoute()
 
-const { data, pending } = await useFetch<MerchProduct>(
-    () => `/api/merch/products/${route.params.slug}`
-)
+const product = computed(() => findMerchProduct(String(route.params.slug)))
 
-const product = computed(() => data.value || null)
-const images = computed(() => product.value?.imageFilenames || [])
+if (!product.value) {
+    throw createError({ statusCode: 404, statusMessage: 'Product not found' })
+}
+
+const images = computed(() => product.value?.images || [])
 
 const currentIndex = ref(0)
 const currentImage = computed(() => images.value[currentIndex.value] || '')

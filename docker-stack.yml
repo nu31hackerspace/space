@@ -19,11 +19,6 @@ services:
             - NUXT_PUBLIC_MQTT_HOST=${MQTT_HOST}
             - NUXT_PUBLIC_MQTT_USER=${MQTT_USER}
             - NUXT_MQTT_PASS=${MQTT_PASS}
-            - NUXT_MONOBANK_TOKEN=${MONOBANK_TOKEN}
-            - NUXT_NOVA_POSHTA_API_KEY=${NOVA_POSHTA_API_KEY}
-            - NUXT_RESEND_TOKEN=${RESEND_TOKEN}
-            - NUXT_RESEND_FROM=${RESEND_FROM}
-            - NUXT_ORDER_CHANNEL_ID=${ORDER_CHANNEL_ID}
         deploy:
             update_config:
                 order: start-first

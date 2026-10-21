@@ -30,7 +30,7 @@ npm run lint           # eslint .             (lint:fix to autofix)
 # lint errors (mostly `@typescript-eslint/no-explicit-any` and unused vars).
 
 npm test               # vitest in WATCH mode
-npx vitest run         # single pass, use in CI (currently 18 files / 110 tests, green)
+npx vitest run         # single pass, use in CI (currently 6 files / 32 tests, green)
 npx vitest run server/core/content/parse.test.ts   # one file
 npx vitest run -t "parses h1 header"               # one test by name
 ```
@@ -74,7 +74,7 @@ docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:lat
 
 ### Data access
 
-MongoDB is reached through `useNitroApp().db` (or `requireDatabase(...)`). Images are stored in **GridFS** via `nitroApp.fileStores`, with one bucket per `FileStoreType` (user avatars, media images, merch product images — see `server/plugins/3_file_store.ts`). Avatars/images are served back through dedicated API routes that stream from GridFS.
+MongoDB is reached through `useNitroApp().db` (or `requireDatabase(...)`). Images are stored in **GridFS** via `nitroApp.fileStores`, with one bucket per `FileStoreType` (user avatars, media images — see `server/plugins/3_file_store.ts`). Avatars/images are served back through dedicated API routes that stream from GridFS.
 
 ### Auth
 

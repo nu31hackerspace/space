@@ -145,7 +145,7 @@
             </div>
 
             <div
-                v-if="merchProducts && merchProducts.length > 0"
+                v-if="merchProducts.length > 0"
                 class="mb-20"
             >
                 <h2
@@ -163,7 +163,7 @@
                     >
                         <article
                             v-for="product in merchProducts"
-                            :key="product.id"
+                            :key="product.slug"
                             class="flex flex-col flex-shrink-0 w-64 md:w-72"
                             style="scroll-snap-align: start"
                         >
@@ -175,8 +175,8 @@
                                     class="aspect-square rounded-xl overflow-hidden bg-fill-tertiary border border-separator-primary"
                                 >
                                     <img
-                                        v-if="product.imageFilenames.length"
-                                        :src="`/api/merch/products/image/${product.imageFilenames[0]}`"
+                                        v-if="product.images.length"
+                                        :src="product.images[0]"
                                         :alt="product.name"
                                         loading="lazy"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -192,7 +192,7 @@
                             <p
                                 class="mt-1 text-lg font-bold text-accent-primary"
                             >
-                                {{ formatPrice(product.priceKopecks) }}
+                                {{ formatPrice(product.priceUah) }}
                             </p>
 
                             <div class="mt-auto pt-3">
@@ -201,11 +201,7 @@
                                     size="M"
                                     label="Купити"
                                     class="w-full justify-center"
-                                    @click="
-                                        navigateTo(
-                                            `/merch/${product.slug}/checkout`
-                                        )
-                                    "
+                                    :link="`/merch/${product.slug}`"
                                 />
                             </div>
                         </article>
@@ -419,8 +415,7 @@ import { trackEvent } from '~~/app/utils/track'
 import { useUser } from '~/composables/useUser'
 import { useTheme } from '~/composables/useTheme'
 
-import type { MerchProduct } from '~~/shared/types/merch'
-import { formatPrice } from '~~/shared/merch'
+import { MERCH_PRODUCTS as merchProducts, formatPrice } from '~~/shared/merch'
 
 useHead({
     script: [
@@ -454,10 +449,6 @@ const { data: mediaPosts } = await useFetch<
 const galleryImages = Array.from(
     { length: 27 },
     (_, i) => `/img/gallery/${String(i + 1).padStart(2, '0')}.jpg`
-)
-
-const { data: merchProducts } = await useFetch<MerchProduct[]>(
-    '/api/merch/products'
 )
 
 const legalAddress = `HACKERSPACE NU31
