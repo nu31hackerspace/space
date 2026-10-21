@@ -18,9 +18,9 @@ describe('runtime database helpers', () => {
         await expect(pingDatabase({})).resolves.toBe(false)
     })
 
-    it('returns true from ping when database responds to ping', async () => {
+    it('returns true from ping when database answers a query', async () => {
         const db = {
-            command: async () => ({ ok: 1 }),
+            query: async () => ({ rows: [{ '?column?': 1 }] }),
         }
 
         await expect(pingDatabase({ db })).resolves.toBe(true)

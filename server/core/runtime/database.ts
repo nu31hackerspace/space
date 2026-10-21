@@ -1,11 +1,17 @@
 import { createError } from 'h3'
-import type { Db } from 'mongodb'
 
-interface NitroAppWithOptionalDb {
-    db?: Db
+// The subset of pg.Pool used here, so tests can pass a stub.
+interface Queryable {
+    query: (sql: string) => Promise<unknown>
 }
 
-export function requireDatabase(nitroApp: NitroAppWithOptionalDb): Db {
+interface NitroAppWithOptionalDb<T extends Queryable> {
+    db?: T
+}
+
+export function requireDatabase<T extends Queryable>(
+    nitroApp: NitroAppWithOptionalDb<T>
+): T {
     if (!nitroApp.db) {
         throw createError({
             statusCode: 503,
@@ -16,15 +22,15 @@ export function requireDatabase(nitroApp: NitroAppWithOptionalDb): Db {
     return nitroApp.db
 }
 
-export async function pingDatabase(
-    nitroApp: NitroAppWithOptionalDb
+export async function pingDatabase<T extends Queryable>(
+    nitroApp: NitroAppWithOptionalDb<T>
 ): Promise<boolean> {
     if (!nitroApp.db) {
         return false
     }
 
     try {
-        await nitroApp.db.command({ ping: 1 })
+        await nitroApp.db.query('SELECT 1')
         return true
     } catch {
         return false

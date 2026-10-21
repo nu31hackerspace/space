@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     },
     pages: true,
     runtimeConfig: {
-        mongoUri: 'mongodb://localhost:27017/nu31space',
+        postgresUrl: 'postgresql://postgres:postgres@localhost:5432/space',
         public: {
             baseUrl: 'http://localhost:3000',
             gitCommitSha: 'local',

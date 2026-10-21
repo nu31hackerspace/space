@@ -10,5 +10,20 @@ export type TrackDBRecord = {
 }
 
 export function saveTrackRecordInBackground(record: TrackDBRecord) {
-    requireDatabase(useNitroApp()).collection('tracking').insertOne(record)
+    const nitroApp = useNitroApp()
+    requireDatabase(nitroApp)
+        .query(
+            `INSERT INTO tracking (action, country, data, session_key, timestamp)
+             VALUES ($1, $2, $3, $4, $5)`,
+            [
+                record.action,
+                record.country,
+                record.data,
+                record.sessionKey,
+                record.timestamp,
+            ]
+        )
+        .catch((error) => {
+            nitroApp.logger.error('Failed to save tracking record:', error)
+        })
 }

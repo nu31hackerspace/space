@@ -18,8 +18,8 @@
     "dependencies": {
         "@tailwindcss/vite": "^4.1.12",
         "marked": "^18.0.0",
-        "mongodb": "^6.18.0",
         "nuxt": "^4.0.3",
+        "pg": "^8.23.1",
         "qrcode": "^1.5.4",
         "vue": "^3.5.18",
         "vue-router": "^4.5.1",
@@ -30,6 +30,7 @@
         "@iconify/vue": "^5.0.0",
         "@nuxt/eslint-config": "^1.9.0",
         "@tailwindcss/typography": "^0.5.16",
+        "@types/pg": "^8.23.1",
         "@vue/eslint-config-prettier": "^10.2.0",
         "eslint": "^9.35.0",
         "eslint-plugin-vue": "^10.4.0",

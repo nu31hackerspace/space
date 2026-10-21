@@ -4,7 +4,7 @@ This file provides guidance to AI coding agents working with code in this reposi
 
 ## What this is
 
-The website and backend for **NU31 Hacker Space** (https://nu31.space), a Ukrainian nonprofit. It is a single **Nuxt 4** application that serves both the frontend (Vue 3) and the API (Nitro server). One repo, one deployable. Persistence is **MongoDB** (no migrations — collections are created on first write); it stores only anonymous analytics events (`tracking`); request logs go to the console. There is no login: page content (merch, media coverage, gallery) is static, kept in `shared/` and `public/img/`. The project's stated philosophy is to keep the code simple enough that many people can contribute. The README is in Ukrainian.
+The website and backend for **NU31 Hacker Space** (https://nu31.space), a Ukrainian nonprofit. It is a single **Nuxt 4** application that serves both the frontend (Vue 3) and the API (Nitro server). One repo, one deployable. Persistence is **PostgreSQL**, database `space` (no migrations — the database and tables are created on boot); it stores only anonymous analytics events (`tracking` table); request logs go to the console. There is no login: page content (merch, media coverage, gallery) is static, kept in `shared/` and `public/img/`. The project's stated philosophy is to keep the code simple enough that many people can contribute. The README is in Ukrainian.
 
 ## Commands
 
@@ -33,10 +33,10 @@ npx vitest run server/core/content/parse.test.ts   # one file
 npx vitest run -t "parses h1 header"               # one test by name
 ```
 
-Dev requires a MongoDB instance. The default URI is `mongodb://localhost:27017/nu31space`. Quick start:
+Dev requires a PostgreSQL instance. The default URL is `postgresql://postgres:postgres@localhost:5432/space` (the database is created automatically). Quick start:
 
 ```bash
-docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:latest
+docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres:17
 ```
 
 ## Critical conventions
@@ -45,7 +45,7 @@ docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:lat
     - Nuxt/Nitro/h3 helpers (`defineEventHandler`, `useRuntimeConfig`, `useNitroApp`, `getQuery`, `createError`, `defineNitroPlugin`, `defineNuxtRouteMiddleware`, `navigateTo`, `useFetch`, …) → from `#imports`
     - Vue APIs (`ref`, `computed`, …) → from `vue`
 - **Path aliases:** `~~/` = project root (e.g. `~~/server/...`, `~~/shared/...`), `~/` = the `app/` directory. Vitest maps only `~~` (see `vitest.config.ts`), so unit-tested code should import shared logic via `~~/` or relative paths.
-- **Configuration is `runtimeConfig` + env overrides.** Defaults live in `nuxt.config.ts`. In production they are overridden by `NUXT_*` env vars following Nuxt's convention (`mongoUri` ← `NUXT_MONGO_URI`, `public.baseUrl` ← `NUXT_PUBLIC_BASE_URL`, etc. — see `docker-stack.yml` for the full mapping). Secrets (the Mongo URI) are never in the repo.
+- **Configuration is `runtimeConfig` + env overrides.** Defaults live in `nuxt.config.ts`. In production they are overridden by `NUXT_*` env vars following Nuxt's convention (`postgresUrl` ← `NUXT_POSTGRES_URL`, `public.baseUrl` ← `NUXT_PUBLIC_BASE_URL`, etc. — see `docker-stack.yml` for the full mapping). Secrets (the Postgres URL) are never in the repo.
 - **Formatting:** Prettier — no semicolons, single quotes, 4-space indent, `printWidth` 80. Prettier owns all formatting (including Vue templates, e.g. one attribute per line via `singleAttributePerLine`); ESLint (`eslint.config.js`, flat config) defers formatting to Prettier and focuses on code-quality rules. Run `npm run format` to fix style.
 
 ## Architecture
@@ -60,7 +60,7 @@ docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:lat
 
 ### `server/core/` vs `server/api/` — the central pattern
 
-`server/api/` handlers are thin: they parse the request, call into `server/core/`, talk to MongoDB, and shape the response. **All non-trivial logic** (validation, parsing, response shaping) lives in `server/core/` as pure, dependency-free functions. **Unit tests (`*.test.ts`) are colocated and target `server/core/` and `shared/`**, not the HTTP handlers — so when adding logic, put it in `core/` and test it there rather than inside a route.
+`server/api/` handlers are thin: they parse the request, call into `server/core/`, talk to PostgreSQL, and shape the response. **All non-trivial logic** (validation, parsing, response shaping) lives in `server/core/` as pure, dependency-free functions. **Unit tests (`*.test.ts`) are colocated and target `server/core/` and `shared/`**, not the HTTP handlers — so when adding logic, put it in `core/` and test it there rather than inside a route.
 
 ### Request lifecycle (server middleware, runs in numeric order)
 
@@ -68,11 +68,11 @@ docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:lat
 
 ### Startup (server plugins, run in numeric order)
 
-`1_logger` (Winston on `nitroApp.logger`) → `2_mongo` (connects and sets `nitroApp.db`). Request handlers use `requireDatabase(useNitroApp())`, which 503s until Mongo is ready (`server/core/runtime/database.ts`).
+`1_logger` (Winston on `nitroApp.logger`) → `2_postgres` (creates the database named in the URL and the tables if missing, sets `nitroApp.db` to a `pg` Pool). Request handlers use `requireDatabase(useNitroApp())`, which 503s until Postgres is ready (`server/core/runtime/database.ts`).
 
 ### Data access
 
-MongoDB is reached through `useNitroApp().db` (or `requireDatabase(...)`).
+PostgreSQL is reached through `useNitroApp().db` (or `requireDatabase(...)`), a `pg` Pool — use parameterized queries (`$1`, `$2`, …). In production it is the `postgres-1` service of the infra stack, reached over the `infra_postgres-net` network. The deploy workflow builds `POSTGRES_URL` from the infra stack's `USERNAME`/`PASSWORD`, so there is no separate secret for it.
 
 ## Deploy
 

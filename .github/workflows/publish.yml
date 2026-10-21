@@ -6,12 +6,11 @@ on:
             - 'main'
 
 env:
-    ENV_KEYS: >-
-        MONGO_URI
-
     # Application environment variables
     GIT_COMMIT_SHA: ${{ github.sha }}
-    MONGO_URI: ${{ secrets.MONGO_URI }}
+    # Credentials of the postgres-1 service in the infra stack
+    USERNAME: ${{ vars.USERNAME }}
+    PASSWORD: ${{ secrets.PASSWORD }}
 
     # Docker image configuration
     IMAGE_NAME: nu31hackerspace/space
@@ -68,9 +67,7 @@ jobs:
               run: |
                   echo "IMAGE_NAME='$IMAGE_NAME'" >> .env
                   echo "GIT_COMMIT_HASH='$GIT_COMMIT_SHA'" >> .env
-                  for key in $ENV_KEYS; do
-                      echo "$key='${!key}'" >> .env
-                  done
+                  echo "POSTGRES_URL='postgresql://${{ env.USERNAME }}:${{ env.PASSWORD }}@postgres-1:5432/space'" >> .env
 
             - name: Docker Stack Deploy
               uses: cssnr/stack-deploy-action@v1
