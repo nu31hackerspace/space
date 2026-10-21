@@ -27,7 +27,7 @@
                     class="w-full h-full absolute inset-0 z-20 flex items-center text-center justify-center"
                 >
                     <span class="text-8xl font-wallpoet text-accent-primary">
-                        NU31 Hacker Space
+                        NU31HACKERSPACE
                     </span>
                 </div>
             </div>
