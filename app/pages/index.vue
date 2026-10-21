@@ -192,7 +192,7 @@
                             <p
                                 class="mt-1 text-lg font-bold text-accent-primary"
                             >
-                                {{ formatPrice(product.priceUah) }}
+                                Донат {{ formatPrice(product.priceUah) }}
                             </p>
 
                             <div class="mt-auto pt-3">

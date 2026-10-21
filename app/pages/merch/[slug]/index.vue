@@ -80,7 +80,7 @@
                     </h1>
 
                     <p class="text-2xl font-bold text-label-primary">
-                        {{ formatPrice(product.priceUah) }}
+                        Донат {{ formatPrice(product.priceUah) }}
                     </p>
 
                     <p
@@ -101,7 +101,7 @@
                         class="flex flex-col gap-4 bg-fill-secondary border border-separator-primary rounded-xl p-5"
                     >
                         <h2 class="text-lg font-bold text-label-primary">
-                            Як замовити
+                            Як отримати подарунок
                         </h2>
 
                         <ol
@@ -113,7 +113,7 @@
                                     {{ formatPrice(product.priceUah) }}
                                 </span>
                                 за 1 штуку в банку monobank. Якщо хочеш кілька,
-                                помнож ціну на кількість: за 2 штуки —
+                                помнож суму на кількість: за 2 штуки —
                                 {{ formatPrice(product.priceUah * 2) }}.
                             </li>
                             <li>
@@ -130,7 +130,7 @@
                                 </code>
                             </li>
                             <li>
-                                Ми відправимо замовлення Новою Поштою на вказане
+                                Ми відправимо подарунок Новою Поштою на вказане
                                 відділення.
                             </li>
                         </ol>
