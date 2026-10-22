@@ -9,7 +9,25 @@ services:
         environment:
             - NUXT_PUBLIC_GIT_COMMIT_SHA=${GIT_COMMIT_HASH}
             - NUXT_PUBLIC_BASE_URL=https://nu31.space
-            - NUXT_POSTGRES_URL=${POSTGRES_URL}
+        deploy:
+            update_config:
+                order: start-first
+        networks:
+            - infra_reverse-proxy
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
+    backend:
+        image: ghcr.io/${BACKEND_IMAGE_NAME}:${GIT_COMMIT_HASH}
+        dns:
+            - 8.8.8.8
+            - 8.8.4.4
+        environment:
+            - POSTGRES_URL=${POSTGRES_URL}
         deploy:
             update_config:
                 order: start-first

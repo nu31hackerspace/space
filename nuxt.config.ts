@@ -8,7 +8,6 @@ export default defineNuxtConfig({
     },
     pages: true,
     runtimeConfig: {
-        postgresUrl: 'postgresql://postgres:postgres@localhost:5432/space',
         public: {
             baseUrl: 'http://localhost:3000',
             gitCommitSha: 'local',
@@ -16,6 +15,14 @@ export default defineNuxtConfig({
     },
     vite: {
         plugins: [tailwindcss()],
+        server: {
+            proxy: {
+                '/api': {
+                    target: process.env.BACKEND_URL ?? 'http://localhost:3001',
+                    changeOrigin: true,
+                },
+            },
+        },
         vue: {
             template: {
                 compilerOptions: {

@@ -14,6 +14,7 @@ env:
 
     # Docker image configuration
     IMAGE_NAME: nu31hackerspace/space
+    BACKEND_IMAGE_NAME: nu31hackerspace/space-backend
     DOCKER_STACK_NAME: nu31space
     REGISTRY: ghcr.io
 
@@ -44,7 +45,7 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Build and push Docker image
+            - name: Build and push Nuxt app Docker image
               uses: docker/build-push-action@v6
               with:
                   context: .
@@ -54,6 +55,15 @@ jobs:
                       ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
                   build-args: |
                       GIT_COMMIT_SHA=${{ env.GIT_COMMIT_SHA }}
+
+            - name: Build and push Backend Docker image
+              uses: docker/build-push-action@v6
+              with:
+                  context: ./backend
+                  push: true
+                  tags: |
+                      ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}:latest
+                      ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}:${{ github.sha }}
 
     deploy:
         runs-on: ubuntu-latest
@@ -66,6 +76,7 @@ jobs:
             - name: Create .env file for Docker Stack
               run: |
                   echo "IMAGE_NAME='$IMAGE_NAME'" >> .env
+                  echo "BACKEND_IMAGE_NAME='$BACKEND_IMAGE_NAME'" >> .env
                   echo "GIT_COMMIT_HASH='$GIT_COMMIT_SHA'" >> .env
                   echo "POSTGRES_URL='postgresql://${{ env.USERNAME }}:${{ env.PASSWORD }}@postgres-1:5432/space'" >> .env
 
