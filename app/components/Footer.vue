@@ -132,30 +132,55 @@
                             size="M"
                             link="https://github.com/nu31hackerspace"
                             icon="mdi:github"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'footer_github',
+                                })
+                            "
                         />
                         <MainButton
                             button-style="ghost"
                             size="M"
                             link="https://www.instagram.com/nu31hackerspace/"
                             icon="mdi:instagram"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'footer_instagram',
+                                })
+                            "
                         />
                         <MainButton
                             button-style="ghost"
                             size="M"
                             link="https://discord.gg/X93qAG2jH6"
                             icon="ic:baseline-discord"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'footer_discord',
+                                })
+                            "
                         />
                         <MainButton
                             button-style="ghost"
                             size="M"
                             link="https://www.patreon.com/cw/NU31"
                             icon="mdi:patreon"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'footer_patreon',
+                                })
+                            "
                         />
                         <MainButton
                             button-style="ghost"
                             size="M"
                             link="https://www.linkedin.com/company/nu31/"
                             icon="mdi:linkedin"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'footer_linkedin',
+                                })
+                            "
                         />
                     </div>
                 </div>
@@ -174,6 +199,8 @@
 </template>
 
 <script setup lang="ts">
+import { trackEvent } from '~/utils/track'
+
 const currentYear = new Date().getFullYear()
 const legalAddress = `HACKERSPACE NU31
 Nyzhnoiurkivska

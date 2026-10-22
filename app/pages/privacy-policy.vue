@@ -29,8 +29,14 @@
 
 <script setup lang="ts">
 import { definePageMeta } from '#imports'
+import { onMounted } from 'vue'
+import { trackEvent } from '~~/app/utils/track'
 
 definePageMeta({
     layout: 'doc',
+})
+
+onMounted(() => {
+    trackEvent('page_view', { page: 'privacy_policy' })
 })
 </script>

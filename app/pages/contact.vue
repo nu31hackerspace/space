@@ -132,6 +132,8 @@
 <script setup lang="ts">
 import { definePageMeta, useHead } from '#imports'
 import { Icon } from '@iconify/vue'
+import { onMounted } from 'vue'
+import { trackEvent } from '~~/app/utils/track'
 
 definePageMeta({
     layout: 'default',
@@ -153,4 +155,8 @@ Nyzhnoiurkivska
 Kyiv; Kyiv 04080`
 
 const mapsUrl = 'https://maps.app.goo.gl/HyjnMv37owj5GYHm8'
+
+onMounted(() => {
+    trackEvent('page_view', { page: 'contact' })
+})
 </script>

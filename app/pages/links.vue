@@ -168,6 +168,8 @@
 <script setup lang="ts">
 import { definePageMeta, useHead } from '#imports'
 import { Icon } from '@iconify/vue'
+import { onMounted } from 'vue'
+import { trackEvent } from '~~/app/utils/track'
 
 definePageMeta({
     layout: 'default',
@@ -181,5 +183,9 @@ useHead({
             content: 'All official links and services for HACKER SPACE NU31.',
         },
     ],
+})
+
+onMounted(() => {
+    trackEvent('page_view', { page: 'links' })
 })
 </script>

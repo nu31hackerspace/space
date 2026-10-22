@@ -8,7 +8,7 @@
         ]"
         :href="link"
         :rel="link ? 'noopener noreferrer' : undefined"
-        @click="link ? undefined : $emit('click', $event)"
+        @click="$emit('click', $event)"
     >
         <span
             v-if="icon"

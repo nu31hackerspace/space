@@ -194,6 +194,12 @@
                                     label="Отримати"
                                     class="w-full justify-center"
                                     :link="`/merch/${product.slug}`"
+                                    @click="
+                                        trackEvent('button_click', {
+                                            button: 'landing_merch_get',
+                                            slug: product.slug,
+                                        })
+                                    "
                                 />
                             </div>
                         </article>
@@ -205,6 +211,11 @@
                         size="M"
                         link="/merch"
                         class="justify-center"
+                        @click="
+                            trackEvent('button_click', {
+                                button: 'landing_merch_all',
+                            })
+                        "
                     >
                         Дивитись весь мерч
                     </MainButton>
@@ -257,6 +268,11 @@
                             link="https://send.monobank.ua/jar/99aDNpRkWL"
                             icon="mdi:bank"
                             class="w-full justify-center"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'landing_support_monobank_top',
+                                })
+                            "
                         >
                             Підтримати на Monobank
                         </MainButton>
@@ -266,6 +282,11 @@
                             link="https://www.patreon.com/cw/NU31"
                             icon="mdi:patreon"
                             class="w-full justify-center"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'landing_support_patreon_top',
+                                })
+                            "
                         >
                             Підтримати на Patreon
                         </MainButton>
@@ -286,6 +307,11 @@
                     size="M"
                     link="https://discord.gg/X93qAG2jH6"
                     icon="ic:baseline-discord"
+                    @click="
+                        trackEvent('button_click', {
+                            button: 'landing_join_discord',
+                        })
+                    "
                 >
                     Ми тусимо в Discord, приєднуйся!
                 </MainButton>
@@ -374,6 +400,11 @@
                             link="https://send.monobank.ua/jar/99aDNpRkWL"
                             icon="mdi:bank"
                             class="w-full justify-center"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'landing_support_monobank_bottom',
+                                })
+                            "
                         >
                             Підтримати на Monobank
                         </MainButton>
@@ -383,6 +414,11 @@
                             link="https://www.patreon.com/cw/NU31"
                             icon="mdi:patreon"
                             class="w-full justify-center"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'landing_support_patreon_bottom',
+                                })
+                            "
                         >
                             Підтримати на Patreon
                         </MainButton>

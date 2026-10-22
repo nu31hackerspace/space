@@ -62,7 +62,7 @@
                                     ? 'border-accent-primary'
                                     : 'border-separator-primary opacity-60 hover:opacity-100',
                             ]"
-                            @click="currentIndex = index"
+                            @click="selectImage(index)"
                         >
                             <img
                                 :src="image"
@@ -141,6 +141,12 @@
                             :link="MERCH_JAR_URL"
                             icon="mdi:bank"
                             class="justify-center"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'merch_donate',
+                                    slug: product.slug,
+                                })
+                            "
                         >
                             Задонатити {{ formatPrice(product.priceUah) }}
                         </MainButton>
@@ -153,13 +159,14 @@
 
 <script setup lang="ts">
 import { createError, definePageMeta, useRoute } from '#imports'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import {
     DONATION_COMMENT_EXAMPLE,
     MERCH_JAR_URL,
     findMerchProduct,
     formatPrice,
 } from '~~/shared/merch'
+import { trackEvent } from '~~/app/utils/track'
 
 definePageMeta({ layout: 'default' })
 
@@ -176,13 +183,37 @@ const images = computed(() => product.value?.images || [])
 const currentIndex = ref(0)
 const currentImage = computed(() => images.value[currentIndex.value] || '')
 
+onMounted(() => {
+    trackEvent('page_view', {
+        page: 'merch_product',
+        slug: product.value?.slug ?? '',
+    })
+})
+
 // Wrapping both ways so the arrows never dead-end on the first or last photo.
 function next() {
     currentIndex.value = (currentIndex.value + 1) % images.value.length
+    trackEvent('button_click', {
+        button: 'merch_gallery_next',
+        slug: product.value?.slug ?? '',
+    })
 }
 
 function previous() {
     currentIndex.value =
         (currentIndex.value - 1 + images.value.length) % images.value.length
+    trackEvent('button_click', {
+        button: 'merch_gallery_prev',
+        slug: product.value?.slug ?? '',
+    })
+}
+
+function selectImage(index: number) {
+    currentIndex.value = index
+    trackEvent('button_click', {
+        button: 'merch_gallery_thumbnail',
+        slug: product.value?.slug ?? '',
+        index: String(index),
+    })
 }
 </script>

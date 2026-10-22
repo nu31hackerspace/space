@@ -147,6 +147,6 @@ const buttonStyles = [
 
 const handleClick = () => {
     clickCount.value++
-    console.log('Button clicked!')
+    trackEvent('button_click', { button: 'design_sandbox_button' })
 }
 </script>

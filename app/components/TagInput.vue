@@ -55,6 +55,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { trackEvent } from '~/utils/track'
 
 const props = defineProps<{
     modelValue: string[]
@@ -80,13 +81,15 @@ function focusInput() {
 function addTag(tag: string) {
     const trimmed = tag.trim()
     if (!trimmed || props.modelValue.includes(trimmed)) return
+    trackEvent('button_click', { button: 'add_tag', tag: trimmed })
     emit('update:modelValue', [...props.modelValue, trimmed])
     inputValue.value = ''
 }
 
 function removeTag(index: number) {
     const next = [...props.modelValue]
-    next.splice(index, 1)
+    const [removed] = next.splice(index, 1)
+    trackEvent('button_click', { button: 'remove_tag', tag: removed ?? '' })
     emit('update:modelValue', next)
 }
 

@@ -59,6 +59,12 @@
                             size="M"
                             label="Отримати"
                             :link="`/merch/${product.slug}`"
+                            @click="
+                                trackEvent('button_click', {
+                                    button: 'merch_get',
+                                    slug: product.slug,
+                                })
+                            "
                         />
                     </div>
                 </article>
@@ -69,7 +75,13 @@
 
 <script setup lang="ts">
 import { definePageMeta } from '#imports'
+import { onMounted } from 'vue'
 import { MERCH_PRODUCTS as products, formatPrice } from '~~/shared/merch'
+import { trackEvent } from '~~/app/utils/track'
 
 definePageMeta({ layout: 'default' })
+
+onMounted(() => {
+    trackEvent('page_view', { page: 'merch' })
+})
 </script>

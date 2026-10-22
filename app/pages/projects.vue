@@ -113,6 +113,8 @@
 
 <script setup lang="ts">
 import { definePageMeta, useHead } from '#imports'
+import { onMounted } from 'vue'
+import { trackEvent } from '~~/app/utils/track'
 
 definePageMeta({
     layout: 'default',
@@ -127,5 +129,9 @@ useHead({
                 'Open-source projects, community events, and member work at HACKER SPACE NU31 — a nonprofit hackerspace in Kyiv, Ukraine.',
         },
     ],
+})
+
+onMounted(() => {
+    trackEvent('page_view', { page: 'projects' })
 })
 </script>
