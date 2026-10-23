@@ -3,6 +3,12 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 import { createServer } from 'node:http'
 import type { Queryable } from './database.js'
 import { pingDatabase } from './database.js'
+import type { LastElectricityResponse } from './electricity/ping.js'
+import {
+    getLastElectricityPing,
+    isValidElectricityToken,
+    saveElectricityPing,
+} from './electricity/ping.js'
 import type { TrackDBRecord, TrackRequest } from './tracking/add.js'
 import { saveTrackRecordInBackground } from './tracking/add.js'
 import {
@@ -39,7 +45,14 @@ async function readJsonBody<T>(req: IncomingMessage): Promise<T> {
     return JSON.parse(raw) as T
 }
 
-export function createRequestHandler(db: Queryable | undefined) {
+export type BackendOptions = {
+    electricityToken?: string
+}
+
+export function createRequestHandler(
+    db: Queryable | undefined,
+    options: BackendOptions = {}
+) {
     return async (req: IncomingMessage, res: ServerResponse) => {
         const url = new URL(req.url ?? '/', 'http://localhost')
 
@@ -106,12 +119,82 @@ export function createRequestHandler(db: Queryable | undefined) {
             return
         }
 
+        if (url.pathname === '/api/nu31electricity') {
+            if (
+                !isValidElectricityToken(
+                    url.searchParams.get('token'),
+                    options.electricityToken
+                )
+            ) {
+                res.statusCode = 401
+                res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+                res.end('Unauthorized')
+                return
+            }
+
+            if (!db) {
+                res.statusCode = 503
+                res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+                res.end('Database is not ready')
+                return
+            }
+
+            try {
+                await saveElectricityPing(db, new Date())
+            } catch (error) {
+                console.error('Failed to save electricity ping:', error)
+                res.statusCode = 500
+                res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+                res.end('Failed to save electricity ping')
+                return
+            }
+
+            res.statusCode = 204
+            res.end()
+            return
+        }
+
+        if (
+            req.method === 'GET' &&
+            url.pathname === '/api/nu31electricity/last'
+        ) {
+            if (!db) {
+                res.statusCode = 503
+                res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+                res.end('Database is not ready')
+                return
+            }
+
+            let lastSeenAt: Date | null
+            try {
+                lastSeenAt = await getLastElectricityPing(db)
+            } catch (error) {
+                console.error('Failed to read electricity ping:', error)
+                res.statusCode = 500
+                res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+                res.end('Failed to read electricity ping')
+                return
+            }
+
+            const body: LastElectricityResponse = {
+                lastSeenAt: lastSeenAt ? lastSeenAt.toISOString() : null,
+            }
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json; charset=utf-8')
+            res.setHeader('Cache-Control', 'no-store')
+            res.end(JSON.stringify(body))
+            return
+        }
+
         res.statusCode = 404
         res.setHeader('Content-Type', 'text/plain; charset=utf-8')
         res.end('Not Found')
     }
 }
 
-export function createBackendServer(db: Queryable | undefined) {
-    return createServer(createRequestHandler(db))
+export function createBackendServer(
+    db: Queryable | undefined,
+    options: BackendOptions = {}
+) {
+    return createServer(createRequestHandler(db, options))
 }

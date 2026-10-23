@@ -13,6 +13,11 @@ const SCHEMA_SQL = `
         session_key TEXT,
         timestamp   TIMESTAMPTZ NOT NULL DEFAULT now()
     );
+
+    CREATE TABLE IF NOT EXISTS electricity_pings (
+        id          BIGSERIAL   PRIMARY KEY,
+        timestamp   TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
 `
 
 export async function connectDatabase(connectionString: string): Promise<Pool> {

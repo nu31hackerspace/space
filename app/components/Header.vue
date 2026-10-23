@@ -45,6 +45,7 @@
                 </NuxtLink>
             </nav>
             <div class="flex items-center space-x-4">
+                <ElectricityStatus />
                 <ThemeSwitch />
             </div>
         </div>

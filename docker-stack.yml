@@ -28,6 +28,7 @@ services:
             - 8.8.4.4
         environment:
             - POSTGRES_URL=${POSTGRES_URL}
+            - NU31_ELECTRICITY_TOKEN=${NU31_ELECTRICITY_TOKEN}
         deploy:
             update_config:
                 order: start-first

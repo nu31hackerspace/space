@@ -6,11 +6,10 @@ on:
             - 'main'
 
 env:
-    # Application environment variables
     GIT_COMMIT_SHA: ${{ github.sha }}
-    # Credentials of the postgres-1 service in the infra stack
     USERNAME: ${{ vars.USERNAME }}
     PASSWORD: ${{ secrets.PASSWORD }}
+    NU31_ELECTRICITY_TOKEN: ${{ secrets.NU31_ELECTRICITY_TOKEN }}
 
     # Docker image configuration
     IMAGE_NAME: nu31hackerspace/space
@@ -79,6 +78,7 @@ jobs:
                   echo "BACKEND_IMAGE_NAME='$BACKEND_IMAGE_NAME'" >> .env
                   echo "GIT_COMMIT_HASH='$GIT_COMMIT_SHA'" >> .env
                   echo "POSTGRES_URL='postgresql://${{ env.USERNAME }}:${{ env.PASSWORD }}@postgres-1:5432/space'" >> .env
+                  echo "NU31_ELECTRICITY_TOKEN='$NU31_ELECTRICITY_TOKEN'" >> .env
 
             - name: Docker Stack Deploy
               uses: cssnr/stack-deploy-action@v1

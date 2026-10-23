@@ -5,6 +5,13 @@ const PORT = Number(process.env.PORT) || 3001
 const POSTGRES_URL =
     process.env.POSTGRES_URL ??
     'postgresql://postgres:postgres@localhost:5432/space'
+const NU31_ELECTRICITY_TOKEN = process.env.NU31_ELECTRICITY_TOKEN
+
+if (!NU31_ELECTRICITY_TOKEN) {
+    console.warn(
+        'NU31_ELECTRICITY_TOKEN is not set, electricity pings will be rejected'
+    )
+}
 
 async function main() {
     let pool
@@ -15,7 +22,9 @@ async function main() {
         process.exit(1)
     }
 
-    const server = createBackendServer(pool)
+    const server = createBackendServer(pool, {
+        electricityToken: NU31_ELECTRICITY_TOKEN,
+    })
 
     server.listen(PORT, () => {
         console.info(`Backend listening on http://localhost:${PORT}`)

@@ -8,6 +8,7 @@
             <div
                 class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row"
             >
+                <ElectricityStatus />
                 <ThemeSwitch />
             </div>
         </div>
