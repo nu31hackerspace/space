@@ -50,11 +50,12 @@ docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRE
 
 ## Architecture
 
-| Dir        | Role                                                                                                          |
-| ---------- | ------------------------------------------------------------------------------------------------------------- |
-| `app/`     | Nuxt frontend — `pages/` (file-based routes), `components/`, `composables/`, `layouts/`, `utils/`             |
-| `shared/`  | Static data and types used by the frontend (`merch.ts`, `media.ts`, `types/`)                                 |
-| `backend/` | Standalone Node.js (`node:http`) + TypeScript API server (`/api/service/health`, `/api/track`) and unit tests |
+| Dir         | Role                                                                                                                                  |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/`      | Nuxt frontend — `pages/` (file-based routes), `components/`, `composables/`, `layouts/`, `utils/`                                     |
+| `shared/`   | Static data and types used by the frontend (`merch.ts`, `media.ts`, `types/`)                                                         |
+| `backend/`  | Standalone Node.js (`node:http`) + TypeScript API server (`/api/service/health`, `/api/track`) and unit tests                         |
+| `firmware/` | MicroPython firmware for the ESP32-C3 electricity sensor that pings `/api/nu31electricity` (secrets live in an untracked `config.py`) |
 
 ### Routing between frontend and backend
 
