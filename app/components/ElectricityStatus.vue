@@ -1,6 +1,6 @@
 <template>
     <MainBadge
-        :label="labels[status]"
+        :label="label"
         :variant="variants[status]"
         :title="lastSeenTitle"
     />
@@ -32,11 +32,34 @@ const variants: Record<ElectricityStatus, 'success' | 'error' | 'info'> = {
 const status = ref<ElectricityStatus>('unknown')
 const lastSeenAt = ref<Date | null>(null)
 
+const label = computed(() => {
+    if (status.value === 'off' && lastSeenAt.value) {
+        return `${labels.off} з ${formatSince(lastSeenAt.value)}`
+    }
+    return labels[status.value]
+})
+
 const lastSeenTitle = computed(() =>
     lastSeenAt.value
         ? `Останній сигнал: ${lastSeenAt.value.toLocaleString('uk-UA')}`
         : undefined
 )
+
+// Show only the time for today, and add the date for older outages.
+function formatSince(date: Date): string {
+    const time = date.toLocaleTimeString('uk-UA', {
+        hour: '2-digit',
+        minute: '2-digit',
+    })
+    if (date.toDateString() === new Date().toDateString()) {
+        return time
+    }
+    const day = date.toLocaleDateString('uk-UA', {
+        day: '2-digit',
+        month: '2-digit',
+    })
+    return `${day} ${time}`
+}
 
 async function refresh() {
     try {
