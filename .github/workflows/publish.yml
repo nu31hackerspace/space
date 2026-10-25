@@ -77,7 +77,7 @@ jobs:
                   echo "IMAGE_NAME='$IMAGE_NAME'" >> .env
                   echo "BACKEND_IMAGE_NAME='$BACKEND_IMAGE_NAME'" >> .env
                   echo "GIT_COMMIT_HASH='$GIT_COMMIT_SHA'" >> .env
-                  echo "POSTGRES_URL='postgresql://${{ env.USERNAME }}:${{ env.PASSWORD }}@main.postgres.database.azure.com:5432/space'" >> .env
+                  echo "POSTGRES_URL='postgresql://${{ env.USERNAME }}:${{ env.PASSWORD }}@main.postgres.database.azure.com:5432/space?sslmode=require'" >> .env
                   echo "NU31_ELECTRICITY_TOKEN='$NU31_ELECTRICITY_TOKEN'" >> .env
 
             - name: Docker Stack Deploy
