@@ -19,3 +19,13 @@ tags: ['новини']
 Кожен Markdown-файл у `content/blog/` з'являється у блозі та RSS після збірки. Для локальної перевірки виконайте `npm run generate`: сторінки з'являться в `.output/public/blog/`, стрічка — у `.output/public/rss.xml`.
 
 RSS: https://nu31.space/rss.xml
+
+## Зображення
+
+Зберігайте зображення для дописів у `public/img/blog/`. Додайте його до тексту Markdown так:
+
+```md
+![Короткий опис зображення](/img/blog/photo.webp)
+```
+
+Шлях `/img/blog/photo.webp` відповідає файлу `public/img/blog/photo.webp`. Текст у квадратних дужках описує зображення для читачів, які його не бачать.
