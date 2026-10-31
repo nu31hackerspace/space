@@ -16,7 +16,7 @@ const exportedDates: Record<string, string> = existsSync(datesFile)
 function blogDate(filePath: string, value?: string): string {
     const sourcePath = relative(process.cwd(), filePath)
     const sourceDate =
-        value ??
+        (value?.trim() || undefined) ??
         firstCommitDate(filePath) ??
         exportedDates[sourcePath] ??
         statSync(filePath).birthtime
