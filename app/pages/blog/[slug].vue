@@ -12,13 +12,8 @@
             </NuxtLink>
 
             <header class="mt-8 sm:mt-10">
-                <p
-                    class="text-xs font-medium uppercase tracking-[0.18em] text-label-tertiary"
-                >
-                    Блог NU31
-                </p>
                 <h1
-                    class="mt-3 text-3xl font-semibold leading-tight text-accent-primary sm:text-4xl"
+                    class="text-3xl font-semibold leading-tight text-accent-primary sm:text-4xl"
                 >
                     {{ post.title }}
                 </h1>
