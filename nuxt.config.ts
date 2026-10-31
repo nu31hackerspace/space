@@ -29,6 +29,17 @@ function blogDate(filePath: string, value?: string): string {
 
 export default defineNuxtConfig({
     modules: ['@nuxt/content'],
+    content: {
+        build: {
+            markdown: {
+                // Titles come from frontmatter; keep Markdown H1 in the article body.
+                contentHeading: false,
+            },
+        },
+        renderer: {
+            anchorLinks: false,
+        },
+    },
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
     imports: {

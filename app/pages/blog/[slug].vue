@@ -111,11 +111,15 @@ function formatDate(value: string): string {
 .blog-content > * + * {
     margin-top: 1.5rem;
 }
+.blog-content h1,
 .blog-content h2,
 .blog-content h3 {
     font-weight: 700;
     color: var(--color-accent-primary);
     margin-top: 2.5rem;
+}
+.blog-content h1 {
+    font-size: 1.75rem;
 }
 .blog-content h2 {
     font-size: 1.5rem;
