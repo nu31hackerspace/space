@@ -12,7 +12,7 @@
                     to="/blog"
                     class="rounded-full border border-separator-primary px-4 py-2 text-sm font-medium text-label-primary transition-colors hover:border-accent-primary hover:bg-fill-secondary"
                 >
-                    Блог
+                    Blog
                 </NuxtLink>
                 <ElectricityStatus />
                 <ThemeSwitch />
