@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto px-4 py-4">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center space-x-4">
                 <NuxtLink
                     to="/"
@@ -18,7 +18,9 @@
                     </span>
                 </NuxtLink>
             </div>
-            <nav class="flex items-center space-x-6">
+            <nav
+                class="order-3 flex w-full flex-wrap items-center gap-x-6 gap-y-2 sm:order-none sm:w-auto"
+            >
                 <NuxtLink
                     to="/about"
                     class="text-label-primary hover:text-accent-primary transition-colors font-medium"
@@ -42,6 +44,12 @@
                     class="text-label-primary hover:text-accent-primary transition-colors font-medium"
                 >
                     Merch
+                </NuxtLink>
+                <NuxtLink
+                    to="/blog"
+                    class="text-label-primary hover:text-accent-primary transition-colors font-medium"
+                >
+                    Блог
                 </NuxtLink>
             </nav>
             <div class="flex items-center space-x-4">
