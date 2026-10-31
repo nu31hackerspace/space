@@ -1,9 +1,9 @@
 <template>
     <article
         v-if="post"
-        class="min-h-screen bg-background-primary text-label-primary"
+        class="bg-background-primary text-label-primary"
     >
-        <div class="mx-auto max-w-3xl px-5 pb-20 pt-8 sm:pt-12">
+        <div class="mx-auto max-w-3xl px-5 pb-10 pt-8 sm:pt-10">
             <NuxtLink
                 to="/blog"
                 class="inline-flex text-sm text-label-secondary transition-colors hover:text-accent-primary"
@@ -11,43 +11,40 @@
                 ← До блогу
             </NuxtLink>
 
-            <header class="mt-8 sm:mt-10">
-                <h1
-                    class="text-3xl font-semibold leading-tight text-accent-primary sm:text-4xl"
-                >
-                    {{ post.title }}
-                </h1>
-                <p
-                    class="mt-4 text-base leading-7 text-label-secondary sm:text-lg"
-                >
-                    {{ post.description }}
-                </p>
+            <header class="mt-7">
                 <div
-                    class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-label-secondary"
+                    class="flex flex-wrap gap-x-3 gap-y-1 text-sm text-label-tertiary"
                 >
                     <time :datetime="post.date">
                         {{ formatDate(post.date) }}
                     </time>
+                    <span aria-hidden="true">·</span>
                     <span>{{ post.author }}</span>
                 </div>
-                <div
-                    v-if="post.tags.length"
-                    class="mt-5 flex flex-wrap gap-2"
+                <h1
+                    class="mt-3 text-2xl font-semibold leading-tight text-accent-primary sm:text-3xl"
                 >
-                    <span
-                        v-for="tag in post.tags"
-                        :key="tag"
-                        class="rounded-full border border-separator-primary px-3 py-1 text-xs text-label-secondary"
-                    >
-                        {{ tag }}
-                    </span>
-                </div>
+                    {{ post.title }}
+                </h1>
             </header>
 
             <ContentRenderer
                 :value="post"
-                class="blog-content mt-8 border-t border-separator-primary pt-8 sm:mt-10 sm:pt-10"
+                class="blog-content mt-6"
             />
+
+            <footer
+                v-if="post.tags.length"
+                class="mt-8 flex flex-wrap gap-2 border-t border-separator-primary pt-5"
+            >
+                <span
+                    v-for="tag in post.tags"
+                    :key="tag"
+                    class="rounded-full border border-separator-primary px-3 py-1 text-xs text-label-secondary"
+                >
+                    {{ tag }}
+                </span>
+            </footer>
         </div>
     </article>
 </template>
@@ -111,16 +108,19 @@ function formatDate(value: string): string {
 .blog-content h3 {
     font-weight: 700;
     color: var(--color-accent-primary);
-    margin-top: 2.5rem;
+    margin-top: 2rem;
 }
 .blog-content h1 {
-    font-size: 1.75rem;
-}
-.blog-content h2 {
     font-size: 1.5rem;
 }
+.blog-content h2 {
+    font-size: 1.35rem;
+}
 .blog-content h3 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
+}
+.blog-content > :first-child {
+    margin-top: 0;
 }
 .blog-content a {
     color: var(--color-accent-primary);

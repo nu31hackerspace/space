@@ -1,13 +1,9 @@
 <template>
-    <div
-        class="bg-background-primary overflow-x-hidden max-w-full min-h-screen"
-    >
+    <div class="bg-background-primary overflow-x-hidden max-w-full">
         <Header />
-        <div class="flex flex-col min-h-screen">
-            <main class="flex-grow">
-                <slot />
-            </main>
-        </div>
+        <main>
+            <slot />
+        </main>
         <Footer />
     </div>
 </template>
