@@ -88,7 +88,7 @@ export default defineNuxtConfig({
                 {
                     rel: 'alternate',
                     type: 'application/rss+xml',
-                    title: 'NU31 Space Blog',
+                    title: 'Блог',
                     href: 'https://nu31.space/rss.xml',
                 },
             ],

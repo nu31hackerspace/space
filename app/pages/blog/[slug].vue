@@ -74,7 +74,7 @@ if (!post.value) {
 }
 
 useHead({
-    title: `${post.value.title} — Блог NU31`,
+    title: `${post.value.title} — Блог`,
     meta: [
         { name: 'description', content: post.value.description },
         { property: 'og:title', content: post.value.title },

@@ -5,7 +5,7 @@
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <h1 class="text-3xl font-semibold text-accent-primary">
-                            Блог NU31
+                            Блог
                         </h1>
                         <p class="mt-1 text-sm text-label-tertiary">
                             {{ posts?.length ?? 0 }} публікацій
@@ -79,7 +79,7 @@ const { data: posts } = await useAsyncData('published-blog-posts', () =>
 )
 
 useHead({
-    title: 'Блог NU31',
+    title: 'Блог',
     meta: [
         {
             name: 'description',

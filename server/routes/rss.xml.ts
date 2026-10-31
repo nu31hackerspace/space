@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
         'xmlns:dc': 'http://purl.org/dc/elements/1.1/',
     })
     const channel = rss.ele('channel')
-    channel.ele('title').txt('Блог NU31')
+    channel.ele('title').txt('Блог')
     channel.ele('link').txt(`${siteUrl}/blog/`)
     channel
         .ele('description')
