@@ -25,5 +25,7 @@ assert len(links) == len(set(links)), 'Duplicate RSS entries'
 for item in items:
     assert item.findtext('guid') == item.findtext('link')
     assert item.findtext('pubDate')
+    article = item.findtext('{http://purl.org/rss/1.0/modules/content/}encoded')
+    assert article and article.strip(), 'RSS entry is missing the full article HTML'
 
 print(f'Checked {len(expected)} published blog posts and RSS entries')
