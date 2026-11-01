@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto px-4 py-4">
-        <div class="flex flex-wrap justify-between items-center gap-4">
+        <div class="relative flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center space-x-4">
                 <NuxtLink
                     to="/"
@@ -19,7 +19,7 @@
                 </NuxtLink>
             </div>
             <nav
-                class="order-3 flex w-full flex-wrap items-center gap-x-6 gap-y-2 sm:order-none sm:w-auto"
+                class="order-3 flex w-full flex-wrap items-center gap-x-6 gap-y-2 sm:order-none sm:w-auto lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2"
             >
                 <NuxtLink
                     to="/about"
