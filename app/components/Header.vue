@@ -53,15 +53,9 @@
                 </NuxtLink>
             </nav>
             <div class="flex items-center space-x-4">
-                <ElectricityStatus v-if="!route.path.startsWith('/blog')" />
+                <ElectricityStatus />
                 <ThemeSwitch />
             </div>
         </div>
     </div>
 </template>
-
-<script setup lang="ts">
-import { useRoute } from '#imports'
-
-const route = useRoute()
-</script>
