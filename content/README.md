@@ -30,4 +30,4 @@ RSS: https://nu31.space/rss.xml. Стрічка містить повний те
 ![Короткий опис зображення](/img/blog/photo.webp)
 ```
 
-Шлях `/img/blog/photo.webp` відповідає файлу `public/img/blog/photo.webp`. Текст у квадратних дужках описує зображення для читачів, які його не бачать.
+Шлях `/img/blog/photo.webp` відповідає файлу `public/img/blog/photo.webp`.
