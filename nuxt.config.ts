@@ -34,6 +34,8 @@ export default defineNuxtConfig({
             markdown: {
                 // Titles come from frontmatter; keep Markdown H1 in the article body.
                 contentHeading: false,
+                // Preserve single Enter presses inside a paragraph as visible line breaks.
+                remarkPlugins: { 'remark-breaks': {} },
             },
         },
         renderer: {
