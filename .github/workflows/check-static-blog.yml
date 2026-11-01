@@ -1,0 +1,22 @@
+name: Check static blog
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+
+jobs:
+    generate:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '24'
+                  cache: npm
+            - run: npm ci
+            - run: npm run generate
+            - run: python3 scripts/check-blog-output.py

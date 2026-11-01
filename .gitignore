@@ -4,6 +4,7 @@
 .nuxt
 .nitro
 .cache
+.blog-dates.generated.json
 dist
 
 # Node dependencies
