@@ -8,12 +8,6 @@
             <div
                 class="flex w-full sm:w-auto items-center justify-end gap-4 flex-row"
             >
-                <NuxtLink
-                    to="/blog"
-                    class="rounded-full border border-separator-primary px-4 py-2 text-sm font-medium text-label-primary transition-colors hover:border-accent-primary hover:bg-fill-secondary"
-                >
-                    Blog
-                </NuxtLink>
                 <ElectricityStatus />
                 <ThemeSwitch />
             </div>
