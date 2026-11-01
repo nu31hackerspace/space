@@ -1,7 +1,7 @@
 <template>
     <div class="bg-background-primary text-label-primary">
         <section class="border-b border-separator-primary">
-            <div class="container mx-auto max-w-6xl px-4 py-8">
+            <div class="container mx-auto max-w-4xl px-6 py-8">
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <h1 class="text-3xl font-semibold text-accent-primary">
@@ -21,7 +21,7 @@
             </div>
         </section>
 
-        <div class="container mx-auto max-w-6xl px-6 py-10">
+        <div class="container mx-auto max-w-4xl px-6 py-10">
             <div
                 v-if="posts?.length"
                 class="divide-y divide-separator-primary"
