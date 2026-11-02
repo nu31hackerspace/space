@@ -79,6 +79,14 @@
                         </li>
                         <li>
                             <NuxtLink
+                                to="/blog"
+                                class="text-sm text-label-secondary hover:text-accent-primary transition-colors"
+                            >
+                                Блог / Blog
+                            </NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
                                 to="/design"
                                 class="text-sm text-label-secondary hover:text-accent-primary transition-colors"
                             >

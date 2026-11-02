@@ -1,13 +1,11 @@
 <template>
     <div
-        class="bg-background-primary overflow-x-hidden max-w-full min-h-screen"
+        class="bg-background-primary overflow-x-hidden max-w-full min-h-screen flex flex-col"
     >
         <Header />
-        <div class="flex flex-col min-h-screen">
-            <main class="flex-grow">
-                <slot />
-            </main>
-        </div>
+        <main class="flex-grow">
+            <slot />
+        </main>
         <Footer />
     </div>
 </template>
