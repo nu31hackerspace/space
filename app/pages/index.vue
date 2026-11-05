@@ -19,7 +19,9 @@
                 <div
                     class="w-full h-full absolute inset-0 z-20 flex items-center text-center justify-center"
                 >
-                    <span class="text-8xl font-wallpoet text-accent-primary">
+                    <span
+                        class="text-[min(6rem,8vw)] leading-none whitespace-nowrap font-wallpoet text-accent-primary"
+                    >
                         NU31HACKERSPACE
                     </span>
                 </div>
@@ -343,32 +345,17 @@
                 >
                     Галерея
                 </h2>
-                <div class="overflow-x-auto">
-                    <div
-                        class="flex gap-4 pb-4"
-                        style="
-                            scroll-snap-type: x mandatory;
-                            scroll-behavior: smooth;
-                        "
-                    >
-                        <div
-                            v-for="src in galleryImages"
-                            :key="src"
-                            class="flex-shrink-0"
-                            style="scroll-snap-align: start"
-                        >
-                            <div
-                                class="w-64 h-64 md:w-80 md:h-80 rounded-xl overflow-hidden bg-fill-tertiary border border-separator-primary"
-                            >
-                                <img
-                                    :src="src"
-                                    alt="Gallery image"
-                                    class="w-full h-full object-cover"
-                                    loading="lazy"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                <div
+                    class="grid grid-cols-3 gap-0 rounded-xl overflow-hidden bg-fill-tertiary"
+                >
+                    <img
+                        v-for="src in galleryImages"
+                        :key="src"
+                        :src="src"
+                        alt="Gallery image"
+                        class="w-full aspect-square object-cover block"
+                        loading="lazy"
+                    />
                 </div>
             </div>
 
