@@ -74,12 +74,30 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta } from '#imports'
+import { definePageMeta, useRuntimeConfig, useSeoMeta } from '#imports'
 import { onMounted } from 'vue'
 import { MERCH_PRODUCTS as products, formatPrice } from '~~/shared/merch'
 import { trackEvent } from '~~/app/utils/track'
 
 definePageMeta({ layout: 'default' })
+
+// Link previews in chats; image and url must be absolute.
+const baseUrl = useRuntimeConfig().public.baseUrl
+const previewDescription =
+    'Мерч Київського Хакерспейсу NU31. Донат на банку — і подарунок їде до вас.'
+useSeoMeta({
+    title: 'Мерч | NU31',
+    description: previewDescription,
+    ogType: 'website',
+    ogSiteName: 'HACKER SPACE NU31',
+    ogTitle: 'Мерч NU31',
+    ogDescription: previewDescription,
+    ogUrl: `${baseUrl}/merch`,
+    ogImage: products[0]?.images[0]
+        ? `${baseUrl}${products[0].images[0]}`
+        : undefined,
+    twitterCard: 'summary_large_image',
+})
 
 onMounted(() => {
     trackEvent('page_view', { page: 'merch' })

@@ -8,7 +8,8 @@
 export const MERCH_JAR_URL = 'https://send.monobank.ua/jar/3QzivsKben'
 
 export interface MerchProduct {
-    // URL key, kept identical to the old database slugs so shared links work.
+    // URL key. When renaming one, add the old path to app/utils/redirects.ts so
+    // shared links keep working.
     slug: string
     name: string
     description: string
@@ -20,7 +21,7 @@ export interface MerchProduct {
 
 export const MERCH_PRODUCTS: MerchProduct[] = [
     {
-        slug: 'flyus-u-kistochtsi-vid-nyu31-ne-potrebuye-zmyvky-e24961',
+        slug: 'flux',
         name: 'Флюс у кісточці, від НЮ31 не потребує змивки',
         description: `Флюс-олівець (кісточка) від Київського Хакерспейсу NU31, зроблений мейкерами для мейкерів.
 
