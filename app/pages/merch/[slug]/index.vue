@@ -158,7 +158,13 @@
 </template>
 
 <script setup lang="ts">
-import { createError, definePageMeta, useRoute } from '#imports'
+import {
+    createError,
+    definePageMeta,
+    useRoute,
+    useRuntimeConfig,
+    useSeoMeta,
+} from '#imports'
 import { computed, onMounted, ref } from 'vue'
 import {
     DONATION_COMMENT_EXAMPLE,
@@ -179,6 +185,23 @@ if (!product.value) {
 }
 
 const images = computed(() => product.value?.images || [])
+
+// Link previews in chats (Telegram, Viber, Slack…) read these tags; image and
+// url must be absolute.
+const baseUrl = useRuntimeConfig().public.baseUrl
+const previewTitle = `${product.value!.name} — ${formatPrice(product.value!.priceUah)}`
+const previewDescription = product.value!.description.split('\n')[0]!
+useSeoMeta({
+    title: `${previewTitle} | NU31`,
+    description: previewDescription,
+    ogType: 'website',
+    ogSiteName: 'HACKER SPACE NU31',
+    ogTitle: previewTitle,
+    ogDescription: previewDescription,
+    ogUrl: `${baseUrl}/merch/${product.value!.slug}`,
+    ogImage: images.value[0] ? `${baseUrl}${images.value[0]}` : undefined,
+    twitterCard: 'summary_large_image',
+})
 
 const currentIndex = ref(0)
 const currentImage = computed(() => images.value[currentIndex.value] || '')
