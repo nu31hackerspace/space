@@ -35,8 +35,8 @@
                             class="aspect-square rounded-xl overflow-hidden bg-fill-tertiary border border-separator-primary"
                         >
                             <img
-                                v-if="product.images.length"
-                                :src="product.images[0]"
+                                v-if="product.cover"
+                                :src="product.cover"
                                 :alt="product.name"
                                 loading="lazy"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -93,9 +93,7 @@ useSeoMeta({
     ogTitle: 'Мерч NU31',
     ogDescription: previewDescription,
     ogUrl: `${baseUrl}/merch`,
-    ogImage: products[0]?.images[0]
-        ? `${baseUrl}${products[0].images[0]}`
-        : undefined,
+    ogImage: products[0] ? `${baseUrl}${products[0].cover}` : undefined,
     twitterCard: 'summary_large_image',
 })
 
