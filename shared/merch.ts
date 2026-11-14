@@ -1,51 +1,36 @@
-// The merch catalog. It is static on purpose: to add or change a product, edit
-// this list and drop its photos into public/img/merch/.
+// Merch cards for the listings on the home page and /merch. Each product has
+// its own hand-written page in app/pages/merch/<slug>.vue; this list only
+// links to them.
 //
-// There is no checkout. A buyer donates the price to the monobank jar and writes
-// their phone, city and Nova Poshta branch in the donation comment; the team
-// ships from the jar's statement.
+// There is no checkout. A buyer donates to the monobank jar and writes their
+// phone, city and Nova Poshta branch in the donation comment; the team ships
+// from the jar's statement.
 
 export const MERCH_JAR_URL = 'https://send.monobank.ua/jar/3QzivsKben'
 
-export interface MerchProduct {
-    // URL key. When renaming one, add the old path to app/utils/redirects.ts so
-    // shared links keep working.
+export interface MerchCard {
+    // Must match the page file app/pages/merch/<slug>.vue. When renaming one,
+    // add the old path to app/utils/redirects.ts so shared links keep working.
     slug: string
     name: string
-    description: string
     priceUah: number
-    // Ordered; the first one is the cover shown in the grid.
-    images: string[]
-    isAvailable: boolean
+    cover: string
 }
 
-export const MERCH_PRODUCTS: MerchProduct[] = [
+export const MERCH_PRODUCTS: MerchCard[] = [
     {
         slug: 'flux',
         name: 'Флюс у кісточці, від НЮ31 не потребує змивки',
-        description: `Флюс-олівець (кісточка) від Київського Хакерспейсу NU31, зроблений мейкерами для мейкерів.
-
-✨ Характеристики:
-• Флюс неактивний, змивка не потрібна
-• Зручний формат кісточки з пензликом
-• Підходить для пайки SMD-компонентів та проводів, DIP, та всього, що не алюміній чи чавун.
-
-Донатячи, ви підтримуєте роботу Київського Хакерспейсу NU31 та розвиток інженерії в Україні, а флюс — наш подарунок вам на подяку.`,
         priceUah: 500,
-        images: [
-            '/img/merch/flux-1.webp',
-            '/img/merch/flux-2.webp',
-            '/img/merch/flux-3.webp',
-            '/img/merch/flux-4.webp',
-            '/img/merch/flux-5.webp',
-        ],
-        isAvailable: true,
+        cover: '/img/merch/flux-1.webp',
+    },
+    {
+        slug: 'oil',
+        name: 'Олива в кісточці для 3D-принтерів, від НЮ31',
+        priceUah: 500,
+        cover: '/img/merch/oil-1.webp',
     },
 ]
-
-export function findMerchProduct(slug: string): MerchProduct | null {
-    return MERCH_PRODUCTS.find((product) => product.slug === slug) || null
-}
 
 export function formatPrice(uah: number): string {
     return `${uah} ₴`

@@ -170,8 +170,8 @@
                                     class="aspect-square rounded-xl overflow-hidden bg-fill-tertiary border border-separator-primary"
                                 >
                                     <img
-                                        v-if="product.images.length"
-                                        :src="product.images[0]"
+                                        v-if="product.cover"
+                                        :src="product.cover"
                                         :alt="product.name"
                                         loading="lazy"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
