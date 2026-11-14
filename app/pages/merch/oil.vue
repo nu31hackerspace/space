@@ -44,7 +44,7 @@
                     <MainButton
                         button-style="primary"
                         size="L"
-                        :link="MERCH_JAR_URL"
+                        :link="OIL_JAR_URL"
                         icon="mdi:heart"
                         class="justify-center md:self-start"
                         @click="trackDonate('hero')"
@@ -306,7 +306,7 @@
                     на подяку.
                 </p>
                 <a
-                    :href="MERCH_JAR_URL"
+                    :href="OIL_JAR_URL"
                     rel="noopener noreferrer"
                     class="mt-2 inline-flex items-center justify-center rounded-xl bg-background-primary px-8 py-4 text-lg font-bold text-accent-primary hover:opacity-90 transition-opacity"
                     @click="trackDonate('footer')"
@@ -321,8 +321,11 @@
 <script setup lang="ts">
 import { definePageMeta, useRuntimeConfig, useSeoMeta } from '#imports'
 import { onMounted } from 'vue'
-import { DONATION_COMMENT_EXAMPLE, MERCH_JAR_URL } from '~~/shared/merch'
+import { DONATION_COMMENT_EXAMPLE } from '~~/shared/merch'
 import { trackEvent } from '~~/app/utils/track'
+
+// The oil has its own monobank jar, separate from MERCH_JAR_URL.
+const OIL_JAR_URL = 'https://send.monobank.ua/jar/92rahpyhUb'
 
 definePageMeta({ layout: 'default' })
 
