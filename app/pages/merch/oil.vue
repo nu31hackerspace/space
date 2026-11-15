@@ -1,63 +1,63 @@
+<!--
+    The blue sections reuse the background of the product photos, so they
+    keep fixed colors (blue + near-black) in both light and dark themes.
+-->
 <template>
     <div class="text-label-primary">
         <!-- Hero -->
-        <section
-            class="container mx-auto max-w-6xl px-4 pt-8 pb-16 md:pb-24 flex flex-col gap-10"
-        >
-            <NuxtLink
-                to="/merch"
-                class="text-sm text-label-secondary hover:text-accent-primary transition-colors"
+        <section class="bg-[#8aa8c0] text-[#111]">
+            <div
+                class="container mx-auto max-w-6xl px-4 pt-8 pb-16 md:pb-24 flex flex-col gap-10"
             >
-                ← Усі подарунки
-            </NuxtLink>
+                <NuxtLink
+                    to="/merch"
+                    class="text-sm opacity-70 hover:opacity-100 transition-opacity"
+                >
+                    ← Усі подарунки
+                </NuxtLink>
 
-            <div class="grid md:grid-cols-2 gap-10 items-center">
-                <div class="flex flex-col gap-6">
-                    <p
-                        class="text-sm font-bold uppercase tracking-widest text-label-secondary"
-                    >
-                        Подарунок за донат · NU31
-                    </p>
-                    <h1
-                        class="text-5xl md:text-7xl font-bold leading-none text-accent-primary"
-                    >
-                        Олива в кісточці
-                    </h1>
-                    <p class="text-xl md:text-2xl text-label-primary">
-                        Змащуй 3D-принтер пензликом, а не з пляшки.
-                    </p>
-
-                    <div class="flex items-center gap-4">
-                        <span
-                            class="text-6xl font-bold leading-none text-accent-primary"
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <div class="flex flex-col gap-6">
+                        <p
+                            class="text-sm font-bold uppercase tracking-widest opacity-70"
                         >
-                            ×3
-                        </span>
-                        <span class="text-lg text-label-secondary">
-                            Набір із трьох кісточок
-                            <br />
-                            за донат
-                            <b class="text-label-primary">500 ₴</b>
-                        </span>
+                            Подарунок за донат · NU31
+                        </p>
+                        <h1 class="text-5xl md:text-7xl font-bold leading-none">
+                            Олива в кісточці
+                        </h1>
+                        <p class="text-xl md:text-2xl">
+                            Змащуй 3D-принтер пензликом, а не з пляшки.
+                        </p>
+
+                        <div class="flex items-center gap-4">
+                            <span class="text-6xl font-bold leading-none">
+                                ×3
+                            </span>
+                            <span class="text-lg">
+                                Набір із трьох кісточок
+                                <br />
+                                за донат
+                                <b>500 ₴</b>
+                            </span>
+                        </div>
+
+                        <a
+                            :href="OIL_JAR_URL"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center justify-center md:self-start rounded-xl bg-[#111] px-8 py-4 text-lg font-bold text-[#8aa8c0] hover:opacity-90 transition-opacity"
+                            @click="trackDonate('hero')"
+                        >
+                            Задонатити 500 ₴
+                        </a>
                     </div>
 
-                    <MainButton
-                        button-style="primary"
-                        size="L"
-                        :link="OIL_JAR_URL"
-                        icon="mdi:heart"
-                        class="justify-center md:self-start"
-                        @click="trackDonate('hero')"
-                    >
-                        Задонатити 500 ₴
-                    </MainButton>
+                    <img
+                        src="/img/merch/oil-1.webp"
+                        alt="Набір із трьох кісточок оливи NU31"
+                        class="w-full aspect-[3/4] md:aspect-square object-cover rounded-3xl"
+                    />
                 </div>
-
-                <img
-                    src="/img/merch/oil-1.webp"
-                    alt="Набір із трьох кісточок оливи NU31"
-                    class="w-full aspect-[3/4] md:aspect-square object-cover rounded-3xl"
-                />
             </div>
         </section>
 
@@ -293,7 +293,7 @@
         </section>
 
         <!-- Final call -->
-        <section class="bg-accent-primary text-background-primary">
+        <section class="bg-[#8aa8c0] text-[#111]">
             <div
                 class="container mx-auto max-w-4xl px-4 py-16 md:py-24 flex flex-col items-center gap-6 text-center"
             >
@@ -308,7 +308,7 @@
                 <a
                     :href="OIL_JAR_URL"
                     rel="noopener noreferrer"
-                    class="mt-2 inline-flex items-center justify-center rounded-xl bg-background-primary px-8 py-4 text-lg font-bold text-accent-primary hover:opacity-90 transition-opacity"
+                    class="mt-2 inline-flex items-center justify-center rounded-xl bg-[#111] px-8 py-4 text-lg font-bold text-[#8aa8c0] hover:opacity-90 transition-opacity"
                     @click="trackDonate('footer')"
                 >
                     Задонатити 500 ₴ — отримати ×3
